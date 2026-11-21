@@ -34,6 +34,7 @@ type AuthState = {
   fetchSignupDefaults: () => Promise<boolean>
   submitSignup: (form: SignupForm) => Promise<boolean>
   refreshAccessToken: () => Promise<string | null>
+  fetchMe: () => Promise<string | null>
 }
 
 type TokenResponse = {
@@ -103,15 +104,23 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       return
     }
 
-    if (await get().refreshAccessToken()) {
+    // 콜백 JSON의 data.signupRequired를 백엔드가 리다이렉트 쿼리로 넘겨 주면 그대로 따르고,
+    // 아직 넘겨 주지 않으면 쿠키로 판별한다 (기존 회원은 temp_refresh, 신규 회원은 JSESSIONID만 받는다)
+    const signupRequired = new URLSearchParams(search).get('signupRequired')
+
+    if (signupRequired !== 'true' && (await get().refreshAccessToken())) {
+      await get().fetchMe()
       set({ callbackStatus: 'existing' })
       return
     }
-    if (await get().fetchSignupDefaults()) {
+    if (signupRequired !== 'false' && (await get().fetchSignupDefaults())) {
       set({ callbackStatus: 'signupRequired' })
       return
     }
-    set({ callbackStatus: 'failed', callbackError: get().signupError })
+    set({
+      callbackStatus: 'failed',
+      callbackError: signupRequired === 'false' ? '로그인을 완료하지 못했어요.' : get().signupError,
+    })
   },
 
   fetchSignupDefaults: async () => {
@@ -144,8 +153,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       try {
         response = await post()
       } catch (e) {
-        // 403은 CSRF 토큰 불일치. 명세대로 같은 세션에서 기본값을 다시 받아 한 번만 재시도한다
-        if (getApiErrorCode(e) !== 'AUTH_FORBIDDEN') throw e
+        // 403은 CSRF 토큰과 JSESSIONID가 맞지 않는 경우. 가입 정보를 다시 조회해 새 토큰으로 한 번만 재시도한다
+        if (!isAxiosError(e) || e.response?.status !== 403) throw e
         if (!(await get().fetchSignupDefaults())) return false
         response = await post()
       }
@@ -154,8 +163,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       set({ accountId: response.data.data.accountId })
       return true
     } catch (e) {
-      const code = getApiErrorCode(e)
-      if (code === 'AUTH_SIGNUP_EXPIRED' || code === 'AUTH_FORBIDDEN') set({ signupExpired: true })
+      if (getApiErrorCode(e) === 'AUTH_SIGNUP_EXPIRED') set({ signupExpired: true })
       set({ signupError: handleApiError(e), fieldErrors: toFieldErrors(e) })
       return false
     } finally {
@@ -178,5 +186,15 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         refreshing = null
       })
     return refreshing
+  },
+
+  fetchMe: async () => {
+    try {
+      const { data } = await api.get<ApiResponse<{ accountId: string }>>('/api/v1/auth/me')
+      set({ accountId: data.data.accountId })
+      return data.data.accountId
+    } catch {
+      return null
+    }
   },
 }))
