@@ -12,7 +12,7 @@ type ChatState = {
   creating: boolean
   sending: boolean
   error: string | null
-  createConversation: (personaKeys: string[]) => Promise<string | null>
+  createConversation: (personaKeys: string[], firstMessage?: string) => Promise<string | null>
   sendMessage: (conversationId: string, message: string) => Promise<boolean>
   endConversation: (conversationId: string) => void
 }
@@ -36,6 +36,57 @@ export const useChatStore = create<ChatState>()((set, get) => {
       (reply) => updateTurn(id, turn.turnId, (t) => ({ ...t, replies: [...t.replies, reply] })),
     )
 
+  const userTurn = (message: string): Turn => {
+    const clientMessageId = uuid()
+    return {
+      turnId: clientMessageId,
+      type: 'question',
+      clientMessageId,
+      message,
+      replies: [],
+      createdAt: new Date().toISOString(),
+    }
+  }
+
+  // 화면에 이미 올라간 사용자 턴을 서버에 보내고, 철학자 답을 오는 대로 그 턴에 붙인다
+  const deliver = async (
+    conversationId: string,
+    personaKeys: string[],
+    isFirstMessage: boolean,
+    clientMessageId: string,
+    message: string,
+  ) => {
+    const turnId = clientMessageId
+    try {
+      const { turn } = await dummyStreamMessage(
+        conversationId,
+        personaKeys,
+        isFirstMessage,
+        { clientMessageId, message },
+        {
+          onTyping: (personaKey) => set({ typingKey: personaKey }),
+          onReply: (reply) =>
+            updateTurn(conversationId, turnId, (t) => ({ ...t, replies: [...t.replies, reply] })),
+        },
+      )
+      updateTurn(conversationId, turnId, (t) => ({ ...turn, replies: t.replies }))
+      return true
+    } catch (e) {
+      // 접수되지 않은 메시지는 화면에서 빼고, 입력창에 되돌려 다시 보낼 수 있게 한다
+      updateConversation(conversationId, (c) => ({
+        ...c,
+        turns: c.turns.filter((t) => t.turnId !== turnId),
+      }))
+      set({
+        error:
+          getApiErrorCode(e) === 'CHAT_CONVERSATION_BUSY'
+            ? '철학자들이 아직 답하는 중이에요. 잠시 후 다시 보내 주세요.'
+            : handleApiError(e),
+      })
+      return false
+    }
+  }
+
   return {
     conversations: [],
     typingKey: null,
@@ -43,11 +94,12 @@ export const useChatStore = create<ChatState>()((set, get) => {
     sending: false,
     error: null,
 
-    createConversation: async (personaKeys) => {
-      // 응답 전에 빈 방부터 보여야 이전 방이 잠깐 보였다가 바뀌지 않는다
+    createConversation: async (personaKeys, firstMessage) => {
+      // 응답 전에 방(과 홈에서 먼저 말한 고민)부터 보여야 이전 방이 잠깐 보였다가 바뀌지 않는다
       const pendingId = uuid()
+      const pending = firstMessage ? userTurn(firstMessage) : null
       set((s) => ({
-        conversations: [...s.conversations, { conversationId: pendingId, personaKeys, turns: [] }],
+        conversations: [...s.conversations, { conversationId: pendingId, personaKeys, turns: pending ? [pending] : [] }],
         creating: true,
         sending: true,
         error: null,
@@ -55,9 +107,15 @@ export const useChatStore = create<ChatState>()((set, get) => {
       try {
         const { data } = await dummyCreateConversation(personaKeys)
         const { conversationId, turn } = data.data
-        updateConversation(pendingId, (c) => ({ ...c, conversationId, turns: [{ ...turn, replies: [] }] }))
+        // 고민을 먼저 말하고 들어온 방에서 인사가 그 뒤에 뜨면 어색해서 띄우지 않는다
+        updateConversation(pendingId, (c) => ({
+          ...c,
+          conversationId,
+          turns: pending ? c.turns : [{ ...turn, replies: [] }],
+        }))
         set({ creating: false })
-        await revealReplies(conversationId, turn)
+        if (pending && firstMessage) await deliver(conversationId, personaKeys, true, pending.turnId, firstMessage)
+        else await revealReplies(conversationId, turn)
         return conversationId
       } catch (e) {
         set((s) => ({
@@ -74,46 +132,12 @@ export const useChatStore = create<ChatState>()((set, get) => {
       const conversation = get().conversations.find((c) => c.conversationId === conversationId)
       if (!conversation || get().sending) return false
 
-      const clientMessageId = uuid()
-      const pending: Turn = {
-        turnId: clientMessageId,
-        type: 'question',
-        clientMessageId,
-        message,
-        replies: [],
-        createdAt: new Date().toISOString(),
-      }
+      const pending = userTurn(message)
       const isFirstMessage = !conversation.turns.some((t) => t.message)
       updateConversation(conversationId, (c) => ({ ...c, turns: [...c.turns, pending] }))
       set({ sending: true, error: null })
-
       try {
-        const { turn } = await dummyStreamMessage(
-          conversationId,
-          conversation.personaKeys,
-          isFirstMessage,
-          { clientMessageId, message },
-          {
-            onTyping: (personaKey) => set({ typingKey: personaKey }),
-            onReply: (reply) =>
-              updateTurn(conversationId, pending.turnId, (t) => ({ ...t, replies: [...t.replies, reply] })),
-          },
-        )
-        updateTurn(conversationId, pending.turnId, (t) => ({ ...turn, replies: t.replies }))
-        return true
-      } catch (e) {
-        // 접수되지 않은 메시지는 화면에서 빼고, 입력창에 되돌려 다시 보낼 수 있게 한다
-        updateConversation(conversationId, (c) => ({
-          ...c,
-          turns: c.turns.filter((t) => t.turnId !== pending.turnId),
-        }))
-        set({
-          error:
-            getApiErrorCode(e) === 'CHAT_CONVERSATION_BUSY'
-              ? '철학자들이 아직 답하는 중이에요. 잠시 후 다시 보내 주세요.'
-              : handleApiError(e),
-        })
-        return false
+        return await deliver(conversationId, conversation.personaKeys, isFirstMessage, pending.turnId, message)
       } finally {
         set({ sending: false, typingKey: null })
       }

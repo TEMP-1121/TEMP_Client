@@ -6,10 +6,8 @@ import EndChatDialog from '@/components/dialog/chat/EndChatDialog'
 import ChatInput from '@/components/widgets/chat/ChatInput'
 import { useAutoScroll } from '@/components/widgets/chat/hooks/useAutoScroll'
 import PhilosopherAvatar from '@/components/widgets/philosopher/PhilosopherAvatar'
-import { DUMMY_PERSONAS } from '@/lib/dummyChat'
 import { useChatStore } from '@/stores/useChatStore'
-
-const nameOf = (key: string) => DUMMY_PERSONAS[key] ?? key
+import { usePhilosopherStore } from '@/stores/usePhilosopherStore'
 
 const withSubject = (name: string) => {
   const code = name.charCodeAt(name.length - 1) - 0xac00
@@ -28,6 +26,8 @@ export default function ChatPage() {
   const sendMessage = useChatStore((s) => s.sendMessage)
   const endConversation = useChatStore((s) => s.endConversation)
   const [confirmingEnd, setConfirmingEnd] = useState(false)
+  const philosophers = usePhilosopherStore((s) => s.philosophers)
+  const nameOf = (key: string) => philosophers.find((p) => p.key === key)?.name ?? key
 
   const replyCount = conversation?.turns.reduce((n, t) => n + 1 + t.replies.length, 0)
   const { ref, onScroll, stickToBottom } = useAutoScroll<HTMLDivElement>(

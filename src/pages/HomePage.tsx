@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import { ChevronRight } from 'lucide-react'
-import { Link, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 
 import ChatInput from '@/components/widgets/chat/ChatInput'
-import { DUMMY_PERSONAS } from '@/lib/dummyChat'
+import PhilosopherAvatar from '@/components/widgets/philosopher/PhilosopherAvatar'
 import { cn } from '@/lib/utils'
-import { useChatStore } from '@/stores/useChatStore'
 import { MAX_PHILOSOPHERS, usePhilosopherStore } from '@/stores/usePhilosopherStore'
 
 const QUICK_STARTS = ['반복 업무가 의미 없게 느껴져요', '번아웃이 온 것 같아요', '동료 고민 상담하기']
@@ -13,16 +12,11 @@ const QUICK_STARTS = ['반복 업무가 의미 없게 느껴져요', '번아웃�
 export default function HomePage() {
   const navigate = useNavigate()
   const selectedIds = usePhilosopherStore((s) => s.selectedIds)
-  const createConversation = useChatStore((s) => s.createConversation)
-  const sendMessage = useChatStore((s) => s.sendMessage)
   const [draft, setDraft] = useState('')
-  const ready = selectedIds.length === MAX_PHILOSOPHERS
+  const [message, setMessage] = useState('')
+  const hasMessage = message.trim() !== ''
 
-  const start = async (text: string) => {
-    navigate('/chat')
-    const id = await createConversation(selectedIds)
-    return id ? sendMessage(id, text) : false
-  }
+  const pickPhilosophers = (text: string) => navigate('/philosophers', { state: { message: text.trim() } })
 
   return (
     <section className="flex flex-1 flex-col px-4 pb-4">
@@ -43,7 +37,10 @@ export default function HomePage() {
         {QUICK_STARTS.map((text) => (
           <button
             key={text}
-            onClick={() => setDraft(text)}
+            onClick={() => {
+              setDraft(text)
+              setMessage(text)
+            }}
             className={cn(
               'border px-4 py-3 text-left text-body-15-regular',
               draft === text ? 'border-border-active bg-accent-light text-text-brand' : 'border-border-normal',
@@ -55,39 +52,39 @@ export default function HomePage() {
       </div>
 
       <div className="mt-auto flex flex-col gap-3 pt-10">
-        <Link to="/philosophers" className="flex items-center gap-4 border border-border-strong px-4 py-3">
+        <button
+          onClick={() => pickPhilosophers(message)}
+          disabled={!hasMessage}
+          className="flex items-center gap-4 border border-border-strong px-4 py-3 text-left disabled:border-border-disabled disabled:text-text-disabled"
+        >
           <div className="flex -space-x-2">
-            {[0, 1, 2].map((i) => {
-              const id = selectedIds[i]
-              return (
-                <span
-                  key={i}
-                  className={cn(
-                    'flex size-9 items-center justify-center rounded-full text-caption-12-semibold',
-                    id ? 'border-2 border-border-inverse bg-background-subtle' : 'border border-dashed border-border-strong bg-background-base',
-                  )}
-                >
-                  {id && DUMMY_PERSONAS[id]?.[0]}
-                </span>
-              )
-            })}
+            {[0, 1, 2].map((i) =>
+              selectedIds[i] ? (
+                <PhilosopherAvatar key={i} personaKey={selectedIds[i]} className="size-9" />
+              ) : (
+                <span key={i} className="size-9 rounded-full border border-dashed border-border-strong bg-background-base" />
+              ),
+            )}
           </div>
           <span className="flex-1 text-body-16-semibold">철학자 3명 고르기</span>
           <span className="flex items-center text-body-14-regular text-text-tertiary">
             {selectedIds.length}/{MAX_PHILOSOPHERS}
             <ChevronRight className="size-4" />
           </span>
-        </Link>
+        </button>
 
         <ChatInput
           key={draft}
           defaultValue={draft}
-          disabled={!ready}
           placeholder="매일 같은 보고서만 써서 지겨워요"
           className="border-t-0 p-0"
-          onSend={start}
+          onTextChange={setMessage}
+          onSend={async (text) => {
+            pickPhilosophers(text)
+            return true
+          }}
         />
-        {!ready && <p className="text-caption-12-regular text-text-tertiary">철학자 3명을 고르면 대화를 시작할 수 있어요</p>}
+        {!hasMessage && <p className="text-caption-12-regular text-text-tertiary">고민을 입력하면 함께 이야기할 철학자를 고를 수 있어요</p>}
       </div>
     </section>
   )

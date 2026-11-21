@@ -8,6 +8,7 @@ type ChatInputProps = {
   defaultValue?: string
   placeholder?: string
   className?: string
+  onTextChange?: (text: string) => void
   onSend: (text: string) => Promise<boolean>
 }
 
@@ -16,6 +17,7 @@ export default function ChatInput({
   defaultValue = '',
   placeholder = '고민을 이야기해 보세요',
   className,
+  onTextChange,
   onSend,
 }: ChatInputProps) {
   const [text, setText] = useState(defaultValue)
@@ -46,7 +48,10 @@ export default function ChatInput({
       {/* text-base(16px) 미만이면 iOS가 포커스할 때 화면을 확대한다 */}
       <textarea
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={(e) => {
+          setText(e.target.value)
+          onTextChange?.(e.target.value)
+        }}
         onKeyDown={handleKeyDown}
         rows={1}
         maxLength={2000}
