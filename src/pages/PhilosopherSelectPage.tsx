@@ -2,6 +2,7 @@ import { X } from 'lucide-react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
+import LoadingScreen from '@/components/common/LoadingScreen';
 import PhilosopherImage from '@/components/widgets/philosopher/PhilosopherImage';
 import PhilosopherSelectCard from '@/components/widgets/philosopher/PhilosopherSelectCard';
 import { useChatStore } from '@/stores/useChatStore';
@@ -13,6 +14,8 @@ import {
 export default function PhilosopherSelectPage() {
   const philosophers = usePhilosopherStore((s) => s.philosophers);
   const fetchPersonas = usePhilosopherStore((s) => s.fetchPersonas);
+  // 실패하면 내장 목록으로 보여 주고, 받는 중에는 내장 목록이 먼저 보였다가 바뀌지 않게 로딩을 띄운다
+  const personasPending = usePhilosopherStore((s) => !s.personasLoaded && !s.personasError);
   const selected = usePhilosopherStore((s) => s.selectedIds);
   const togglePhilosopher = usePhilosopherStore((s) => s.toggleSelect);
   const createConversation = useChatStore((s) => s.createConversation);
@@ -32,6 +35,8 @@ export default function PhilosopherSelectPage() {
     });
     navigate('/chat');
   }
+
+  if (personasPending) return <LoadingScreen />;
 
   return (
     <section className='flex min-h-0 flex-1 flex-col bg-background-surface'>

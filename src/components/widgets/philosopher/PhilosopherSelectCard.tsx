@@ -17,7 +17,8 @@ export default function PhilosopherSelectCard({ philosopher, selected, disabled,
     <label
       className={cn(
         // 시안은 한 줄 설명 기준 213px. 실제 설명은 두 줄인 경우가 있어 높이를 고정하지 않고 내용에 맞춘다 (같은 줄 카드는 그리드가 높이를 맞춘다)
-        'flex cursor-pointer flex-col gap-6.75 rounded-card transition-colors',
+        // relative가 없으면 sr-only 체크박스가 스크롤 영역 밖(레이아웃 기준)에 놓여, 누를 때 페이지 전체가 스크롤된다
+        'relative flex cursor-pointer flex-col gap-6.75 rounded-card transition-colors',
         // 피그마 테두리는 안쪽 선이라 여백(14px)에 포함되지 않는다. 테두리 두께만큼 여백을 빼 내용이 가장자리에서 14px에 오게 한다
         selected
           ? cn('border-2 border-border-selected p-3', SELECTED_CARD_BG[philosopher.key] ?? 'bg-accent-light')

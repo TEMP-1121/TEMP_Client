@@ -1,24 +1,9 @@
 import { MessageCircle } from 'lucide-react';
-import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router';
 
 import { useAuthStore } from '@/stores/useAuthStore';
 
 export default function LoginPage() {
   const startKakaoLogin = useAuthStore((s) => s.startKakaoLogin);
-  const location = useLocation();
-  const navigate = useNavigate();
-  const signupComplete = (location.state as { signupComplete?: boolean } | null)?.signupComplete ?? false;
-
-  useEffect(() => {
-    if (!signupComplete) return
-
-    const timeout = window.setTimeout(() => {
-      navigate('/onboarding', { replace: true });
-    }, 1800);
-
-    return () => window.clearTimeout(timeout);
-  }, [navigate, signupComplete]);
 
   return (
     <section className='flex flex-1 flex-col bg-background-base px-4 pb-8'>
@@ -33,14 +18,6 @@ export default function LoginPage() {
           <p className='mt-1 text-sm text-text-secondary'>
             일고민 하나, 철학자는 셋 <span className='font-semibold text-accent-primary'>일세</span>
           </p>
-          {signupComplete && (
-            <div
-              role='status'
-              className='absolute left-1/2 top-1/2 z-10 -translate-x-1/2 translate-y-1/2 whitespace-nowrap rounded-full bg-accent-primary px-3 py-1.5 text-[10px] font-medium text-text-inverse shadow-sm'
-            >
-              일세 회원가입 완료!
-            </div>
-          )}
         </div>
       </div>
 
