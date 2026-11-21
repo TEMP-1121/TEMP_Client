@@ -1,82 +1,77 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router'
+
+import StepIndicator from '@/components/widgets/onboarding/StepIndicator'
+import {
+  ONBOARDING_STEPS,
+  selectIsLastStep,
+  useOnboardingStore,
+} from '@/stores/useOnboardingStore'
 
 const slides = [
   {
     title: '일이 지루하게 느껴질 때',
-    description:
-      '매일 비슷한 일, 무엇이 나를 지치게 하는지 철학자와 함께 들여다보세요.',
+    description: '매일 비슷한 일, 무엇이 나를 지치게 하는지 철학자와 함께 들여다보세요.',
   },
   {
     title: '나에게 맞는 철학자를 골라 보세요',
     description:
-      '철학자마다 성격과 질문하는 방식이 달라요. 마음에 드는 사수를 직접 선택해 보세요.',
+      '철학자마다 성격과 질문하는 방식이 달라요. 특징을 보고 마음에 드는 사수를 직접 선택해 보세요.',
   },
   {
-    title: '새로운 시선으로 일상을 시험해 보세요',
-    description:
-      '대화를 나누고 나면 지금 나에게 맞는 활동과 물건을 추천해 드려요.',
+    title: '새로운 시선을 일상에서 시험해 보세요',
+    description: '대화를 나누고 나면 지금 나에게 맞는 활동과 물건을 추천해 드려요.',
   },
-];
+]
 
 export default function OnboardingPage() {
-  const [page, setPage] = useState(0);
-  const navigate = useNavigate();
-  const slide = slides[page];
-  const isLast = page === slides.length - 1;
+  const navigate = useNavigate()
+  const step = useOnboardingStore((s) => s.step)
+  const isLast = useOnboardingStore(selectIsLastStep)
+  const next = useOnboardingStore((s) => s.next)
+  const reset = useOnboardingStore((s) => s.reset)
+  const slide = slides[step]
 
-  function finishOnboarding() {
-    navigate('/philosophers');
-  }
+  useEffect(() => {
+    reset()
+  }, [reset])
+
+  const finish = () => navigate('/philosophers')
 
   return (
-    <section className='flex flex-1 flex-col bg-background-surface px-5 pb-5'>
-      <div className='h-12' aria-hidden />
-
-      <div className='flex h-10 items-center justify-end'>
+    <section className="flex flex-1 flex-col bg-background-base px-4 pb-12">
+      <div className="flex h-14 items-center justify-end">
         {!isLast && (
           <button
-            type='button'
-            onClick={finishOnboarding}
-            className='px-2 py-2 text-xs text-neutral-400 transition-colors hover:text-neutral-700'
+            type="button"
+            onClick={finish}
+            className="px-1 py-2 text-body-14-regular text-text-tertiary"
           >
             건너뛰기
           </button>
         )}
       </div>
 
-      <div className='flex flex-1 flex-col justify-center pb-4'>
-        <div className='mb-7 h-[min(46vh,390px)] min-h-64' aria-hidden />
-
-        <div className='min-h-28 px-1'>
-          <h1 className='text-[20px] font-semibold leading-snug tracking-[-0.04em] text-neutral-900'>
-            {slide.title}
-          </h1>
-          <p className='mt-3 text-xs leading-relaxed text-neutral-500'>
-            {slide.description}
-          </p>
-        </div>
+      <div className="mt-8 flex h-90 items-center justify-center bg-background-subtle" aria-hidden>
+        <span className="text-caption-12-regular text-text-tertiary">일러스트 영역</span>
       </div>
 
-      <div
-        className='flex h-8 items-center justify-center gap-1.5'
-        aria-label={`온보딩 ${page + 1} / ${slides.length}`}
-      >
-        {slides.map((item, index) => (
-          <span
-            key={item.title}
-            className={`h-1.5 rounded-full transition-all ${index === page ? 'w-5 bg-neutral-900' : 'w-1.5 bg-neutral-300'}`}
-          />
-        ))}
+      <div className="mt-10 min-h-32">
+        <h1 className="min-h-20 text-title-24-semibold text-text-primary">{slide.title}</h1>
+        <p className="text-body-15-regular text-text-tertiary">{slide.description}</p>
       </div>
+
+      <div className="flex-1" />
+
+      <StepIndicator total={ONBOARDING_STEPS} current={step} />
 
       <button
-        type='button'
-        onClick={() => (isLast ? finishOnboarding() : setPage((current) => current + 1))}
-        className='flex h-14 w-full items-center justify-center rounded-none bg-neutral-900 text-sm font-semibold text-white transition-colors hover:bg-neutral-800 active:bg-neutral-700'
+        type="button"
+        onClick={isLast ? finish : next}
+        className="mt-12 flex h-14 w-full items-center justify-center bg-text-primary text-body-16-semibold text-text-inverse active:opacity-90"
       >
         {isLast ? '시작하기' : '다음'}
       </button>
     </section>
-  );
+  )
 }
