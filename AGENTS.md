@@ -107,7 +107,7 @@ export const useFeedStore = create<FeedState>()((set) => ({
 - `VITE_`로 시작하는 값은 빌드 결과 JS에 그대로 들어가 누구나 볼 수 있음. API 키·비밀번호 같은 비밀값은 넣지 않기 (서버에서 처리)
 - 서버 응답 형식은 `ApiResponse<T>` (`{ code, message, data }`, `src/types/api.ts`). 필드 검증 에러는 `FieldError[]`
 - 에러 메시지는 `handleApiError(e)`로 한국어 문장으로 변환해서 표시. 에러 코드 분기는 `getApiErrorCode(e)` (스토어마다 따로 만들지 않기)
-- 채팅 API는 Bearer JWT 필요 (`setAccessToken`으로 넣으면 axios·SSE 둘 다 붙음). 메시지 전송은 SSE이고 서버가 끝날 때 `turn.completed`/`turn.failed` 이벤트 하나에 전원 답을 보낸다. 웹은 `revealInTurn`으로 한 명씩 "입력 중"과 함께 띄운다
+- 채팅 API는 Bearer JWT 필요. 토큰은 `useAuthStore.accessToken`에 있고 axios 인터셉터·`authHeader()`(SSE)가 붙인다. 401이면 refresh 쿠키로 한 번 갱신 후 재시도 (axios·SSE 동일). 메시지 전송은 SSE이고 서버가 끝날 때 `turn.completed`/`turn.failed` 이벤트 하나에 전원 답을 보낸다. 웹은 `revealInTurn`으로 한 명씩 "입력 중"과 함께 띄운다
   - 메시지 `type`: 일반 대화 `conversation`, "이제 진지한 솔루션을 내놔라" `advice`
   - 종료 이벤트 없이 연결이 끊기면 이력 조회(`GET …/{id}?clientMessageId=`)로 결과 확인
 - 인증은 카카오 OAuth + 세션 쿠키(JSESSIONID). 인증 관련 요청은 `withCredentials: true`, 가입 POST는 `X-CSRF-TOKEN` 헤더 (`useAuthStore` 참고)

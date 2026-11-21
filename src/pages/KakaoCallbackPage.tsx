@@ -17,7 +17,7 @@ export default function KakaoCallbackPage() {
   }, [search, completeKakaoCallback])
 
   useEffect(() => {
-    // 인가 코드가 담긴 콜백 주소로 뒤로 가기 하면 같은 코드를 다시 쓰게 되므로 replace로 이동한다
+    // 뒤로 가기로 콜백 화면에 돌아오면 확인을 다시 하게 되므로 replace로 이동한다
     if (status === 'signupRequired') navigate('/signup', { replace: true })
     if (status === 'existing') navigate('/onboarding', { replace: true })
   }, [status, navigate])

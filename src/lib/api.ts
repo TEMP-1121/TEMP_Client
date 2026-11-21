@@ -1,24 +1,37 @@
-import axios, { isAxiosError } from 'axios'
+import axios, { isAxiosError, type InternalAxiosRequestConfig } from 'axios'
+
+import { useAuthStore } from '@/stores/useAuthStore'
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   timeout: 15000,
 })
 
-// 채팅 API는 Bearer JWT가 필요하다. 토큰 발급 흐름(카카오 로그인 → POST /api/v1/auth/refresh)이 정해지면 로그인 쪽에서 setAccessToken으로 넣는다
-let accessToken: string | null = null
+const REFRESH_URL = '/api/v1/auth/refresh'
 
-export function setAccessToken(token: string | null) {
-  accessToken = token
-}
-
+// SSE는 axios를 거치지 않아(lib/sse.ts) 같은 토큰을 헤더로 직접 붙인다
 export function authHeader(): Record<string, string> {
-  return accessToken ? { Authorization: `Bearer ${accessToken}` } : {}
+  const token = useAuthStore.getState().accessToken
+  return token ? { Authorization: `Bearer ${token}` } : {}
 }
 
 api.interceptors.request.use((config) => {
-  if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`
+  const token = useAuthStore.getState().accessToken
+  if (token && config.url !== REFRESH_URL) config.headers.Authorization = `Bearer ${token}`
   return config
+})
+
+// Access Token은 15분이면 만료돼, 401이 오면 refresh 쿠키로 새 토큰을 받아 한 번만 다시 보낸다
+api.interceptors.response.use(undefined, async (error: unknown) => {
+  if (!isAxiosError(error) || error.response?.status !== 401) throw error
+  const config = error.config as (InternalAxiosRequestConfig & { retried?: boolean }) | undefined
+  if (!config || config.retried || config.url === REFRESH_URL) throw error
+
+  const token = await useAuthStore.getState().refreshAccessToken()
+  if (!token) throw error
+  config.retried = true
+  config.headers.Authorization = `Bearer ${token}`
+  return api(config)
 })
 
 export function handleApiError(error: unknown, fallback = '잠시 후 다시 시도해 주세요.') {

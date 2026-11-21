@@ -1,6 +1,7 @@
 import { AxiosError, AxiosHeaders } from 'axios'
 
 import { api, authHeader } from '@/lib/api'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 export type SseEvent<T> = { event: string; data: T }
 
@@ -30,11 +31,15 @@ function parseBlock(block: string) {
 // axios는 브라우저에서 응답 스트림을 읽지 못해 SSE만 fetch로 받는다.
 // endEvents 중 하나가 오면 그 이벤트를 돌려주고, 결과 없이 연결이 끝나면 null (호출한 쪽이 이력 조회로 확인)
 export async function postForEvent<T>(url: string, body: unknown, endEvents: string[]): Promise<SseEvent<T> | null> {
-  const res = await fetch(api.getUri({ url }), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream', ...authHeader() },
-    body: JSON.stringify(body),
-  })
+  const send = () =>
+    fetch(api.getUri({ url }), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream', ...authHeader() },
+      body: JSON.stringify(body),
+    })
+  let res = await send()
+  // axios 응답 인터셉터와 같은 규칙: 토큰이 만료돼 401이면 refresh 쿠키로 새 토큰을 받아 한 번만 다시 보낸다
+  if (res.status === 401 && (await useAuthStore.getState().refreshAccessToken())) res = await send()
   if (!res.ok) throw toApiError(await res.json().catch(() => null), res.status)
   if (!res.body) return null
 
