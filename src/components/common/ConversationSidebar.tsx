@@ -103,8 +103,7 @@ export default function ConversationSidebar({ onClose }: { onClose: () => void }
                     <PhilosopherAvatar
                       key={key}
                       personaKey={key}
-                      name={nameOf(key)}
-                      className='size-7 text-caption-10-bold'
+                      className='size-7'
                     />
                   ))}
                 </div>
