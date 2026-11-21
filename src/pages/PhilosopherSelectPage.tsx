@@ -1,48 +1,58 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
+
+import { MAX_PHILOSOPHERS, usePhilosopherStore } from '@/stores/usePhilosopherStore';
 
 const philosophers = [
   {
+    id: 'epictetus',
     name: '에픽테토스',
     description: '내게 달린 선택에 집중해요.',
     tags: '#통제 #선택',
   },
   {
+    id: 'nietzsche',
     name: '니체',
     description: '남의 성공 기준을 의심하고 내 기준을 세워요.',
     tags: '#내기준 #자기극복',
   },
   {
+    id: 'marx',
     name: '마르쿠스',
     description: '누가 일을 결정하는지 보고, 바꿀 조건을 찾아요.',
     tags: '#노동 #구조',
   },
   {
+    id: 'camus',
     name: '카뮈',
     description: '답이 없는 반복 속에서 내가 취할 태도를 찾아요.',
     tags: '#반복 #태도',
   },
   {
+    id: 'zhuangzi',
     name: '장자',
     description: '당연한 기준을 뒤집어 다른 길을 보여줘요.',
     tags: '#관점전환 #자유',
   },
   {
+    id: 'epicurus',
     name: '에피쿠로스',
     description: '꼭 필요한 욕구와 불안을 키우는 욕구를 나눠요.',
     tags: '#욕구 #작은행복',
   },
   {
+    id: 'aristotle',
     name: '아리스토텔레스',
     description: '되고 싶은 사람에 가까워지는 습관을 제안해요.',
     tags: '#습관 #성장',
   },
   {
+    id: 'arendt',
     name: '한나 아렌트',
     description: '동료와 함께 새롭게 시작할 일을 찾아요.',
     tags: '#협업 #새시작',
   },
   {
+    id: 'weil',
     name: '시몬 베유',
     description: '일하는 사람을 지치게 하는 업무 조건을 짚어요.',
     tags: '#업무조건 #번아웃',
@@ -50,21 +60,11 @@ const philosophers = [
 ];
 
 export default function PhilosopherSelectPage() {
-  const [selected, setSelected] = useState<string[]>([]);
   const navigate = useNavigate();
-  const canContinue = selected.length === 3;
-
-  function togglePhilosopher(name: string) {
-    setSelected((current) => {
-      if (current.includes(name)) {
-        return current.filter((item) => item !== name);
-      }
-      if (current.length === 3) {
-        return current;
-      }
-      return [...current, name];
-    });
-  }
+  const location = useLocation();
+  const selectedIds = usePhilosopherStore((s) => s.selectedIds);
+  const toggleSelect = usePhilosopherStore((s) => s.toggleSelect);
+  const canContinue = selectedIds.length === MAX_PHILOSOPHERS;
 
   return (
     <section className='flex min-h-0 flex-1 flex-col bg-white'>
@@ -77,7 +77,7 @@ export default function PhilosopherSelectPage() {
         </h1>
         <button
           type='button'
-          onClick={() => navigate('/home')}
+          onClick={() => navigate('/home', { state: location.state })}
           aria-label='닫기'
           className='flex size-9 items-center justify-center justify-self-end text-3xl leading-none text-neutral-800'
         >
@@ -93,8 +93,8 @@ export default function PhilosopherSelectPage() {
 
       <div className='grid flex-1 grid-cols-2 content-start gap-2.5 overflow-y-auto px-5 pb-4'>
         {philosophers.map((philosopher) => {
-          const isSelected = selected.includes(philosopher.name);
-          const isDisabled = !isSelected && selected.length === 3;
+          const isSelected = selectedIds.includes(philosopher.id);
+          const isDisabled = !isSelected && selectedIds.length === MAX_PHILOSOPHERS;
 
           return (
             <label
@@ -114,7 +114,7 @@ export default function PhilosopherSelectPage() {
                   type='checkbox'
                   checked={isSelected}
                   disabled={isDisabled}
-                  onChange={() => togglePhilosopher(philosopher.name)}
+                  onChange={() => toggleSelect(philosopher.id)}
                   aria-label={`${philosopher.name} 선택`}
                   className='size-5 cursor-pointer accent-neutral-900 disabled:cursor-not-allowed'
                 />
@@ -138,22 +138,22 @@ export default function PhilosopherSelectPage() {
           <div className='flex items-center gap-3'>
             <span className='text-neutral-500'>선택한 철학자</span>
             <div className='flex -space-x-2' aria-hidden>
-              {selected.map((name) => (
+              {selectedIds.map((id) => (
                 <span
-                  key={name}
+                  key={id}
                   className='size-6 rounded-full bg-neutral-300 ring-2 ring-white'
                 />
               ))}
             </div>
           </div>
           <span className='font-semibold text-neutral-900'>
-            {selected.length}/3
+            {selectedIds.length}/{MAX_PHILOSOPHERS}
           </span>
         </div>
         <button
           type='button'
           disabled={!canContinue}
-          onClick={() => navigate('/home')}
+          onClick={() => navigate('/home', { state: location.state })}
           className='flex h-12 w-full items-center justify-center bg-neutral-900 text-sm font-semibold text-white transition-colors hover:bg-neutral-800 disabled:cursor-not-allowed disabled:bg-neutral-300'
         >
           선택 완료 · 단톡방 열기
