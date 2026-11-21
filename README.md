@@ -6,9 +6,7 @@
 <img src=".github/assets/ilse-logo.png" alt="일세 로고" width="300" />
 
 
-### 일이 지루해질 때, 철학자가 말을 건다.
-
-**털어놓기 애매한 직장 고민을 세 철학자의 단톡방에 꺼내 보세요.**
+### -
 
 
 <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white" />
