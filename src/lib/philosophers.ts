@@ -15,7 +15,7 @@ export const PHILOSOPHERS: PhilosopherProfile[] = [
   {
     key: 'nietzsche',
     name: '니체',
-    description: '남의 성공 기준을 의심하고 내 기준을 세워요.',
+    description: '나만의 기준을 세워요.',
     tags: ['내기준', '자기극복'],
     era: '독일 · 1844년',
     introduction: '"너 자신이 되어라." 남이 정한 성공 대신 내가 원하는 삶의 기준을 세우도록 몰아붙이는 철학자예요.',
@@ -24,7 +24,7 @@ export const PHILOSOPHERS: PhilosopherProfile[] = [
   {
     key: 'marx',
     name: '마르크스',
-    description: '누가 일을 결정하는지 보고, 바꿀 조건을 찾아요.',
+    description: '바꿀 업무 조건을 찾아요.',
     tags: ['노동', '구조'],
     era: '독일 · 1818년',
     introduction: '지루함이 내 탓만은 아닐 수 있어요. 누가 일을 정하고 누가 이익을 얻는지, 일의 구조부터 함께 살펴봐요.',
@@ -33,7 +33,7 @@ export const PHILOSOPHERS: PhilosopherProfile[] = [
   {
     key: 'camus',
     name: '카뮈',
-    description: '답이 없는 반복 속에서 내가 취할 태도를 찾아요.',
+    description: '반복 속에서 태도를 정해요.',
     tags: ['반복', '태도'],
     era: '프랑스 · 1913년',
     introduction: '"행복한 시시포스를 상상해야 한다." 끝없는 반복 속에서도 내가 고를 수 있는 태도를 찾아 주는 철학자예요.',
@@ -42,7 +42,7 @@ export const PHILOSOPHERS: PhilosopherProfile[] = [
   {
     key: 'zhuangzi',
     name: '장자',
-    description: '당연한 기준을 뒤집어 다른 길을 보여줘요.',
+    description: '익숙한 기준을 뒤집어 봐요',
     tags: ['관점전환', '자유'],
     era: '중국 전국시대 · 기원전 369년경',
     introduction: '쓸모없어 보이는 나무가 오래 산다고 말해요. 당연하게 여긴 기준을 뒤집어 다른 길을 보여 주는 철학자예요.',
@@ -51,7 +51,7 @@ export const PHILOSOPHERS: PhilosopherProfile[] = [
   {
     key: 'epicurus',
     name: '에피쿠로스',
-    description: '꼭 필요한 욕구와 불안을 키우는 욕구를 나눠요.',
+    description: '필요한 욕구를 가려내요.',
     tags: ['욕구', '작은행복'],
     era: '고대 그리스 · 기원전 341년',
     introduction: '행복은 큰 성취가 아니라 불안이 없는 상태라고 말해요. 꼭 필요한 욕구와 나를 지치게 하는 욕구를 나눠 줘요.',
@@ -60,7 +60,7 @@ export const PHILOSOPHERS: PhilosopherProfile[] = [
   {
     key: 'aristotle',
     name: '아리스토텔레스',
-    description: '되고 싶은 사람에 가까워지는 습관을 제안해요.',
+    description: '나를 키울 습관을 찾아요.',
     tags: ['습관', '성장'],
     era: '고대 그리스 · 기원전 384년',
     introduction: '"우리는 반복적으로 하는 것의 결과다." 되고 싶은 사람에 한 걸음씩 가까워지는 습관을 함께 찾아요.',
@@ -69,7 +69,7 @@ export const PHILOSOPHERS: PhilosopherProfile[] = [
   {
     key: 'arendt',
     name: '한나 아렌트',
-    description: '동료와 함께 새롭게 시작할 일을 찾아요.',
+    description: '동료와 새로 시작해요.',
     tags: ['협업', '새시작'],
     era: '독일 · 1906년',
     introduction: '사람은 누구나 새로운 것을 시작할 수 있다고 말해요. 혼자가 아니라 동료와 함께 할 수 있는 일을 찾아 줘요.',
@@ -78,7 +78,7 @@ export const PHILOSOPHERS: PhilosopherProfile[] = [
   {
     key: 'weil',
     name: '시몬 베유',
-    description: '일하는 사람을 지치게 하는 업무 조건을 짚어요.',
+    description: '일에 지치는 이유를 짚어요.',
     tags: ['업무조건', '번아웃'],
     era: '프랑스 · 1909년',
     introduction: '직접 공장에서 일하며 노동을 기록한 철학자예요. 나를 지치게 하는 업무 조건이 무엇인지 함께 짚어 봐요.',
