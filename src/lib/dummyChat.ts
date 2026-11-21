@@ -5,31 +5,53 @@ import { uuid } from '@/lib/utils'
 import type { ApiResponse } from '@/types/api'
 import type { CreateConversationResponse, PersonaReply, SendMessageResponse, Turn } from '@/types/chat'
 
+// 디자인 시스템의 철학자 9명(--color-philosopher-*) 기준
 export const DUMMY_PERSONAS: Record<string, string> = {
-  socrates: '소크라테스',
-  seneca: '세네카',
-  camus: '카뮈',
-  epicurus: '에피쿠로스',
+  epictetus: '에픽테토스',
   nietzsche: '니체',
+  marx: '마르크스',
+  camus: '카뮈',
   zhuangzi: '장자',
+  epicurus: '에피쿠로스',
+  aristotle: '아리스토텔레스',
+  arendt: '한나 아렌트',
+  weil: '시몬 베유',
 }
 
 const GREETINGS: Record<string, string> = {
-  socrates: '어서 오게. 무엇이 자네의 마음을 무겁게 하는가?',
-  seneca: '반갑네. 오늘 그대가 붙들고 있는 고민을 들려주게.',
+  epictetus: '어서 오게. 오늘 자네 손에 달린 일과 아닌 일을 함께 나눠 보세.',
+  nietzsche: '왔군! 오늘은 무엇이 자네를 지치게 했나?',
+  marx: '반갑네. 그 일이 누구를 위해 돌아가는지부터 들어 보세.',
   camus: '왔군. 오늘은 어떤 바위를 밀고 있었나?',
+  zhuangzi: '반갑네. 쓸모를 잠시 내려놓고 이야기해 보게.',
+  epicurus: '어서 오게. 차 한 잔 하며 천천히 이야기하세.',
+  aristotle: '반갑네. 자네가 잘하고 싶은 일이 무엇인지 들려주게.',
+  arendt: '반가워요. 오늘 어떤 일을 했는지부터 이야기해 볼까요?',
+  weil: '어서 와요. 지금 무엇에 주의를 빼앗기고 있나요?',
 }
 
 const QUESTIONS: Record<string, string> = {
-  socrates: '그 일에서 가장 바꾸고 싶은 것은 무엇인가?',
-  seneca: '그중 그대가 바꿀 수 있는 부분은 어디까지인가?',
+  epictetus: '그 일에서 자네가 바꿀 수 있는 부분은 어디까지인가?',
+  nietzsche: '오늘을 영원히 다시 살아야 한다면, 무엇을 바꾸겠나?',
+  marx: '그 일의 결과는 누구에게 돌아가나?',
   camus: '그 반복 안에 자네가 스스로 고른 것은 있나?',
+  zhuangzi: '꼭 쓸모 있는 사람이어야만 하는가?',
+  epicurus: '오늘 업무 사이에 자네만의 작은 즐거움은 있었나?',
+  aristotle: '그 일을 잘 해냈을 때 자네는 어떤 사람이 되어 있나?',
+  arendt: '그 일은 노동인가요, 작업인가요, 아니면 행위인가요?',
+  weil: '그 일에 온전히 주의를 기울인 순간이 있었나요?',
 }
 
 const ADVICE: Record<string, string> = {
-  socrates: '"캐묻지 않는 삶은 살 가치가 없다." 답을 서두르지 말고 질문을 하나 더 품어 보게.',
-  seneca: '"우리는 현실보다 상상 속에서 더 자주 괴로워한다." 오늘 할 수 있는 한 가지만 정하게.',
+  epictetus: '"우리를 괴롭히는 것은 일이 아니라 일에 대한 생각이다." 생각부터 나눠 보게.',
+  nietzsche: '지겹다면 부숴 버리게! 같은 일도 자네 방식으로 다시 쓰면 창조일세.',
+  marx: '자네가 만든 것에서 자네가 빠져 있다면, 지치는 게 당연하네.',
   camus: '"시지프는 행복하다고 상상해야 한다." 반복 속에서 자네만의 의미를 골라 보게.',
+  zhuangzi: '쓸모없는 나무가 오래 사는 법이지. 오늘은 조금 쓸모없어도 괜찮네.',
+  epicurus: '일 끝나면 좋아하는 커피 한 잔을 상으로 주게. 작은 즐거움이 하루를 버티게 하네.',
+  aristotle: '탁월함은 습관일세. 오늘 하나만 어제보다 낫게 해 보게.',
+  arendt: '생각 없이 반복하는 게 가장 위험해요. 오늘 한 줄은 당신의 생각으로 써 보세요.',
+  weil: '주의는 가장 드문 너그러움이에요. 한 가지 일에만 온전히 머물러 보세요.',
 }
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
