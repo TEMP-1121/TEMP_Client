@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { ChevronLeft } from 'lucide-react'
 import { Link, useNavigate } from 'react-router'
 
-import EndChatDialog from '@/components/dialog/chat/EndChatDialog'
+import GiftRecommendationSheet from '@/components/dialog/chat/GiftRecommendationSheet'
 import ChatInput from '@/components/widgets/chat/ChatInput'
 import { useAutoScroll } from '@/components/widgets/chat/hooks/useAutoScroll'
 import PhilosopherAvatar from '@/components/widgets/philosopher/PhilosopherAvatar'
@@ -25,7 +25,8 @@ export default function ChatPage() {
   const error = useChatStore((s) => s.error)
   const sendMessage = useChatStore((s) => s.sendMessage)
   const endConversation = useChatStore((s) => s.endConversation)
-  const [confirmingEnd, setConfirmingEnd] = useState(false)
+  const [showingGiftSheet, setShowingGiftSheet] = useState(false)
+  const [giftedKeys, setGiftedKeys] = useState<string[]>([])
   const philosophers = usePhilosopherStore((s) => s.philosophers)
   const nameOf = (key: string) => philosophers.find((p) => p.key === key)?.name ?? key
 
@@ -110,7 +111,7 @@ export default function ChatPage() {
           ) : (
             <div className="flex flex-col gap-3 p-4">
               <button
-                onClick={() => setConfirmingEnd(true)}
+                onClick={() => setShowingGiftSheet(true)}
                 disabled={sending}
                 className="border border-border-strong py-3 text-body-16-semibold disabled:text-text-disabled"
               >
@@ -130,12 +131,19 @@ export default function ChatPage() {
         </>
       )}
 
-      {confirmingEnd && conversation && (
-        <EndChatDialog
-          onCancel={() => setConfirmingEnd(false)}
-          onConfirm={() => {
+      {showingGiftSheet && conversation && (
+        <GiftRecommendationSheet
+          personaKeys={conversation.personaKeys}
+          giftedKeys={giftedKeys}
+          onClose={() => setShowingGiftSheet(false)}
+          onGift={(personaKey) =>
+            setGiftedKeys((current) =>
+              current.includes(personaKey) ? current : [...current, personaKey],
+            )
+          }
+          onEndConversation={() => {
             endConversation(conversation.conversationId)
-            setConfirmingEnd(false)
+            setShowingGiftSheet(false)
           }}
         />
       )}
