@@ -14,7 +14,7 @@ type PhilosopherMessageProps = {
 export default function PhilosopherMessage({ personaKey, name, text, advice = false, quote }: PhilosopherMessageProps) {
   return (
     <div className="flex gap-2">
-      <PhilosopherAvatar personaKey={personaKey} name={name} className="size-7.5" />
+      <PhilosopherAvatar personaKey={personaKey} className="size-7.5" />
       <div className="flex min-w-0 flex-col items-start gap-1">
         <span className="text-caption-12-bold text-text-secondary">{name}</span>
         <div

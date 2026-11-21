@@ -19,7 +19,7 @@ export default function TypingIndicator({ personaKey, name }: TypingIndicatorPro
   return (
     <div role="status" className="relative flex items-center gap-2">
       {personaKey && (
-        <PhilosopherAvatar personaKey={personaKey} name={name} className="size-5 text-caption-10-bold" />
+        <PhilosopherAvatar personaKey={personaKey} className="size-5" />
       )}
       <span aria-hidden className="flex h-5 w-12.5 items-center justify-between rounded-full bg-background-subtle px-3">
         {DOT_DELAYS.map((delay) => (

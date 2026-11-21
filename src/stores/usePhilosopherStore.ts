@@ -7,12 +7,6 @@ import type { PhilosopherProfile } from '@/types/philosopher'
 
 export const MAX_PHILOSOPHERS = 3
 
-// 아바타 이니셜 폰트(Noto Sans KR)는 그 글자를 처음 그릴 때 받기 시작해 첫 철학자의 이니셜만 늦게 뜬다. 목록이 정해지면 미리 받아 둔다
-const preloadInitials = (philosophers: PhilosopherProfile[]) =>
-  document.fonts.load('700 1em "Noto Sans KR"', philosophers.map((p) => p.name[0]).join('')).catch(() => {})
-
-preloadInitials(PHILOSOPHERS)
-
 type Persona = {
   personaKey: string
   name: string
