@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 import LoadingScreen from '@/components/common/LoadingScreen';
-import PhilosopherImage from '@/components/widgets/philosopher/PhilosopherImage';
+import PhilosopherAvatar from '@/components/widgets/philosopher/PhilosopherAvatar';
 import PhilosopherSelectCard from '@/components/widgets/philosopher/PhilosopherSelectCard';
 import { useChatStore } from '@/stores/useChatStore';
 import {
@@ -82,16 +82,20 @@ export default function PhilosopherSelectPage() {
               선택한 철학자
             </span>
             <div className='flex -space-x-1.5' aria-hidden>
-              {Array.from({ length: MAX_PHILOSOPHERS }, (_, index) => (
-                <span
-                  key={selected[index] ?? index}
-                  className='flex size-6.5 items-center justify-center overflow-hidden rounded-full border-2 border-border-inverse bg-background-subtle'
-                >
-                  {selected[index] && (
-                    <PhilosopherImage personaKey={selected[index]} className='size-4' />
-                  )}
-                </span>
-              ))}
+              {Array.from({ length: MAX_PHILOSOPHERS }, (_, index) =>
+                selected[index] ? (
+                  <PhilosopherAvatar
+                    key={selected[index]}
+                    personaKey={selected[index]}
+                    className='size-6.5 border-2 border-border-inverse'
+                  />
+                ) : (
+                  <span
+                    key={index}
+                    className='size-6.5 rounded-full border-2 border-border-inverse bg-background-subtle'
+                  />
+                ),
+              )}
             </div>
           </div>
           <span className='text-caption-12-regular tabular-nums text-text-tertiary'>
