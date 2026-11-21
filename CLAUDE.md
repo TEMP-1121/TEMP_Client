@@ -104,6 +104,7 @@ export const useFeedStore = create<FeedState>()((set) => ({
 - `VITE_`로 시작하는 값은 빌드 결과 JS에 그대로 들어가 누구나 볼 수 있음. API 키·비밀번호 같은 비밀값은 넣지 않기 (서버에서 처리)
 - 서버 응답 형식은 `ApiResponse<T>` (`{ code, message, data }`, `src/types/api.ts`). 필드 검증 에러는 `FieldError[]`
 - 에러 메시지는 `handleApiError(e)`로 한국어 문장으로 변환해서 표시. 에러 코드 분기는 `getApiErrorCode(e)` (스토어마다 따로 만들지 않기)
+- 채팅 답변은 SSE로 철학자별로 하나씩 받는다 (`useChatStore`의 `onTyping`·`onReply`). 명세 확정 전이라 지금은 `lib/dummyChat.ts`가 흉내 냄. 마감 전 반드시 삭제
 - 인증은 카카오 OAuth + 세션 쿠키(JSESSIONID). 인증 관련 요청은 `withCredentials: true`, 가입 POST는 `X-CSRF-TOKEN` 헤더 (`useAuthStore` 참고)
 
 ## 스타일
