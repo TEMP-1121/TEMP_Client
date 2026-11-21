@@ -1,10 +1,40 @@
 @import "tailwindcss" source("../src");
 
+/* 에이투지체 (상업 사용·재배포 가능, 폰트 자체 판매만 금지. 출처: 눈누 projectnoonnu/2601-6). 글자 스타일 토큰이 쓰는 400·500·600·700만 public/fonts/a2z에 둔다 */
+@font-face {
+  font-family: "A2Z";
+  src: url("/fonts/a2z/A2Z-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "A2Z";
+  src: url("/fonts/a2z/A2Z-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "A2Z";
+  src: url("/fonts/a2z/A2Z-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "A2Z";
+  src: url("/fonts/a2z/A2Z-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
 @theme {
   --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
     "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
   /* 철학자 아바타 이니셜·홈 철학자 고르기 버튼 (시안 지정). index.html에서 500·700만 불러온다 */
   --font-noto: "Noto Sans KR", "Pretendard Variable", Pretendard, sans-serif;
+  --font-a2z: "A2Z", "Pretendard Variable", Pretendard, sans-serif;
 
   /* 홈 철학자 고르기 버튼·빠르게 시작하기 모서리 (홈 시안 기준) */
   --radius-card: 10px;
