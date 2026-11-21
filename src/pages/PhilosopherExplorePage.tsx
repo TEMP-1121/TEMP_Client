@@ -13,7 +13,7 @@ export default function PhilosopherExplorePage() {
 
   const startChat = (philosopher: PhilosopherProfile) => {
     const { selectedIds, toggleSelect, closeCard } = usePhilosopherStore.getState()
-    if (!selectedIds.includes(philosopher.personaKey)) toggleSelect(philosopher.personaKey)
+    if (!selectedIds.includes(philosopher.key)) toggleSelect(philosopher.key)
     closeCard()
     navigate('/philosophers')
   }
@@ -30,7 +30,7 @@ export default function PhilosopherExplorePage() {
         className="mt-5"
         renderItem={(philosopher) => (
           <button
-            key={philosopher.personaKey}
+            key={philosopher.key}
             type="button"
             onClick={() => openCard(philosopher)}
             className="block text-left"

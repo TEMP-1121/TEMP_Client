@@ -1,10 +1,12 @@
 import { create } from 'zustand'
 
+import { PHILOSOPHERS } from '@/lib/philosophers'
 import type { PhilosopherProfile } from '@/types/philosopher'
 
 export const MAX_PHILOSOPHERS = 3
 
 type PhilosopherState = {
+  philosophers: PhilosopherProfile[]
   selectedIds: string[]
   cardPhilosopher: PhilosopherProfile | null
   toggleSelect: (id: string) => boolean
@@ -14,6 +16,7 @@ type PhilosopherState = {
 }
 
 export const usePhilosopherStore = create<PhilosopherState>()((set, get) => ({
+  philosophers: PHILOSOPHERS,
   selectedIds: [],
   cardPhilosopher: null,
 

@@ -3,7 +3,7 @@ import type { PhilosopherProfile } from '@/types/philosopher'
 // 철학자는 디자인 시스템의 9명(--color-philosopher-*)으로 고정이라 서버에서 받지 않는다
 export const PHILOSOPHERS: PhilosopherProfile[] = [
   {
-    personaKey: 'epictetus',
+    key: 'epictetus',
     name: '에픽테토스',
     description: '내게 달린 선택에 집중해요.',
     tags: ['통제', '선택'],
@@ -12,7 +12,7 @@ export const PHILOSOPHERS: PhilosopherProfile[] = [
     conversationStyle: '구분하기, 담담한 조언',
   },
   {
-    personaKey: 'nietzsche',
+    key: 'nietzsche',
     name: '니체',
     description: '남의 성공 기준을 의심하고 내 기준을 세워요.',
     tags: ['내기준', '자기극복'],
@@ -21,7 +21,7 @@ export const PHILOSOPHERS: PhilosopherProfile[] = [
     conversationStyle: '도발, 강한 격려',
   },
   {
-    personaKey: 'marx',
+    key: 'marx',
     name: '마르크스',
     description: '누가 일을 결정하는지 보고, 바꿀 조건을 찾아요.',
     tags: ['노동', '구조'],
@@ -30,7 +30,7 @@ export const PHILOSOPHERS: PhilosopherProfile[] = [
     conversationStyle: '구조 분석, 질문',
   },
   {
-    personaKey: 'camus',
+    key: 'camus',
     name: '카뮈',
     description: '답이 없는 반복 속에서 내가 취할 태도를 찾아요.',
     tags: ['반복', '태도'],
@@ -39,7 +39,7 @@ export const PHILOSOPHERS: PhilosopherProfile[] = [
     conversationStyle: '공감, 담백한 위로',
   },
   {
-    personaKey: 'zhuangzi',
+    key: 'zhuangzi',
     name: '장자',
     description: '당연한 기준을 뒤집어 다른 길을 보여줘요.',
     tags: ['관점전환', '자유'],
@@ -48,7 +48,7 @@ export const PHILOSOPHERS: PhilosopherProfile[] = [
     conversationStyle: '우화, 비틀어 보기',
   },
   {
-    personaKey: 'epicurus',
+    key: 'epicurus',
     name: '에피쿠로스',
     description: '꼭 필요한 욕구와 불안을 키우는 욕구를 나눠요.',
     tags: ['욕구', '작은행복'],
@@ -57,7 +57,7 @@ export const PHILOSOPHERS: PhilosopherProfile[] = [
     conversationStyle: '차분한 정리, 작은 제안',
   },
   {
-    personaKey: 'aristotle',
+    key: 'aristotle',
     name: '아리스토텔레스',
     description: '되고 싶은 사람에 가까워지는 습관을 제안해요.',
     tags: ['습관', '성장'],
@@ -66,7 +66,7 @@ export const PHILOSOPHERS: PhilosopherProfile[] = [
     conversationStyle: '단계별 제안, 실천',
   },
   {
-    personaKey: 'arendt',
+    key: 'arendt',
     name: '한나 아렌트',
     description: '동료와 함께 새롭게 시작할 일을 찾아요.',
     tags: ['협업', '새시작'],
@@ -75,7 +75,7 @@ export const PHILOSOPHERS: PhilosopherProfile[] = [
     conversationStyle: '대화 유도, 관계 짚기',
   },
   {
-    personaKey: 'weil',
+    key: 'weil',
     name: '시몬 베유',
     description: '일하는 사람을 지치게 하는 업무 조건을 짚어요.',
     tags: ['업무조건', '번아웃'],
