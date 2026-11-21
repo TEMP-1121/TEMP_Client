@@ -17,7 +17,7 @@ const withSubject = (name: string) => {
 // 누가 답하는지 정해지기 전(응답 대기)에는 점 묶음만 보여 준다
 export default function TypingIndicator({ personaKey, name }: TypingIndicatorProps) {
   return (
-    <div role="status" className="flex items-center gap-2">
+    <div role="status" className="relative flex items-center gap-2">
       {personaKey && (
         <PhilosopherAvatar personaKey={personaKey} name={name} className="size-5 text-caption-10-bold" />
       )}

@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
 import KakaoRetry from '@/components/widgets/auth/KakaoRetry'
+import { takeReturnTo } from '@/lib/authRedirect'
 import { useAuthStore } from '@/stores/useAuthStore'
 
 export default function KakaoCallbackPage() {
@@ -19,7 +20,7 @@ export default function KakaoCallbackPage() {
   useEffect(() => {
     // 뒤로 가기로 콜백 화면에 돌아오면 확인을 다시 하게 되므로 replace로 이동한다
     if (status === 'signupRequired') navigate('/signup', { replace: true })
-    if (status === 'existing') navigate('/onboarding', { replace: true })
+    if (status === 'existing') navigate(takeReturnTo() ?? '/onboarding', { replace: true })
   }, [status, navigate])
 
   if (status === 'failed') {

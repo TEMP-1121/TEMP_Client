@@ -60,7 +60,8 @@ export default function PhilosopherSelectPage() {
             <label
               key={philosopher.key}
               className={cn(
-                'flex h-58 cursor-pointer flex-col rounded-xl border-2 bg-background-base p-3 transition-colors',
+                // relative가 없으면 sr-only 체크박스가 스크롤 영역 밖(레이아웃 기준)에 놓여, 누를 때 페이지 전체가 스크롤된다
+                'relative flex h-58 cursor-pointer flex-col rounded-xl border-2 bg-background-base p-3 transition-colors',
                 isSelected ? 'border-accent-primary' : 'border-transparent',
                 isDisabled && 'cursor-not-allowed opacity-45',
               )}
