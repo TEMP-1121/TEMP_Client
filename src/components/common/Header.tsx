@@ -2,6 +2,7 @@ import { Menu } from 'lucide-react'
 import { useState } from 'react'
 
 import ConversationSidebar from '@/components/common/ConversationSidebar'
+import Wordmark from '@/components/common/Wordmark'
 
 export default function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -18,7 +19,9 @@ export default function Header() {
         >
           <Menu className="size-6 text-icon-secondary" aria-hidden />
         </button>
-        <h1 className="text-center text-heading-18-bold text-text-primary">일세</h1>
+        <h1 className="flex justify-center">
+          <Wordmark className="h-5" />
+        </h1>
       </header>
       {sidebarOpen && <ConversationSidebar onClose={() => setSidebarOpen(false)} />}
     </>
