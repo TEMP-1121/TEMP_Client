@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router'
 
 import GiftRecommendationSheet from '@/components/dialog/chat/GiftRecommendationSheet'
 import ChatInput from '@/components/widgets/chat/ChatInput'
+import ChatPauseNotice from '@/components/widgets/chat/ChatPauseNotice'
 import { useAutoScroll } from '@/components/widgets/chat/hooks/useAutoScroll'
 import PhilosopherAvatar from '@/components/widgets/philosopher/PhilosopherAvatar'
 import { useChatStore } from '@/stores/useChatStore'
@@ -95,6 +96,7 @@ export default function ChatPage() {
                 ))}
               </div>
             ))}
+            {conversation.paused && <ChatPauseNotice className="mx-4" />}
             {typingKey ? (
               <p className={status}>{withSubject(nameOf(typingKey))} 입력 중…</p>
             ) : (
@@ -108,6 +110,8 @@ export default function ChatPage() {
             <p className="border-t border-border-normal p-4 text-center text-body-14-regular text-text-tertiary">
               이 상담은 종료되었어요
             </p>
+          ) : conversation.paused ? (
+            <ChatInput disabled placeholder="철학자들에게 고민을 이야기해 보세요" onSend={async () => false} />
           ) : (
             <div className="flex flex-col gap-3 p-4">
               <button

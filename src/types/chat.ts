@@ -17,6 +17,7 @@ export type Conversation = {
   personaKeys: string[]
   turns: Turn[]
   ended?: boolean
+  paused?: boolean
 }
 
 export type CreateConversationResponse = {
