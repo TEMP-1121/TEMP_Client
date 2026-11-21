@@ -10,6 +10,7 @@ import PhilosopherMessage from '@/components/widgets/chat/PhilosopherMessage'
 import TypingIndicator from '@/components/widgets/chat/TypingIndicator'
 import UserMessage from '@/components/widgets/chat/UserMessage'
 import { useAutoScroll } from '@/components/widgets/chat/hooks/useAutoScroll'
+import { cn } from '@/lib/utils'
 import { useChatStore } from '@/stores/useChatStore'
 import { usePhilosopherStore } from '@/stores/usePhilosopherStore'
 import type { MessageType } from '@/types/chat'
@@ -86,35 +87,48 @@ export default function ChatPage() {
         </div>
       ) : (
         <>
-          <div ref={ref} onScroll={onScroll} className="flex flex-1 flex-col gap-4 overflow-y-auto bg-background-surface p-4">
-            {conversation.turns.map((turn) => (
-              <div key={turn.turnId} className="flex flex-col gap-4">
-                {turn.message && (
-                  <UserMessage
-                    text={turn.message}
-                    failed={turn.failed}
-                    retryDisabled={sending}
-                    onRetry={() => {
-                      stickToBottom()
-                      retryTurn(conversation.conversationId, turn.turnId)
-                    }}
-                  />
-                )}
-                {turn.replies.map((reply) => (
-                  <PhilosopherMessage
-                    key={reply.personaKey}
-                    personaKey={reply.personaKey}
-                    name={nameOf(reply.personaKey)}
-                    text={reply.text}
-                    advice={turn.type === 'advice'}
-                    quote={reply.quote}
-                  />
-                ))}
-              </div>
-            ))}
-            {conversation.paused && <ChatPauseNotice className="mx-4" />}
-            {(typingKey || sending) && (
-              <TypingIndicator personaKey={typingKey ?? undefined} name={typingKey ? nameOf(typingKey) : undefined} />
+          <div className="relative flex min-h-0 flex-1 flex-col">
+            <div
+              ref={ref}
+              onScroll={onScroll}
+              className={cn(
+                'flex flex-1 flex-col gap-4 overflow-y-auto bg-background-surface p-4',
+                // 위에 떠 있는 솔루션 버튼(과 보충 질문 안내) 높이만큼 비워 둬야 맨 아래 메시지가 가려지지 않는다
+                !conversation.paused && (questionTurnId ? 'pb-34' : 'pb-20'),
+              )}
+            >
+              {conversation.turns.map((turn) => (
+                <div key={turn.turnId} className="flex flex-col gap-4">
+                  {turn.message && (
+                    <UserMessage
+                      text={turn.message}
+                      failed={turn.failed}
+                      retryDisabled={sending}
+                      onRetry={() => {
+                        stickToBottom()
+                        retryTurn(conversation.conversationId, turn.turnId)
+                      }}
+                    />
+                  )}
+                  {turn.replies.map((reply) => (
+                    <PhilosopherMessage
+                      key={reply.personaKey}
+                      personaKey={reply.personaKey}
+                      name={nameOf(reply.personaKey)}
+                      text={reply.text}
+                      advice={turn.type === 'advice'}
+                      quote={reply.quote}
+                    />
+                  ))}
+                </div>
+              ))}
+              {conversation.paused && <ChatPauseNotice className="mx-4" />}
+              {(typingKey || sending) && (
+                <TypingIndicator personaKey={typingKey ?? undefined} name={typingKey ? nameOf(typingKey) : undefined} />
+              )}
+            </div>
+            {!conversation.paused && (
+              <ChatActions disabled={sending} questionTurnId={questionTurnId} onSolution={(text) => void send(text, 'advice')} />
             )}
           </div>
 
@@ -127,7 +141,6 @@ export default function ChatPage() {
             />
           ) : (
             <>
-              <ChatActions disabled={sending} questionTurnId={questionTurnId} onSolution={(text) => void send(text, 'advice')} />
               <ChatInput
                 disabled={sending}
                 placeholder="철학자들에게 고민을 이야기해 보세요"
