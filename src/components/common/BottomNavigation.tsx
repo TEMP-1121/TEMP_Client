@@ -4,7 +4,7 @@ import { NavLink } from 'react-router'
 import { cn } from '@/lib/utils'
 
 const tabs: { to: string; label: string; icon: LucideIcon }[] = [
-  { to: '/', label: '홈', icon: House },
+  { to: '/home', label: '홈', icon: House },
   { to: '/mypage', label: '마이', icon: User },
 ]
 
