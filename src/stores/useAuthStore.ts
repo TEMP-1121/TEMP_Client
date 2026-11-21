@@ -37,15 +37,16 @@ const withSession = { withCredentials: true }
 // 갱신할 때마다 refresh 쿠키가 교체돼, 동시에 여러 번 보내면 뒤 요청은 이미 바뀐 쿠키로 실패한다. 진행 중인 갱신 하나를 같이 기다린다
 let refreshing: Promise<string | null> | null = null
 
-// 가입 화면 없이 카카오 정보만으로 가입한다. 서버가 빈 필드(전화번호 등)를 허용하기로 해 기본값을 그대로 보낸다
+// 가입 화면 없이 카카오 정보만으로 가입한다. 서버는 필드를 빼는 건 허용하지만 보낸 값은 검증한다(빈 문자열은 거절).
+// 그래서 카카오가 준 값만 넣고 전화번호와 없는 값은 아예 보내지 않는다
 async function signUpWithKakao() {
   const prefill = async () =>
     (await api.get<ApiResponse<SignupPrefill>>('/api/v1/auth/signup', withSession)).data.data
-  const post = (csrfToken: string, form: { name: string; email: string; phone: string }) =>
+  const post = (csrfToken: string, form: { name?: string; email?: string }) =>
     api.post('/api/v1/auth/signup', form, { ...withSession, headers: { 'X-CSRF-TOKEN': csrfToken } })
 
   let { name, email, csrfToken } = await prefill()
-  const form = { name: name ?? '', email: email ?? '', phone: '' }
+  const form = { ...(name ? { name } : {}), ...(email ? { email } : {}) }
   try {
     await post(csrfToken, form)
   } catch (e) {
