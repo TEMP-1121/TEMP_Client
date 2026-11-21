@@ -1,5 +1,5 @@
 import { useState, type KeyboardEvent } from 'react'
-import { SendHorizontal } from 'lucide-react'
+import { ArrowUp } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 
@@ -45,7 +45,7 @@ export default function ChatInput({
       }}
       className={cn('flex items-end gap-2 border-t border-border-normal bg-background-base p-3', className)}
     >
-      {/* text-base(16px) 미만이면 iOS가 포커스할 때 화면을 확대한다 */}
+      {/* 시안대로 14px. iOS는 16px 미만 입력창에 포커스하면 화면을 확대한다 (docs/checklist.md 참고) */}
       <textarea
         value={text}
         onChange={(e) => {
@@ -53,19 +53,20 @@ export default function ChatInput({
           onTextChange?.(e.target.value)
         }}
         onKeyDown={handleKeyDown}
+        disabled={disabled}
         rows={1}
         maxLength={2000}
         placeholder={placeholder}
         aria-label="메시지"
-        className="max-h-32 flex-1 resize-none rounded-2xl bg-background-subtle px-4 py-2 text-body-16-regular outline-none placeholder:text-text-placeholder"
+        className="min-h-12 max-h-32 flex-1 resize-none rounded-2xl bg-background-subtle px-4.5 py-3.5 text-body-14-regular text-text-primary outline-none placeholder:text-text-placeholder"
       />
       <button
         type="submit"
         disabled={!canSend}
         aria-label="보내기"
-        className="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent-primary text-text-inverse active:bg-accent-pressed disabled:bg-accent-disabled"
+        className="flex size-12 shrink-0 items-center justify-center rounded-full bg-accent-primary text-text-inverse active:bg-accent-pressed disabled:bg-accent-disabled"
       >
-        <SendHorizontal className="size-5" />
+        <ArrowUp className="size-6" />
       </button>
     </form>
   )

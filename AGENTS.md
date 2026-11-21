@@ -44,7 +44,7 @@ public/assets/           # 이미지(PNG). `/assets/파일명.png`로 참조
 - 기능 폴더 안에 `hooks/`로 관련 훅 분리 가능
 - 여러 곳에서 쓰는 타입이 생기면 `src/types/<도메인>.ts`. 한 곳에서만 쓰면 그 파일 안에 둔다
 - 입력창(`TextField`) 같은 범용 폼 부품은 기능 이름을 붙이지 말고 `common/`에 (`SignupTextField` ✗ → `common/TextField` ○)
-- 레이아웃: `components/common/Layout.tsx`가 468px(`max-w-117`) 중앙 프레임 + `Header` + `<main>`(`<Outlet />`) + `BottomNavigation`
+- 레이아웃: `components/common/Layout.tsx`가 402px(`max-w-100.5`, 디자인 시안 기준) 중앙 프레임 + `Header` + `<main>`(`<Outlet />`) + `BottomNavigation`
   - 페이지는 `<main>` 안에 들어가므로 최상위를 `<section className="flex-1 ...">`로 (`main`, `min-h-dvh` 쓰지 않기)
   - 하단 탭 추가: `BottomNavigation.tsx`의 `tabs` 배열에 한 줄 + `main.tsx`에 라우트
   - 디자인 확정 전 임시 구현. 디자인이 나오면 Header/BottomNavigation은 새로 만든다
@@ -119,7 +119,7 @@ export const useFeedStore = create<FeedState>()((set) => ({
   - 글자 스타일은 `cn()`이 글자 크기로 인식하게 `lib/utils.ts`에 등록돼 있음. 새 글자 스타일 접두어(`title`/`heading`/`body`/`caption` 외)를 만들면 거기도 추가
 - 조건부·덮어쓰기 클래스는 `cn()` (`@/lib/utils`). `common/` 컴포넌트는 `className` prop을 받아 `cn()`으로 병합
 - Tailwind는 완전한 클래스 문자열만 스캔 — `bg-${x}` 동적 조합 금지
-- 임의값(`[...]`)보다 기본 스케일 클래스 우선. v4는 spacing이 `값/4` 숫자로 다 표현됨 (`max-w-[468px]` → `max-w-117`, `w-[18px]` → `w-4.5`, `scale-[.98]` → `scale-98`)
+- 임의값(`[...]`)보다 기본 스케일 클래스 우선. v4는 spacing이 `값/4` 숫자로 다 표현됨 (`max-w-[402px]` → `max-w-100.5`, `w-[18px]` → `w-4.5`, `scale-[.98]` → `scale-98`)
   - 임의값은 스케일로 표현 안 되는 값만 (예: `grid-cols-[36px_1fr]`). 반복되는 색·크기는 `@theme` 토큰으로
   - IntelliSense `suggestCanonicalClasses` 경고가 뜨면 제안대로 바꾼다
 - `.vscode/settings.json`이 `*.css`를 `tailwindcss` 언어로 연다 (VS Code 기본 CSS 검사기가 `source()`·`@apply`·`@theme`을 에러로 표시하기 때문). Tailwind CSS IntelliSense 확장 필요
