@@ -15,6 +15,7 @@ import NotFoundPage from '@/pages/NotFoundPage';
 import OnboardingPage from '@/pages/OnboardingPage';
 import PhilosopherExplorePage from '@/pages/PhilosopherExplorePage';
 import PhilosopherSelectPage from '@/pages/PhilosopherSelectPage';
+import SplashPage from '@/pages/SplashPage';
 
 import './index.css';
 
@@ -25,7 +26,11 @@ const router = createBrowserRouter([
   {
     element: <Layout />,
     children: [
-      { element: <GuestOnly />, children: [{ path: '/', element: <LoginPage /> }] },
+      { path: '/splash', element: <SplashPage /> },
+      {
+        element: <GuestOnly />,
+        children: [{ path: '/', element: <LoginPage /> }],
+      },
       {
         element: <RequireAuth />,
         children: [
@@ -39,7 +44,9 @@ const router = createBrowserRouter([
           { path: '/mypage', element: <MyPage /> },
         ],
       },
-      ...(import.meta.env.DEV ? [{ path: '/chat/test', element: <ChatPauseTestPage /> }] : []),
+      ...(import.meta.env.DEV
+        ? [{ path: '/chat/test', element: <ChatPauseTestPage /> }]
+        : []),
       { path: '/auth/kakao/callback', element: <KakaoCallbackPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
