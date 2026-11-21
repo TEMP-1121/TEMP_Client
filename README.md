@@ -6,9 +6,6 @@
 <img src=".github/assets/ilse-logo.png" alt="일세 로고" width="300" />
 
 
-### -
-
-
 <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white" />
 <img src="https://img.shields.io/badge/TypeScript-7-3178C6?style=flat-square&logo=typescript&logoColor=white" />
 <img src="https://img.shields.io/badge/Vite-8-646CFF?style=flat-square&logo=vite&logoColor=white" />
