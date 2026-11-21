@@ -23,7 +23,7 @@ description: 현재 변경사항(staged/unstaged diff)을 분석해 프로젝트
 ## 컨벤션
 
 - 형식: `타입: 한국어 요약`. 필요하면 `—` 뒤에 핵심 내용.
-- 타입: `feat` 기능 추가 / `fix` 버그 수정 / `style` UI·스타일만 / `refactor` 동작 변화 없는 구조 변경 / `chore` 설정·의존성·빌드·CLAUDE.md·README
+- 타입: `feat` 기능 추가 / `fix` 버그 수정 / `style` UI·스타일만 / `refactor` 동작 변화 없는 구조 변경 / `chore` 설정·의존성·빌드·AGENTS.md·README
 - 의도 중심. 파일명 나열 금지. 이모지 금지.
 - 예:
   - `feat: 피드 카드 추가 — 작성자 닉네임·썸네일 표시`

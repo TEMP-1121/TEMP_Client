@@ -3,6 +3,8 @@
 `../temp_webview`(Expo + react-native-webview 셸)이 배포된 https 주소로 띄우는 웹.
 모바일 전용, 페이지 여러 개.
 
+> 팀 규칙은 이 파일 하나에만 적는다. Codex는 이 파일을, Claude Code는 `CLAUDE.md`(`@AGENTS.md` 한 줄)로 같은 내용을 읽는다. `CLAUDE.md`에 규칙을 직접 적지 않기
+
 ## 스택 (바꾸지 않기)
 
 - Vite + React + TypeScript. Next.js 쓰지 않음 (SSR 없음, `'use client'` 불필요)
@@ -40,7 +42,8 @@ public/assets/           # 이미지(PNG). `/assets/파일명.png`로 참조
 - 판단 기준: 여러 페이지 공통 → `common/`, 특정 기능 전용 → `widgets/<기능>/`, 모달 → `dialog/<기능>/`
 - `ui/` 폴더 없음 (shadcn 미사용). 기본 부품도 `common/`에 직접 만든다
 - 기능 폴더 안에 `hooks/`로 관련 훅 분리 가능
-- 여러 곳에서 쓰는 타입이 생기면 `src/types/`. 한 곳에서만 쓰면 그 파일 안에 둔다
+- 여러 곳에서 쓰는 타입이 생기면 `src/types/<도메인>.ts`. 한 곳에서만 쓰면 그 파일 안에 둔다
+- 입력창(`TextField`) 같은 범용 폼 부품은 기능 이름을 붙이지 말고 `common/`에 (`SignupTextField` ✗ → `common/TextField` ○)
 - 레이아웃: `components/common/Layout.tsx`가 468px(`max-w-117`) 중앙 프레임 + `Header` + `<main>`(`<Outlet />`) + `BottomNavigation`
   - 페이지는 `<main>` 안에 들어가므로 최상위를 `<section className="flex-1 ...">`로 (`main`, `min-h-dvh` 쓰지 않기)
   - 하단 탭 추가: `BottomNavigation.tsx`의 `tabs` 배열에 한 줄 + `main.tsx`에 라우트
@@ -67,32 +70,32 @@ public/assets/           # 이미지(PNG). `/assets/파일명.png`로 참조
 - 로컬 UI 상태(입력값, 모달 열림)는 `useState`
 
 ```ts
-import { create } from 'zustand';
-import { api, handleApiError } from '@/lib/api';
+import { create } from 'zustand'
+import { api, handleApiError } from '@/lib/api'
 
 type FeedState = {
-  items: Item[];
-  loading: boolean;
-  error: string | null;
-  fetchFeed: () => Promise<void>;
-};
+  items: Item[]
+  loading: boolean
+  error: string | null
+  fetchFeed: () => Promise<void>
+}
 
 export const useFeedStore = create<FeedState>()((set) => ({
   items: [],
   loading: false,
   error: null,
   fetchFeed: async () => {
-    set({ loading: true, error: null });
+    set({ loading: true, error: null })
     try {
-      const { data } = await api.get<Item[]>('/feed');
-      set({ items: data });
+      const { data } = await api.get<Item[]>('/feed')
+      set({ items: data })
     } catch (e) {
-      set({ error: handleApiError(e) });
+      set({ error: handleApiError(e) })
     } finally {
-      set({ loading: false });
+      set({ loading: false })
     }
   },
-}));
+}))
 ```
 
 ## API
@@ -101,20 +104,26 @@ export const useFeedStore = create<FeedState>()((set) => ({
 - 호출 위치는 도메인 스토어 (상태 관리 섹션 참고)
 - 주소는 `.env`의 `VITE_API_URL`. 하드코딩 금지
 - `VITE_`로 시작하는 값은 빌드 결과 JS에 그대로 들어가 누구나 볼 수 있음. API 키·비밀번호 같은 비밀값은 넣지 않기 (서버에서 처리)
-- 에러 메시지는 `handleApiError(e)`로 한국어 문장으로 변환해서 표시
-- 로그인/토큰 주입은 아직 없음. 필요해지면 `api.interceptors`에서 `useAuthStore.getState()`로 주입
+- 서버 응답 형식은 `ApiResponse<T>` (`{ code, message, data }`, `src/types/api.ts`). 필드 검증 에러는 `FieldError[]`
+- 에러 메시지는 `handleApiError(e)`로 한국어 문장으로 변환해서 표시. 에러 코드 분기는 `getApiErrorCode(e)` (스토어마다 따로 만들지 않기)
+- 채팅 답변은 SSE로 철학자별로 하나씩 받는다 (`useChatStore`의 `onTyping`·`onReply`). 명세 확정 전이라 지금은 `lib/dummyChat.ts`가 흉내 냄. 마감 전 반드시 삭제
+- 인증은 카카오 OAuth + 세션 쿠키(JSESSIONID). 인증 관련 요청은 `withCredentials: true`, 가입 POST는 `X-CSRF-TOKEN` 헤더 (`useAuthStore` 참고)
 
 ## 스타일
 
 - Tailwind 클래스 우선. 컴포넌트별 CSS 파일 만들지 않기 (전역은 `src/index.css`만)
-- 브랜드 색·폰트는 `src/index.css`의 `@theme`에 토큰으로 정의
+- 브랜드 색·폰트는 `src/index.css`의 `@theme`에 토큰으로 정의 (디자이너 디자인 시스템 그대로)
+  - 화면에서는 시멘틱 토큰만: `bg-background-*`, `text-text-*`, `border-border-*`, `text-icon-*`, `bg-accent-*`, `text-state-*`
+  - `palette-*`(원색 팔레트)와 Tailwind 기본 색(`neutral-900`, `white`, `red-500` …)은 화면에 직접 쓰지 않기
+  - 글자는 `@utility` 글자 스타일 하나로: `text-body-16-regular`, `text-title-24-semibold` 등. `text-sm`·`font-bold` 따로 쓰지 않기
+  - 글자 스타일은 `cn()`이 글자 크기로 인식하게 `lib/utils.ts`에 등록돼 있음. 새 글자 스타일 접두어(`title`/`heading`/`body`/`caption` 외)를 만들면 거기도 추가
 - 조건부·덮어쓰기 클래스는 `cn()` (`@/lib/utils`). `common/` 컴포넌트는 `className` prop을 받아 `cn()`으로 병합
 - Tailwind는 완전한 클래스 문자열만 스캔 — `bg-${x}` 동적 조합 금지
 - 임의값(`[...]`)보다 기본 스케일 클래스 우선. v4는 spacing이 `값/4` 숫자로 다 표현됨 (`max-w-[468px]` → `max-w-117`, `w-[18px]` → `w-4.5`, `scale-[.98]` → `scale-98`)
   - 임의값은 스케일로 표현 안 되는 값만 (예: `grid-cols-[36px_1fr]`). 반복되는 색·크기는 `@theme` 토큰으로
   - IntelliSense `suggestCanonicalClasses` 경고가 뜨면 제안대로 바꾼다
 - `.vscode/settings.json`이 `*.css`를 `tailwindcss` 언어로 연다 (VS Code 기본 CSS 검사기가 `source()`·`@apply`·`@theme`을 에러로 표시하기 때문). Tailwind CSS IntelliSense 확장 필요
-- 클래스 스캔은 `src/`만 (`@import "tailwindcss" source("../src")`). 지우지 않기 — 없으면 CLAUDE.md·문서 속 예시 클래스까지 CSS에 들어감
+- 클래스 스캔은 `src/`만 (`@import "tailwindcss" source("../src")`). 지우지 않기 — 없으면 AGENTS.md·문서 속 예시 클래스까지 CSS에 들어감
 - 높이는 `dvh` 단위 (Layout에서 처리). 모바일 우선
 - 확대 막기(`user-scalable=no`)는 접근성 때문에 넣지 않음
 
@@ -126,6 +135,8 @@ export const useFeedStore = create<FeedState>()((set) => ({
 - safe-area는 셸의 `SafeAreaView`가 처리. 웹에서 `env(safe-area-inset-*)` 넣지 않기
 - 우리 도메인이 아닌 링크는 셸이 휴대폰 기본 브라우저로 엶. 앱 안에서 열어야 하면 셸의 `IN_APP_HOSTS` 수정
 - Android 뒤로 가기는 셸이 WebView 히스토리로 처리 → 페이지 이동은 `<Link>`/`navigate()`로 (히스토리가 쌓이게)
+  - 예외: OAuth 시작처럼 다른 origin(백엔드)으로 가야 하는 이동만 `window.location.assign`
+- 카카오 로그인 흐름은 앱 안에서 이어져야 함 → 셸 `IN_APP_HOSTS`에 백엔드 도메인, `kauth.kakao.com`, `accounts.kakao.com` 필요 (없으면 외부 브라우저로 빠져 앱은 로그인 안 됨)
 - 빌드 타깃 `es2020` 유지 (구형 Android WebView)
 - 4xx는 웹이 직접 화면으로 보여 줘야 함 (`NotFoundPage`). 셸은 5xx만 에러 화면 처리
 - 로그인 없이 첫 화면에서 바로 핵심 기능을 쓸 수 있게 (해커톤 심사용)
@@ -153,11 +164,11 @@ export const useFeedStore = create<FeedState>()((set) => ({
 
 ### 브랜치
 
-| 브랜치     | 용도                                                | 직접 push                     |
-| ---------- | --------------------------------------------------- | ----------------------------- |
-| `main`     | 배포용. Vercel 프로덕션 = 셸 `BASE_URL`이 보는 화면 | 금지 (develop에서 PR로만)     |
-| `develop`  | 배포 전 통합. 개발자들의 작업이 모이는 곳           | 금지 (개인 브랜치에서 PR로만) |
-| `<닉네임>` | 개발자별 작업 브랜치. develop에서 따서 계속 사용    | 본인만                        |
+| 브랜치 | 용도 | 직접 push |
+|---|---|---|
+| `main` | 배포용. Vercel 프로덕션 = 셸 `BASE_URL`이 보는 화면 | 금지 (develop에서 PR로만) |
+| `develop` | 배포 전 통합. 개발자들의 작업이 모이는 곳 | 금지 (개인 브랜치에서 PR로만) |
+| `<닉네임>` | 개발자별 작업 브랜치. develop에서 따서 계속 사용 | 본인만 |
 
 - 개인 브랜치 이름은 영문 소문자 닉네임 (예: `gildong`). 기능마다 새로 따지 않고 같은 브랜치에서 계속 작업
 - 작업 흐름:
@@ -174,8 +185,8 @@ export const useFeedStore = create<FeedState>()((set) => ({
   - 예: `feat: 피드 카드 추가 — 작성자 닉네임·썸네일 표시`, `fix: 탭 이동 시 스크롤 위치 초기화`
 - 타입:
   - `feat` 기능 추가 / `fix` 버그 수정 / `style` UI·스타일만 변경 / `refactor` 동작 변화 없는 구조 변경
-  - `chore` 설정·의존성·빌드·CLAUDE.md·README
+  - `chore` 설정·의존성·빌드·AGENTS.md·README
 - 한 커밋에 한 관심사. 섞이면 나눠서 커밋
 - 한 줄만. 본문 쓰지 않기 (길어지면 커밋을 나눈다)
-- Claude는 커밋·push 하지 않고 `/commit-msg`로 메시지만 제안 (커밋은 개발자가 직접)
+- AI 도구(Claude·Codex)는 커밋·push 하지 않고 메시지만 제안 (커밋은 개발자가 직접). Claude는 `/commit-msg`
 - 커밋 전 `/pre-commit-check`로 규칙·심사 기준 점검 (보고만, 수정은 요청 시)
