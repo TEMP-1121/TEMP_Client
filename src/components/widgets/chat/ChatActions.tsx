@@ -1,4 +1,4 @@
-// 임시: 조언을 요청하는 API·플래그가 정해지기 전까지 이 문장을 사용자 메시지로 보낸다
+// 이 문장을 사용자 메시지로 보이고, 서버에는 type: advice(조언 요청)로 보낸다
 const SOLUTION_REQUEST = '이제 진지한 솔루션을 내놔라'
 
 type ChatActionsProps = {

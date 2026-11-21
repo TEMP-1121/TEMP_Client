@@ -19,8 +19,10 @@ export default function PhilosopherSelectPage() {
   const isFull = selected.length === MAX_PHILOSOPHERS;
 
   function openRoom() {
-    createConversation(selected, draft.trim() || undefined);
-    setDraft('', '');
+    // 방 만들기가 실패하면 홈으로 돌아가 다시 보낼 수 있게, 성공했을 때만 고민을 비운다
+    createConversation(selected, draft.trim() || undefined).then((id) => {
+      if (id) setDraft('', '');
+    });
     navigate('/chat');
   }
 

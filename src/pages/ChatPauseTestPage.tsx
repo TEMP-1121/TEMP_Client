@@ -20,7 +20,7 @@ export default function ChatPauseTestPage() {
           turns: [
             {
               turnId: 'chat-pause-test-turn',
-              type: 'question',
+              type: 'conversation',
               clientMessageId: null,
               message: '매일 같은 보고서만 써서 지겨워요',
               replies: [],
