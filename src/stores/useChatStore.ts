@@ -14,6 +14,7 @@ type ChatState = {
   error: string | null
   createConversation: (personaKeys: string[], firstMessage?: string) => Promise<string | null>
   sendMessage: (conversationId: string, message: string) => Promise<boolean>
+  pauseConversation: (conversationId: string) => void
 }
 
 export const useChatStore = create<ChatState>()((set, get) => {
@@ -129,7 +130,7 @@ export const useChatStore = create<ChatState>()((set, get) => {
 
     sendMessage: async (conversationId, message) => {
       const conversation = get().conversations.find((c) => c.conversationId === conversationId)
-      if (!conversation || get().sending) return false
+      if (!conversation || conversation.paused || get().sending) return false
 
       const pending = userTurn(message)
       const isFirstMessage = !conversation.turns.some((t) => t.message)
@@ -141,5 +142,8 @@ export const useChatStore = create<ChatState>()((set, get) => {
         set({ sending: false, typingKey: null })
       }
     },
+
+    // 위기 신호가 감지된 방은 철학자 대화를 멈추고 상담 전화 안내만 남긴다
+    pauseConversation: (conversationId) => updateConversation(conversationId, (c) => ({ ...c, paused: true })),
   }
 })

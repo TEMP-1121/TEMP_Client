@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dev",
+      "runtimeExecutable": "fnm",
+      "runtimeArgs": ["exec", "--using=24", "yarn.cmd", "dev"],
+      "port": 5173
+    }
+  ]
+}

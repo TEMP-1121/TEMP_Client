@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router'
 import ChatActions from '@/components/widgets/chat/ChatActions'
 import ChatHeader from '@/components/widgets/chat/ChatHeader'
 import ChatInput from '@/components/widgets/chat/ChatInput'
+import ChatPauseNotice from '@/components/widgets/chat/ChatPauseNotice'
 import PhilosopherMessage from '@/components/widgets/chat/PhilosopherMessage'
 import TypingIndicator from '@/components/widgets/chat/TypingIndicator'
 import UserMessage from '@/components/widgets/chat/UserMessage'
@@ -69,6 +70,7 @@ export default function ChatPage() {
                 ))}
               </div>
             ))}
+            {conversation.paused && <ChatPauseNotice className="mx-4" />}
             {(typingKey || sending) && (
               <TypingIndicator personaKey={typingKey ?? undefined} name={typingKey ? nameOf(typingKey) : undefined} />
             )}
@@ -76,13 +78,19 @@ export default function ChatPage() {
 
           {error && <p className="px-4 pt-2 text-body-14-regular text-state-negative">{error}</p>}
 
-          <ChatActions disabled={sending} onSolution={send} />
-          <ChatInput
-            disabled={sending}
-            placeholder="철학자들에게 고민을 이야기해 보세요"
-            className="p-4"
-            onSend={send}
-          />
+          {conversation.paused ? (
+            <ChatInput disabled placeholder="철학자들에게 고민을 이야기해 보세요" className="p-4" onSend={async () => false} />
+          ) : (
+            <>
+              <ChatActions disabled={sending} onSolution={send} />
+              <ChatInput
+                disabled={sending}
+                placeholder="철학자들에게 고민을 이야기해 보세요"
+                className="p-4"
+                onSend={send}
+              />
+            </>
+          )}
         </>
       )}
     </section>
