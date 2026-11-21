@@ -1,4 +1,5 @@
-import PhilosopherAvatar from '@/components/widgets/philosopher/PhilosopherAvatar'
+import PhilosopherImage from '@/components/widgets/philosopher/PhilosopherImage'
+import { SELECTED_CARD_BG } from '@/components/widgets/philosopher/cardBackground'
 import { cn } from '@/lib/utils'
 import type { PhilosopherProfile } from '@/types/philosopher'
 
@@ -13,13 +14,15 @@ export default function PhilosopherCard({ philosopher, selected = false, classNa
   return (
     <span
       className={cn(
-        'flex min-h-55 flex-col gap-6.75 rounded-card border bg-background-base px-3.5 pt-6 pb-3.5 text-left transition-colors',
-        selected ? 'border-border-active' : 'border-transparent',
+        'flex min-h-55 flex-col gap-6.75 rounded-card border px-3.5 pt-6 pb-3.5 text-left transition-colors',
+        selected
+          ? cn('border-border-active', SELECTED_CARD_BG[philosopher.key] ?? 'bg-accent-light')
+          : 'border-transparent bg-background-base',
         className,
       )}
     >
       <span className="flex justify-center">
-        <PhilosopherAvatar personaKey={philosopher.key} className="size-22.75" />
+        <PhilosopherImage personaKey={philosopher.key} />
       </span>
       <span className="flex flex-col gap-1.75">
         <span className="flex flex-col gap-1.5">

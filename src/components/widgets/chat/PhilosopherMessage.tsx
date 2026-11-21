@@ -8,13 +8,13 @@ type PhilosopherMessageProps = {
   text: string
   // "이제 진지한 솔루션을 내놔라"에 대한 조언 답변. 시안상 연분홍 배경에 278px을 꽉 채운다
   advice?: boolean
-  quote?: Quote
+  quote?: Quote | null
 }
 
 export default function PhilosopherMessage({ personaKey, name, text, advice = false, quote }: PhilosopherMessageProps) {
   return (
     <div className="flex gap-2">
-      <PhilosopherAvatar personaKey={personaKey} name={name} className="size-7.5" />
+      <PhilosopherAvatar personaKey={personaKey} className="size-7.5" />
       <div className="flex min-w-0 flex-col items-start gap-1">
         <span className="text-caption-12-bold text-text-secondary">{name}</span>
         <div

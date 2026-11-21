@@ -1,6 +1,9 @@
 import { X } from 'lucide-react'
 import { useEffect } from 'react'
 
+import PhilosopherImage from '@/components/widgets/philosopher/PhilosopherImage'
+import { TAG_COLOR } from '@/components/widgets/philosopher/cardBackground'
+import { cn } from '@/lib/utils'
 import { usePhilosopherStore } from '@/stores/usePhilosopherStore'
 import type { PhilosopherProfile } from '@/types/philosopher'
 
@@ -44,11 +47,7 @@ export default function PhilosopherCardDialog({ onStartChat }: PhilosopherCardDi
           <X className="size-6" aria-hidden />
         </button>
 
-        <div className="h-47 shrink-0 bg-background-subtle">
-          {philosopher.imageUrl && (
-            <img src={philosopher.imageUrl} alt="" className="size-full object-cover" />
-          )}
-        </div>
+        <PhilosopherImage personaKey={philosopher.key} className="size-46.5" />
 
         <div className="flex flex-col gap-6.75">
           <div className="flex flex-col gap-5">
@@ -66,7 +65,10 @@ export default function PhilosopherCardDialog({ onStartChat }: PhilosopherCardDi
               {philosopher.tags.map((tag) => (
                 <li
                   key={tag}
-                  className="flex h-7.5 items-center rounded-full border border-accent-primary bg-background-base px-2.5 text-caption-13-regular text-accent-primary"
+                  className={cn(
+                    'flex h-7.5 items-center rounded-full border bg-background-base px-2.5 text-caption-13-regular',
+                    TAG_COLOR[philosopher.key] ?? 'border-border-active text-text-brand',
+                  )}
                 >
                   #{tag}
                 </li>

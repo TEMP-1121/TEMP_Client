@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 
+import LoadingScreen from '@/components/common/LoadingScreen'
 import PhilosopherCardDialog from '@/components/dialog/philosopher/PhilosopherCardDialog'
 import PhilosopherCard from '@/components/widgets/philosopher/PhilosopherCard'
 import { usePhilosopherStore } from '@/stores/usePhilosopherStore'
@@ -10,6 +11,8 @@ export default function PhilosopherExplorePage() {
   const navigate = useNavigate()
   const philosophers = usePhilosopherStore((s) => s.philosophers)
   const fetchPersonas = usePhilosopherStore((s) => s.fetchPersonas)
+  // 실패하면 내장 목록으로 보여 주고, 받는 중에는 내장 목록이 먼저 보였다가 바뀌지 않게 로딩을 띄운다
+  const personasPending = usePhilosopherStore((s) => !s.personasLoaded && !s.personasError)
   const openCard = usePhilosopherStore((s) => s.openCard)
   const openedKey = usePhilosopherStore((s) => s.cardPhilosopher?.key)
 
@@ -23,6 +26,8 @@ export default function PhilosopherExplorePage() {
     closeCard()
     navigate('/philosophers')
   }
+
+  if (personasPending) return <LoadingScreen />
 
   return (
     <section className="flex-1 bg-background-surface px-4 pt-5 pb-6">

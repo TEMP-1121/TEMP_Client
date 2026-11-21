@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 
+import LoadingScreen from '@/components/common/LoadingScreen'
 import ChatActions from '@/components/widgets/chat/ChatActions'
 import ChatHeader from '@/components/widgets/chat/ChatHeader'
 import ChatInput from '@/components/widgets/chat/ChatInput'
@@ -64,10 +65,9 @@ export default function ChatPage() {
         onClose={() => navigate('/home', { replace: true })}
       />
 
-      {opening ? (
-        <div className="flex flex-1 items-center justify-center bg-background-surface p-4">
-          <p className="text-body-14-regular text-text-tertiary">대화를 불러오는 중…</p>
-        </div>
+      {/* 불러오기 effect가 돌기 전 첫 화면에서도 '방 없음'이 잠깐 보이지 않게, 주소의 방이 아직 열리지 않았으면 로딩으로 본다 */}
+      {opening || (routeId && routeId !== activeConversationId) ? (
+        <LoadingScreen />
       ) : !conversation ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-3 p-4">
           <p className="text-body-16-regular text-text-tertiary">아직 상담방이 없어요</p>

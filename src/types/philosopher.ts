@@ -9,5 +9,4 @@ export type PhilosopherProfile = Philosopher & {
   era: string
   introduction: string
   conversationStyle: string
-  imageUrl?: string
 }

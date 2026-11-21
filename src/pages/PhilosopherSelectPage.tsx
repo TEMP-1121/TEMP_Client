@@ -1,7 +1,10 @@
 import { X } from 'lucide-react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
-import { cn } from '@/lib/utils';
+import LoadingScreen from '@/components/common/LoadingScreen';
+import PhilosopherAvatar from '@/components/widgets/philosopher/PhilosopherAvatar';
+import PhilosopherSelectCard from '@/components/widgets/philosopher/PhilosopherSelectCard';
 import { useChatStore } from '@/stores/useChatStore';
 import {
   MAX_PHILOSOPHERS,
@@ -10,6 +13,9 @@ import {
 
 export default function PhilosopherSelectPage() {
   const philosophers = usePhilosopherStore((s) => s.philosophers);
+  const fetchPersonas = usePhilosopherStore((s) => s.fetchPersonas);
+  // 실패하면 내장 목록으로 보여 주고, 받는 중에는 내장 목록이 먼저 보였다가 바뀌지 않게 로딩을 띄운다
+  const personasPending = usePhilosopherStore((s) => !s.personasLoaded && !s.personasError);
   const selected = usePhilosopherStore((s) => s.selectedIds);
   const togglePhilosopher = usePhilosopherStore((s) => s.toggleSelect);
   const createConversation = useChatStore((s) => s.createConversation);
@@ -19,6 +25,10 @@ export default function PhilosopherSelectPage() {
   const setDraft = useChatStore((s) => s.setDraft);
   const isFull = selected.length === MAX_PHILOSOPHERS;
 
+  useEffect(() => {
+    void fetchPersonas();
+  }, [fetchPersonas]);
+
   function openRoom() {
     createConversation(selected, draft.trim() || undefined).then((id) => {
       if (id) setDraft('', '');
@@ -26,112 +36,66 @@ export default function PhilosopherSelectPage() {
     navigate('/chat');
   }
 
+  if (personasPending) return <LoadingScreen />;
+
   return (
     <section className='flex min-h-0 flex-1 flex-col bg-background-surface'>
-      <div
-        className='flex h-12 shrink-0 items-center justify-between px-5 text-sm font-semibold text-text-primary'
-        aria-hidden
-      >
-        {/* <span>9:41</span> */}
-        <div className='flex items-center gap-1.5'></div>
-      </div>
-
-      <header className='relative flex shrink-0 flex-col items-center px-12 pb-5 pt-1'>
-        <h1 className='text-body-16-semibold'>철학자 고르기</h1>
-        <p className='mt-1 text-caption-12-regular text-text-tertiary'>
+      <header className='shrink-0 pb-5.5'>
+        <div className='grid h-14 grid-cols-[2.5rem_1fr_2.5rem] items-end px-2'>
+          <h1 className='col-start-2 text-center text-heading-20-bold text-text-primary'>
+            철학자 고르기
+          </h1>
+          <button
+            type='button'
+            onClick={() => navigate('/home')}
+            aria-label='닫기'
+            className='flex size-10 items-center justify-center text-icon-secondary'
+          >
+            <X className='size-6' aria-hidden />
+          </button>
+        </div>
+        <p className='mt-0.5 text-center text-caption-13-regular text-text-tertiary'>
           함께 이야기할 철학자 {MAX_PHILOSOPHERS}명을 골라 주세요
         </p>
-        <button
-          type='button'
-          onClick={() => navigate('/home')}
-          aria-label='닫기'
-          className='absolute right-4 top-0 flex size-9 items-center justify-center text-icon-primary'
-        >
-          <X className='size-6' aria-hidden />
-        </button>
       </header>
 
       <div className='grid flex-1 grid-cols-2 content-start gap-3 overflow-y-auto px-4 pb-4'>
         {philosophers.map((philosopher) => {
           const isSelected = selected.includes(philosopher.key);
-          const isDisabled = !isSelected && isFull;
-
           return (
-            <label
+            <PhilosopherSelectCard
               key={philosopher.key}
-              className={cn(
-                'flex h-58 cursor-pointer flex-col rounded-xl border-2 bg-background-base p-3 transition-colors',
-                isSelected ? 'border-accent-primary' : 'border-transparent',
-                isDisabled && 'cursor-not-allowed opacity-45',
-              )}
-            >
-              <div className='flex items-start justify-between'>
-                <div
-                  className='size-24 rounded-full bg-palette-neutral-200'
-                  aria-hidden
-                />
-                <input
-                  type='checkbox'
-                  checked={isSelected}
-                  disabled={isDisabled}
-                  onChange={() => togglePhilosopher(philosopher.key)}
-                  aria-label={`${philosopher.name} 선택`}
-                  className='peer sr-only'
-                />
-                <span
-                  aria-hidden
-                  className={cn(
-                    'flex size-5 items-center justify-center rounded-[3px] border-2 text-xs font-bold peer-focus-visible:ring-2 peer-focus-visible:ring-accent-primary peer-focus-visible:ring-offset-2',
-                    isSelected
-                      ? 'border-accent-primary bg-accent-primary text-text-inverse'
-                      : 'border-palette-neutral-700 bg-background-base text-transparent',
-                  )}
-                >
-                  ✓
-                </span>
-              </div>
-
-              <div className='mt-auto min-w-0'>
-                <h2 className='truncate text-body-14-bold text-text-primary'>
-                  {philosopher.name}
-                </h2>
-                <p className='mt-1 line-clamp-2 text-caption-12-regular text-text-secondary'>
-                  {philosopher.description}
-                </p>
-                <div className='mt-2 flex flex-wrap gap-1.5'>
-                  {philosopher.tags.slice(0, 2).map((tag) => (
-                    <span
-                      key={tag}
-                      className='rounded-full border border-accent-primary px-2 py-0.5 text-[10px] leading-4 text-text-brand'
-                    >
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </label>
+              philosopher={philosopher}
+              selected={isSelected}
+              disabled={!isSelected && isFull}
+              onToggle={() => togglePhilosopher(philosopher.key)}
+            />
           );
         })}
       </div>
 
-      <footer className='shrink-0 border-t border-border-normal bg-background-base px-4 pb-4 pt-3'>
-        <div className='mb-3 flex items-center justify-between'>
-          <div className='flex items-center gap-2'>
+      {/* 시안 아래 여백 42px에는 아이폰 홈 인디케이터 자리가 포함돼 있다 */}
+      <footer className='shrink-0 border-t border-border-normal bg-background-base px-4 pt-3 pb-10.5'>
+        <div className='mb-2.5 flex items-center justify-between'>
+          <div className='flex items-center gap-1.25'>
             <span className='text-caption-12-regular text-text-tertiary'>
               선택한 철학자
             </span>
             <div className='flex -space-x-1.5' aria-hidden>
-              {Array.from({ length: MAX_PHILOSOPHERS }, (_, index) => (
-                <span
-                  key={selected[index] ?? index}
-                  className={cn(
-                    'size-6 rounded-full border-2 border-background-base',
-                    selected[index]
-                      ? 'bg-palette-neutral-300'
-                      : 'bg-background-subtle',
-                  )}
-                />
-              ))}
+              {Array.from({ length: MAX_PHILOSOPHERS }, (_, index) =>
+                selected[index] ? (
+                  <PhilosopherAvatar
+                    key={selected[index]}
+                    personaKey={selected[index]}
+                    className='size-6.5 border-2 border-border-inverse'
+                  />
+                ) : (
+                  <span
+                    key={index}
+                    className='size-6.5 rounded-full border-2 border-border-inverse bg-background-subtle'
+                  />
+                ),
+              )}
             </div>
           </div>
           <span className='text-caption-12-regular tabular-nums text-text-tertiary'>
@@ -142,7 +106,7 @@ export default function PhilosopherSelectPage() {
           type='button'
           disabled={!isFull || creating}
           onClick={openRoom}
-          className='flex h-12 w-full items-center justify-center rounded-xl bg-accent-primary text-body-14-semibold text-text-inverse active:bg-accent-pressed disabled:cursor-not-allowed disabled:bg-accent-disabled'
+          className='flex h-12 w-full items-center justify-center rounded-xl bg-accent-primary text-body-15-bold text-text-inverse active:bg-accent-pressed disabled:cursor-not-allowed disabled:bg-accent-disabled'
         >
           상담 시작할게요
         </button>

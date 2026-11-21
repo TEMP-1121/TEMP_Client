@@ -19,6 +19,7 @@ import type {
   Turn,
   TurnFailedData,
 } from '@/types/chat';
+import { DANGER_SIGN } from '@/types/chat';
 
 type ChatState = {
   conversations: Conversation[];
@@ -134,16 +135,29 @@ export const useChatStore = create<ChatState>()((set, get) => {
   ) => {
     const turnId = clientMessageId;
     try {
-      const result = await postForEvent<ApiResponse<SendMessageResponse | TurnFailedData>>(
+      const result = await postForEvent<
+        ApiResponse<SendMessageResponse | TurnFailedData> | { type: typeof DANGER_SIGN }
+      >(
         `/api/v1/chat/conversations/${conversationId}/messages`,
         { clientMessageId, message, type },
         ['turn.completed', 'turn.failed'],
       );
       if (result?.event === 'turn.failed') throw toApiError(result.data, 409);
+
+      // 위험 신호면 서버는 답 없이 {type: USER_DANGER_SIGN}만 보낸다. 내 메시지는 남기고 방을 멈춰 상담 안내를 띄운다
+      const pauseForDanger = () => {
+        updateTurn(conversationId, turnId, (t) => ({ ...t, type: DANGER_SIGN, replies: [] }));
+        updateConversation(conversationId, (c) => ({ ...c, paused: true }));
+        return true;
+      };
+      const payload = result?.data;
+      if (payload && 'type' in payload && payload.type === DANGER_SIGN) return pauseForDanger();
+
       const received =
-        result && 'turn' in result.data.data
-          ? result.data.data.turn
+        payload && 'data' in payload && payload.data && 'turn' in payload.data
+          ? payload.data.turn
           : await findDelivered(conversationId, clientMessageId);
+      if (received.type === DANGER_SIGN) return pauseForDanger();
       const turn = {
         ...received,
         replies: (received.replies as ServerReply[]).map(toReply),
@@ -170,7 +184,8 @@ export const useChatStore = create<ChatState>()((set, get) => {
     setActiveConversation: (conversationId) => set({ activeConversationId: conversationId }),
 
     conversationList: [],
-    listLoading: false,
+    // 처음 받기 전까지는 로딩으로 둬서 보관함이 '대화 없음'부터 보여 주지 않게 한다
+    listLoading: true,
     listError: null,
     openingConversation: false,
 
@@ -206,6 +221,8 @@ export const useChatStore = create<ChatState>()((set, get) => {
         const loaded: Conversation = {
           conversationId,
           personaKeys: data.data.personaKeys,
+          // 마지막 턴이 위험 신호면 다시 열어도 대화를 멈춘 채 상담 안내를 보여 준다
+          paused: data.data.content[data.data.content.length - 1]?.type === DANGER_SIGN,
           turns: data.data.content
             // 서버는 방을 만들 때 인사를 항상 저장하지만, 고민을 먼저 말하고 연 방은 화면에서 인사를 띄우지 않았다.
             // 새로고침 후에도 같은 화면이 되도록 내 메시지가 있는 방은 인사를 숨긴다
@@ -299,11 +316,14 @@ export const useChatStore = create<ChatState>()((set, get) => {
       }
     },
 
-    sendMessage: async (conversationId, message, type = 'conversation') => {
+    sendMessage: async (conversationId, message, requestedType) => {
       const conversation = get().conversations.find(
         (c) => c.conversationId === conversationId,
       );
       if (!conversation || get().sending) return false;
+      // 조언 요청에 철학자가 보충 질문(question)을 했다면, 그 대답은 명세대로 advice로 보낸다
+      const lastAnswered = [...conversation.turns].reverse().find((t) => !t.failed && t.replies.length);
+      const type = requestedType ?? (lastAnswered?.type === 'question' ? 'advice' : 'conversation');
 
       const pending = userTurn(message, type);
       updateConversation(conversationId, (c) => ({

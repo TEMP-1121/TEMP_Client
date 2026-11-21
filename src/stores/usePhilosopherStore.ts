@@ -7,12 +7,6 @@ import type { PhilosopherProfile } from '@/types/philosopher'
 
 export const MAX_PHILOSOPHERS = 3
 
-// 아바타 이니셜 폰트(Noto Sans KR)는 그 글자를 처음 그릴 때 받기 시작해 첫 철학자의 이니셜만 늦게 뜬다. 목록이 정해지면 미리 받아 둔다
-const preloadInitials = (philosophers: PhilosopherProfile[]) =>
-  document.fonts.load('700 1em "Noto Sans KR"', philosophers.map((p) => p.name[0]).join('')).catch(() => {})
-
-preloadInitials(PHILOSOPHERS)
-
 type Persona = {
   personaKey: string
   name: string
@@ -26,7 +20,7 @@ type PersonasResponse = {
   personas: Persona[]
 }
 
-// 카드의 한 줄 설명은 서버에 없어 로컬 값을 쓰고, 소개·시대·태그는 서버 값으로 덮는다.
+// key·이름·시대·태그는 서버 값으로 덮고, 카드 한 줄 설명과 모달 소개(introduction)는 디자인 문구라 로컬 값을 그대로 쓴다.
 // 서버가 내려준 철학자만 남기되, 로컬 목록 순서(디자인 시안 순서)를 따른다
 function mergePersonas(personas: Persona[]): PhilosopherProfile[] {
   const byKey = new Map(personas.map((persona) => [persona.personaKey, persona]))
@@ -36,9 +30,9 @@ function mergePersonas(personas: Persona[]): PhilosopherProfile[] {
     return [
       {
         ...local,
+        key: persona.personaKey,
         name: persona.name,
         era: persona.subtitle,
-        introduction: persona.description,
         tags: persona.tags,
       },
     ]
