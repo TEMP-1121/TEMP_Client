@@ -1,35 +1,22 @@
+import PhilosopherImage from '@/components/widgets/philosopher/PhilosopherImage'
 import { cn } from '@/lib/utils'
-
-// Tailwind는 완성된 클래스 문자열만 스캔해서 bg-philosopher-${key}로 조합하면 색이 생성되지 않는다
-const COLORS: Record<string, string> = {
-  epictetus: 'bg-philosopher-epictetus',
-  nietzsche: 'bg-philosopher-nietzsche',
-  marx: 'bg-philosopher-marx',
-  camus: 'bg-philosopher-camus',
-  zhuangzi: 'bg-philosopher-zhuangzi',
-  epicurus: 'bg-philosopher-epicurus',
-  aristotle: 'bg-philosopher-aristotle',
-  arendt: 'bg-philosopher-arendt',
-  weil: 'bg-philosopher-weil',
-}
 
 type PhilosopherAvatarProps = {
   personaKey: string
-  name?: string
   className?: string
 }
 
-export default function PhilosopherAvatar({ personaKey, name, className }: PhilosopherAvatarProps) {
+// 철학자 고르기 화면의 선택 표시와 같은 모양: 회색 원 안에 철학자 도형을 원 지름의 약 60%로 넣는다
+export default function PhilosopherAvatar({ personaKey, className }: PhilosopherAvatarProps) {
   return (
     <span
       aria-hidden
       className={cn(
-        'flex size-10 shrink-0 items-center justify-center rounded-full font-noto text-body-14-bold text-text-primary',
-        COLORS[personaKey] ?? 'bg-background-subtle',
+        'flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-background-subtle',
         className,
       )}
     >
-      {name?.[0]}
+      <PhilosopherImage personaKey={personaKey} className="size-3/5" />
     </span>
   )
 }
