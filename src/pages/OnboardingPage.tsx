@@ -4,11 +4,13 @@ import { useNavigate } from 'react-router';
 const slides = [
   {
     title: '일이 지루하게 느껴질 때',
-    description: '매일 비슷한 일, 무엇이 나를 지치게 하는지 철학자와 함께 들여다보세요.',
+    description:
+      '매일 비슷한 일, 무엇이 나를 지치게 하는지 철학자와 함께 들여다보세요.',
   },
   {
     title: '나에게 맞는\n철학자를 골라 보세요',
-    description: '철학자마다 성격과 질문하는 방식이 달라요. 특징을 보고 마음에 드는 사수를 직접 선택해 보세요.',
+    description:
+      '철학자마다 성격과 질문하는 방식이 달라요. 특징을 보고 마음에 드는 사수를 직접 선택해 보세요.',
   },
   {
     title: '새로운 시선을\n일상에서 시험해 보세요',
@@ -27,24 +29,20 @@ export default function OnboardingPage() {
   }
 
   return (
-    <section className='flex min-h-0 flex-1 flex-col bg-background-base px-4 pb-4'>
-      <div className='h-12 shrink-0' aria-hidden />
-
-      <div className='flex h-9 shrink-0 items-center justify-end'>
-        {!isLast && (
-          <button
-            type='button'
-            onClick={finishOnboarding}
-            className='px-2 py-2 text-[10px] text-text-tertiary transition-colors hover:text-text-primary'
-          >
-            건너뛰기
-          </button>
-        )}
-      </div>
+    <section className='relative flex min-h-0 flex-1 flex-col bg-background-base px-4 pb-4'>
+      {!isLast && (
+        <button
+          type='button'
+          onClick={finishOnboarding}
+          className='absolute right-4 top-16 z-10 px-2 py-2 text-[10px] text-text-tertiary transition-colors hover:text-text-primary'
+        >
+          건너뛰기
+        </button>
+      )}
 
       <div className='flex min-h-0 flex-1 flex-col'>
         <div
-          className='mt-6 flex aspect-[4/3] max-h-72 min-h-56 shrink-0 bg-palette-neutral-100'
+          className='mt-29 flex aspect-4/3 max-h-72 min-h-56 shrink-0 bg-palette-neutral-100'
           aria-hidden
         />
 
@@ -74,7 +72,9 @@ export default function OnboardingPage() {
 
         <button
           type='button'
-          onClick={() => (isLast ? finishOnboarding() : setPage((current) => current + 1))}
+          onClick={() =>
+            isLast ? finishOnboarding() : setPage((current) => current + 1)
+          }
           className='flex h-12 w-full shrink-0 items-center justify-center rounded-lg bg-accent-primary text-[12px] font-semibold text-text-inverse transition-colors hover:bg-accent-pressed active:bg-accent-pressed'
         >
           {isLast ? '일세 시작하기!' : '다음'}
