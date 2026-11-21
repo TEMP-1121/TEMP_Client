@@ -206,10 +206,14 @@ export const useChatStore = create<ChatState>()((set, get) => {
         const loaded: Conversation = {
           conversationId,
           personaKeys: data.data.personaKeys,
-          turns: data.data.content.map((turn) => ({
-            ...turn,
-            replies: (turn.replies as ServerReply[]).map(toReply),
-          })),
+          turns: data.data.content
+            // 서버는 방을 만들 때 인사를 항상 저장하지만, 고민을 먼저 말하고 연 방은 화면에서 인사를 띄우지 않았다.
+            // 새로고침 후에도 같은 화면이 되도록 내 메시지가 있는 방은 인사를 숨긴다
+            .filter((turn, _, all) => turn.type !== 'greeting' || !all.some((t) => t.message))
+            .map((turn) => ({
+              ...turn,
+              replies: (turn.replies as ServerReply[]).map(toReply),
+            })),
         };
         set((s) => ({
           conversations: [...s.conversations.filter((c) => c.conversationId !== conversationId), loaded],
