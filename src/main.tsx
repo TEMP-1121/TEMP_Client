@@ -9,6 +9,7 @@ import MyPage from '@/pages/MyPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import SignupPage from '@/pages/SignupPage';
 import OnboardingPage from '@/pages/OnboardingPage';
+import PhilosopherSelectPage from '@/pages/PhilosopherSelectPage';
 
 import './index.css';
 
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { path: '/', element: <OnboardingPage /> },
+      { path: '/philosophers', element: <PhilosopherSelectPage /> },
       { path: '/home', element: <HomePage /> },
       { path: '/mypage', element: <MyPage /> },
       { path: '/auth/kakao/callback', element: <KakaoCallbackPage /> },

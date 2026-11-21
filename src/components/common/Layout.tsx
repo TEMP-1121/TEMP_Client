@@ -5,7 +5,7 @@ import Header from '@/components/common/Header'
 
 export default function Layout() {
   const { pathname } = useLocation()
-  const isOnboarding = pathname === '/'
+  const isOnboarding = pathname === '/' || pathname === '/philosophers'
 
   return (
     <div className="min-h-dvh bg-neutral-100">

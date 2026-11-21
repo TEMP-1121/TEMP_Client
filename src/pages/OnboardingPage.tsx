@@ -26,7 +26,7 @@ export default function OnboardingPage() {
   const slide = slides[page - 1];
 
   function finishOnboarding() {
-    navigate('/home');
+    navigate('/philosophers');
   }
 
   return (
