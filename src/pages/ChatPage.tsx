@@ -80,7 +80,8 @@ export default function ChatPage() {
           <ChatInput
             disabled={sending}
             placeholder="철학자들에게 고민을 이야기해 보세요"
-            className="p-4"
+            // 시안 102px = 위 구분선 1 + 위 15 + 입력창 48 + 아래 38(아이폰 홈 인디케이터 자리 포함). 하단 탭(84px)과 같은 기준
+            className="px-4 pt-3.75 pb-9.5"
             onSend={send}
           />
         </>

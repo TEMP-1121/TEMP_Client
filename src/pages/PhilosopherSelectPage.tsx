@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import PhilosopherAvatar from '@/components/widgets/philosopher/PhilosopherAvatar';
 import PhilosopherCard from '@/components/widgets/philosopher/PhilosopherCard';
@@ -14,11 +14,13 @@ export default function PhilosopherSelectPage() {
   const togglePhilosopher = usePhilosopherStore((s) => s.toggleSelect);
   const createConversation = useChatStore((s) => s.createConversation);
   const navigate = useNavigate();
-  const message = (useLocation().state as { message?: string } | null)?.message;
+  const draft = useChatStore((s) => s.draft);
+  const setDraft = useChatStore((s) => s.setDraft);
   const isFull = selected.length === MAX_PHILOSOPHERS;
 
   function openRoom() {
-    createConversation(selected, message);
+    createConversation(selected, draft.trim() || undefined);
+    setDraft('', '');
     navigate('/chat');
   }
 
