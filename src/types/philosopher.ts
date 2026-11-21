@@ -4,3 +4,10 @@ export type Philosopher = {
   description: string
   tags: string[]
 }
+
+export type PhilosopherProfile = Philosopher & {
+  era: string
+  introduction: string
+  conversationStyle: string
+  imageUrl?: string
+}

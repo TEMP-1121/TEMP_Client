@@ -11,6 +11,7 @@ import MyPage from '@/pages/MyPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import SignupPage from '@/pages/SignupPage';
 import OnboardingPage from '@/pages/OnboardingPage';
+import PhilosopherExplorePage from '@/pages/PhilosopherExplorePage';
 import PhilosopherSelectPage from '@/pages/PhilosopherSelectPage';
 
 import './index.css';
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
       { path: '/onboarding', element: <OnboardingPage /> },
       { path: '/philosophers', element: <PhilosopherSelectPage /> },
       { path: '/home', element: <HomePage /> },
+      { path: '/explore', element: <PhilosopherExplorePage /> },
       { path: '/chat', element: <ChatPage /> },
       { path: '/mypage', element: <MyPage /> },
       { path: '/auth/kakao/callback', element: <KakaoCallbackPage /> },

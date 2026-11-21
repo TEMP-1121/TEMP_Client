@@ -53,9 +53,9 @@ export default function HomePage() {
 
       <div className="mt-auto flex flex-col gap-3 pt-10">
         <button
+          type="button"
           onClick={() => pickPhilosophers(message)}
-          disabled={!hasMessage}
-          className="flex items-center gap-4 border border-border-strong px-4 py-3 text-left disabled:border-border-disabled disabled:text-text-disabled"
+          className="flex items-center gap-4 border border-border-strong px-4 py-3 text-left"
         >
           <div className="flex -space-x-2">
             {[0, 1, 2].map((i) =>

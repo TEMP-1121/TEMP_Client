@@ -1,27 +1,33 @@
 import { create } from 'zustand'
 
-import { DUMMY_PHILOSOPHERS } from '@/lib/dummyChat'
-import type { Philosopher } from '@/types/philosopher'
+import { PHILOSOPHERS } from '@/lib/philosophers'
+import type { PhilosopherProfile } from '@/types/philosopher'
 
 export const MAX_PHILOSOPHERS = 3
 
 // 아바타 이니셜 폰트(Noto Sans KR)는 그 글자를 처음 그릴 때 받기 시작해 첫 철학자의 이니셜만 늦게 뜬다. 목록이 정해지면 미리 받아 둔다
-const preloadInitials = (philosophers: Philosopher[]) =>
+const preloadInitials = (philosophers: PhilosopherProfile[]) =>
   document.fonts.load('700 1em "Noto Sans KR"', philosophers.map((p) => p.name[0]).join('')).catch(() => {})
 
-preloadInitials(DUMMY_PHILOSOPHERS)
+preloadInitials(PHILOSOPHERS)
 
 type PhilosopherState = {
-  philosophers: Philosopher[]
+  philosophers: PhilosopherProfile[]
   selectedIds: string[]
+  cardPhilosopher: PhilosopherProfile | null
   toggleSelect: (id: string) => boolean
   pickRandom: (ids: string[], count?: number) => void
+  openCard: (philosopher: PhilosopherProfile) => void
+  closeCard: () => void
 }
 
 export const usePhilosopherStore = create<PhilosopherState>()((set, get) => ({
-  // 임시: 철학자 목록 API가 나오면 fetchPhilosophers로 받아 온다
-  philosophers: DUMMY_PHILOSOPHERS,
+  philosophers: PHILOSOPHERS,
   selectedIds: [],
+  cardPhilosopher: null,
+
+  openCard: (philosopher) => set({ cardPhilosopher: philosopher }),
+  closeCard: () => set({ cardPhilosopher: null }),
 
   toggleSelect: (id) => {
     const { selectedIds } = get()

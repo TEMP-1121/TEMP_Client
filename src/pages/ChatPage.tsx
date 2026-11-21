@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 
-import EndChatDialog from '@/components/dialog/chat/EndChatDialog'
+import GiftRecommendationSheet from '@/components/dialog/chat/GiftRecommendationSheet'
 import ChatActions from '@/components/widgets/chat/ChatActions'
 import ChatHeader from '@/components/widgets/chat/ChatHeader'
 import ChatInput from '@/components/widgets/chat/ChatInput'
@@ -21,7 +21,8 @@ export default function ChatPage() {
   const error = useChatStore((s) => s.error)
   const sendMessage = useChatStore((s) => s.sendMessage)
   const endConversation = useChatStore((s) => s.endConversation)
-  const [confirmingEnd, setConfirmingEnd] = useState(false)
+  const [showingGiftSheet, setShowingGiftSheet] = useState(false)
+  const [giftedKeys, setGiftedKeys] = useState<string[]>([])
   const philosophers = usePhilosopherStore((s) => s.philosophers)
   const nameOf = (key: string) => philosophers.find((p) => p.key === key)?.name ?? key
 
@@ -86,7 +87,7 @@ export default function ChatPage() {
             </p>
           ) : (
             <>
-              <ChatActions disabled={sending} onSolution={send} onGift={() => setConfirmingEnd(true)} />
+              <ChatActions disabled={sending} onSolution={send} onGift={() => setShowingGiftSheet(true)} />
               <ChatInput
                 disabled={sending}
                 placeholder="철학자들에게 고민을 이야기해 보세요"
@@ -98,12 +99,19 @@ export default function ChatPage() {
         </>
       )}
 
-      {confirmingEnd && conversation && (
-        <EndChatDialog
-          onCancel={() => setConfirmingEnd(false)}
-          onConfirm={() => {
+      {showingGiftSheet && conversation && (
+        <GiftRecommendationSheet
+          personaKeys={conversation.personaKeys}
+          giftedKeys={giftedKeys}
+          onClose={() => setShowingGiftSheet(false)}
+          onGift={(personaKey) =>
+            setGiftedKeys((current) =>
+              current.includes(personaKey) ? current : [...current, personaKey],
+            )
+          }
+          onEndConversation={() => {
             endConversation(conversation.conversationId)
-            setConfirmingEnd(false)
+            setShowingGiftSheet(false)
           }}
         />
       )}
