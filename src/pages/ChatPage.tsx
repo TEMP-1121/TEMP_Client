@@ -14,10 +14,11 @@ import type { MessageType } from '@/types/chat'
 
 export default function ChatPage() {
   const navigate = useNavigate()
+  // 지금 고른 방만 보여 준다. 다른 방으로 대신 채우면 보관함에서 연 방이 실패했을 때 엉뚱한 대화가 보인다
   const conversation = useChatStore((s) =>
-    s.conversations.find((item) => item.conversationId === s.activeConversationId) ??
-    s.conversations[s.conversations.length - 1],
+    s.conversations.find((item) => item.conversationId === s.activeConversationId),
   )
+  const opening = useChatStore((s) => s.openingConversation)
   const typingKey = useChatStore((s) => s.typingKey)
   const creating = useChatStore((s) => s.creating)
   const sending = useChatStore((s) => s.sending)
@@ -47,7 +48,11 @@ export default function ChatPage() {
         onClose={() => navigate('/home', { replace: true })}
       />
 
-      {!conversation ? (
+      {opening ? (
+        <div className="flex flex-1 items-center justify-center bg-background-surface p-4">
+          <p className="text-body-14-regular text-text-tertiary">대화를 불러오는 중…</p>
+        </div>
+      ) : !conversation ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-3 p-4">
           <p className="text-body-16-regular text-text-tertiary">아직 상담방이 없어요</p>
           {error && <p className="text-body-14-regular text-state-negative">{error}</p>}

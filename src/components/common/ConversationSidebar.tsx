@@ -1,5 +1,8 @@
+import { useEffect } from 'react'
 import { MessageSquareMore, MoreHorizontal } from 'lucide-react'
 import { useNavigate } from 'react-router'
+
+import PhilosopherAvatar from '@/components/widgets/philosopher/PhilosopherAvatar'
 
 import { useChatStore } from '@/stores/useChatStore'
 import { usePhilosopherStore } from '@/stores/usePhilosopherStore'
@@ -22,15 +25,23 @@ function formatDate(value?: string) {
 
 export default function ConversationSidebar({ onClose }: { onClose: () => void }) {
   const navigate = useNavigate()
-  const conversations = useChatStore((s) => s.conversations)
-  const setActiveConversation = useChatStore((s) => s.setActiveConversation)
+  const conversations = useChatStore((s) => s.conversationList)
+  const listLoading = useChatStore((s) => s.listLoading)
+  const listError = useChatStore((s) => s.listError)
+  const fetchConversations = useChatStore((s) => s.fetchConversations)
+  const openConversation = useChatStore((s) => s.openConversation)
   const philosophers = usePhilosopherStore((s) => s.philosophers)
   const nameOf = (key: string) => philosophers.find((philosopher) => philosopher.key === key)?.name ?? key
+
+  // 보관함을 열 때마다 서버 목록을 다시 받아 방금 만든 방까지 보이게 한다
+  useEffect(() => {
+    fetchConversations()
+  }, [fetchConversations])
 
   return (
     <div
       role='presentation'
-      className='absolute inset-0 z-50 flex bg-black/35'
+      className='absolute inset-0 z-50 flex bg-background-scrim'
       onClick={onClose}
     >
       <aside
@@ -62,51 +73,59 @@ export default function ConversationSidebar({ onClose }: { onClose: () => void }
           </div>
         </div>
 
-        {conversations.length > 0 ? (
+        {listLoading && conversations.length === 0 ? (
+          <p className='px-5 pt-1 text-body-14-regular text-text-tertiary'>대화를 불러오는 중…</p>
+        ) : listError ? (
+          <div className='flex flex-col items-start gap-2 px-5 pt-1'>
+            <p className='text-body-14-regular text-state-negative'>{listError}</p>
+            <button
+              type='button'
+              onClick={() => fetchConversations()}
+              className='text-caption-12-bold text-text-secondary underline underline-offset-2'
+            >
+              다시 불러오기
+            </button>
+          </div>
+        ) : conversations.length > 0 ? (
           <div className='flex flex-col px-5 pb-6'>
-            {[...conversations].reverse().map((conversation) => {
-              const lastTurn = conversation.turns[conversation.turns.length - 1]
-              const latestUserTurn = [...conversation.turns].reverse().find((turn) => turn.message)
-              const summary = latestUserTurn?.message ?? lastTurn?.replies[0]?.text ?? '대화를 시작했어요'
-              const philosopherNames = conversation.personaKeys.map(nameOf).join(' · ')
-
-              return (
-                <button
-                  key={conversation.conversationId}
-                  type='button'
-                  onClick={() => {
-                    setActiveConversation(conversation.conversationId)
-                    onClose()
-                    navigate('/chat')
-                  }}
-                  className='flex w-full items-center gap-2 border-b border-border-normal py-4 text-left last:border-b-0'
-                >
-                  <div className='flex shrink-0 -space-x-2'>
-                    {conversation.personaKeys.slice(0, 3).map((key) => (
-                      <span
-                        key={key}
-                        className='size-7 rounded-full border-2 border-background-base bg-neutral-300'
-                        aria-hidden
-                      />
-                    ))}
-                  </div>
-                  <div className='min-w-0 flex-1'>
-                    <div className='flex items-center justify-between gap-2'>
-                      <p className='line-clamp-1 text-body-14-semibold leading-tight text-text-primary'>
-                        {summary}
-                      </p>
-                      <span className='shrink-0 text-caption-12-regular text-text-tertiary'>
-                        {formatDate(lastTurn?.createdAt)}
-                      </span>
-                    </div>
-                    <p className='mt-1 line-clamp-1 text-body-14-regular text-text-tertiary'>
-                      {philosopherNames}
+            {conversations.map((conversation) => (
+              <button
+                key={conversation.conversationId}
+                type='button'
+                onClick={() => {
+                  onClose()
+                  navigate('/chat')
+                  openConversation(conversation.conversationId)
+                }}
+                className='flex w-full items-center gap-2 border-b border-border-normal py-4 text-left last:border-b-0'
+              >
+                <div className='flex shrink-0 -space-x-2'>
+                  {conversation.personaKeys.slice(0, 3).map((key) => (
+                    <PhilosopherAvatar
+                      key={key}
+                      personaKey={key}
+                      name={nameOf(key)}
+                      className='size-7 text-caption-10-bold'
+                    />
+                  ))}
+                </div>
+                <div className='min-w-0 flex-1'>
+                  <div className='flex items-center justify-between gap-2'>
+                    {/* 서버 제목은 처음 보낸 고민. 고민 없이 연 방은 null */}
+                    <p className='line-clamp-1 text-body-14-semibold text-text-primary'>
+                      {conversation.title ?? '새 고민'}
                     </p>
+                    <span className='shrink-0 text-caption-12-regular text-text-tertiary'>
+                      {formatDate(conversation.createdAt)}
+                    </span>
                   </div>
-                  <MoreHorizontal className='size-5 shrink-0 text-icon-tertiary' aria-hidden />
-                </button>
-              )
-            })}
+                  <p className='mt-1 line-clamp-1 text-body-14-regular text-text-tertiary'>
+                    {conversation.personaKeys.map(nameOf).join(' · ')}
+                  </p>
+                </div>
+                <MoreHorizontal className='size-5 shrink-0 text-icon-tertiary' aria-hidden />
+              </button>
+            ))}
           </div>
         ) : (
           <p className='px-5 pt-1 text-body-14-regular text-text-tertiary'>
