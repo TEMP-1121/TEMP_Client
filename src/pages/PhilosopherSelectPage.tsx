@@ -1,4 +1,5 @@
 import { X } from 'lucide-react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 import { cn } from '@/lib/utils';
@@ -10,6 +11,7 @@ import {
 
 export default function PhilosopherSelectPage() {
   const philosophers = usePhilosopherStore((s) => s.philosophers);
+  const fetchPersonas = usePhilosopherStore((s) => s.fetchPersonas);
   const selected = usePhilosopherStore((s) => s.selectedIds);
   const togglePhilosopher = usePhilosopherStore((s) => s.toggleSelect);
   const createConversation = useChatStore((s) => s.createConversation);
@@ -18,6 +20,10 @@ export default function PhilosopherSelectPage() {
   const draft = useChatStore((s) => s.draft);
   const setDraft = useChatStore((s) => s.setDraft);
   const isFull = selected.length === MAX_PHILOSOPHERS;
+
+  useEffect(() => {
+    void fetchPersonas();
+  }, [fetchPersonas]);
 
   function openRoom() {
     createConversation(selected, draft.trim() || undefined).then((id) => {
