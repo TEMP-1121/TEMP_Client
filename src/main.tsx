@@ -6,6 +6,7 @@ import Layout from '@/components/common/Layout';
 import ChatPage from '@/pages/ChatPage';
 import HomePage from '@/pages/HomePage';
 import KakaoCallbackPage from '@/pages/KakaoCallbackPage';
+import LoginPage from '@/pages/LoginPage';
 import MyPage from '@/pages/MyPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import SignupPage from '@/pages/SignupPage';
@@ -17,7 +18,8 @@ const router = createBrowserRouter([
   {
     element: <Layout />,
     children: [
-      { path: '/', element: <OnboardingPage /> },
+      { path: '/', element: <LoginPage /> },
+      { path: '/onboarding', element: <OnboardingPage /> },
       { path: '/home', element: <HomePage /> },
       { path: '/chat', element: <ChatPage /> },
       { path: '/mypage', element: <MyPage /> },
