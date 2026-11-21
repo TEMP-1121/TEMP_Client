@@ -17,6 +17,9 @@ import PhilosopherSelectPage from '@/pages/PhilosopherSelectPage';
 
 import './index.css';
 
+// 개발 모드에서만 콘솔에 ilseToken(토큰)을 열어 둔다. 배포 빌드에는 들어가지 않는다
+if (import.meta.env.DEV) import('@/lib/devAuth');
+
 const router = createBrowserRouter([
   {
     element: <Layout />,
@@ -27,6 +30,8 @@ const router = createBrowserRouter([
       { path: '/home', element: <HomePage /> },
       { path: '/explore', element: <PhilosopherExplorePage /> },
       { path: '/chat', element: <ChatPage /> },
+      // 주소에 방 ID가 있어야 새로고침·뒤로 가기 후에도 같은 방을 서버에서 다시 불러온다
+      { path: '/chat/:conversationId', element: <ChatPage /> },
       ...(import.meta.env.DEV ? [{ path: '/chat/test', element: <ChatPauseTestPage /> }] : []),
       { path: '/mypage', element: <MyPage /> },
       { path: '/auth/kakao/callback', element: <KakaoCallbackPage /> },

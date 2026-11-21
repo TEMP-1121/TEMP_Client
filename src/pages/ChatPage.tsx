@@ -1,4 +1,5 @@
-import { Link, useNavigate } from 'react-router'
+import { useEffect } from 'react'
+import { Link, useNavigate, useParams } from 'react-router'
 
 import ChatActions from '@/components/widgets/chat/ChatActions'
 import ChatHeader from '@/components/widgets/chat/ChatHeader'
@@ -14,17 +15,34 @@ import type { MessageType } from '@/types/chat'
 
 export default function ChatPage() {
   const navigate = useNavigate()
+  // 지금 고른 방만 보여 준다. 다른 방으로 대신 채우면 보관함에서 연 방이 실패했을 때 엉뚱한 대화가 보인다
   const conversation = useChatStore((s) =>
-    s.conversations.find((item) => item.conversationId === s.activeConversationId) ??
-    s.conversations[s.conversations.length - 1],
+    s.conversations.find((item) => item.conversationId === s.activeConversationId),
   )
+  const opening = useChatStore((s) => s.openingConversation)
+  const activeConversationId = useChatStore((s) => s.activeConversationId)
+  const openConversation = useChatStore((s) => s.openConversation)
+  const { conversationId: routeId } = useParams()
   const typingKey = useChatStore((s) => s.typingKey)
   const creating = useChatStore((s) => s.creating)
   const sending = useChatStore((s) => s.sending)
   const error = useChatStore((s) => s.error)
   const sendMessage = useChatStore((s) => s.sendMessage)
+  const retryTurn = useChatStore((s) => s.retryTurn)
   const philosophers = usePhilosopherStore((s) => s.philosophers)
   const nameOf = (key: string) => philosophers.find((p) => p.key === key)?.name ?? key
+
+  // 주소의 방과 보고 있는 방이 다르면(새로고침·보관함·뒤로 가기) 그 방을 불러온다
+  useEffect(() => {
+    if (routeId && routeId !== activeConversationId) openConversation(routeId)
+  }, [routeId, activeConversationId, openConversation])
+
+  // 새 방은 서버가 ID를 준 뒤에야 주소에 넣을 수 있다. 히스토리를 늘리지 않게 바꿔치기한다
+  useEffect(() => {
+    if (!routeId && !creating && activeConversationId && conversation) {
+      navigate(`/chat/${activeConversationId}`, { replace: true })
+    }
+  }, [routeId, creating, activeConversationId, conversation, navigate])
 
   const replyCount = conversation?.turns.reduce((n, t) => n + 1 + t.replies.length, 0)
   const { ref, onScroll, stickToBottom } = useAutoScroll<HTMLDivElement>(
@@ -46,7 +64,11 @@ export default function ChatPage() {
         onClose={() => navigate('/home', { replace: true })}
       />
 
-      {!conversation ? (
+      {opening ? (
+        <div className="flex flex-1 items-center justify-center bg-background-surface p-4">
+          <p className="text-body-14-regular text-text-tertiary">대화를 불러오는 중…</p>
+        </div>
+      ) : !conversation ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-3 p-4">
           <p className="text-body-16-regular text-text-tertiary">아직 상담방이 없어요</p>
           {error && <p className="text-body-14-regular text-state-negative">{error}</p>}
@@ -63,7 +85,17 @@ export default function ChatPage() {
           <div ref={ref} onScroll={onScroll} className="flex flex-1 flex-col gap-4 overflow-y-auto bg-background-surface p-4">
             {conversation.turns.map((turn) => (
               <div key={turn.turnId} className="flex flex-col gap-4">
-                {turn.message && <UserMessage text={turn.message} />}
+                {turn.message && (
+                  <UserMessage
+                    text={turn.message}
+                    failed={turn.failed}
+                    retryDisabled={sending}
+                    onRetry={() => {
+                      stickToBottom()
+                      retryTurn(conversation.conversationId, turn.turnId)
+                    }}
+                  />
+                )}
                 {turn.replies.map((reply) => (
                   <PhilosopherMessage
                     key={reply.personaKey}
@@ -71,6 +103,7 @@ export default function ChatPage() {
                     name={nameOf(reply.personaKey)}
                     text={reply.text}
                     advice={turn.type === 'advice'}
+                    quote={reply.quote}
                   />
                 ))}
               </div>
@@ -81,8 +114,6 @@ export default function ChatPage() {
             )}
           </div>
 
-          {error && <p className="px-4 pt-2 text-body-14-regular text-state-negative">{error}</p>}
-
           {conversation.paused ? (
             <ChatInput
               disabled
@@ -92,13 +123,17 @@ export default function ChatPage() {
             />
           ) : (
             <>
-              <ChatActions disabled={sending} onSolution={(text) => send(text, 'advice')} />
+              <ChatActions disabled={sending} onSolution={(text) => void send(text, 'advice')} />
               <ChatInput
                 disabled={sending}
                 placeholder="철학자들에게 고민을 이야기해 보세요"
                 // 시안 102px = 위 구분선 1 + 위 15 + 입력창 48 + 아래 38(아이폰 홈 인디케이터 자리 포함). 하단 탭(84px)과 같은 기준
                 className="px-4 pt-3.75 pb-9.5"
-                onSend={send}
+                // 실패해도 메시지는 대화에 남아 그 자리에서 다시 보내므로, 입력창에는 되돌리지 않는다
+                onSend={async (text) => {
+                  await send(text)
+                  return true
+                }}
               />
             </>
           )}

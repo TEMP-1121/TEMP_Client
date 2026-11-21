@@ -20,7 +20,9 @@ export default function SignupPage() {
   }, [fetchSignupDefaults])
 
   useEffect(() => {
-    if (accountId) navigate('/onboarding', { replace: true })
+    if (accountId) {
+      navigate('/', { replace: true, state: { signupComplete: true } })
+    }
   }, [accountId, navigate])
 
   if (accountId) return null
