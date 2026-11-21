@@ -2,7 +2,9 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 
+import GuestOnly from '@/components/common/GuestOnly';
 import Layout from '@/components/common/Layout';
+import RequireAuth from '@/components/common/RequireAuth';
 import ChatPage from '@/pages/ChatPage';
 import ChatPauseTestPage from '@/pages/ChatPauseTestPage';
 import HomePage from '@/pages/HomePage';
@@ -24,16 +26,21 @@ const router = createBrowserRouter([
   {
     element: <Layout />,
     children: [
-      { path: '/', element: <LoginPage /> },
-      { path: '/onboarding', element: <OnboardingPage /> },
-      { path: '/philosophers', element: <PhilosopherSelectPage /> },
-      { path: '/home', element: <HomePage /> },
-      { path: '/explore', element: <PhilosopherExplorePage /> },
-      { path: '/chat', element: <ChatPage /> },
-      // 주소에 방 ID가 있어야 새로고침·뒤로 가기 후에도 같은 방을 서버에서 다시 불러온다
-      { path: '/chat/:conversationId', element: <ChatPage /> },
+      { element: <GuestOnly />, children: [{ path: '/', element: <LoginPage /> }] },
+      {
+        element: <RequireAuth />,
+        children: [
+          { path: '/onboarding', element: <OnboardingPage /> },
+          { path: '/philosophers', element: <PhilosopherSelectPage /> },
+          { path: '/home', element: <HomePage /> },
+          { path: '/explore', element: <PhilosopherExplorePage /> },
+          { path: '/chat', element: <ChatPage /> },
+          // 주소에 방 ID가 있어야 새로고침·뒤로 가기 후에도 같은 방을 서버에서 다시 불러온다
+          { path: '/chat/:conversationId', element: <ChatPage /> },
+          { path: '/mypage', element: <MyPage /> },
+        ],
+      },
       ...(import.meta.env.DEV ? [{ path: '/chat/test', element: <ChatPauseTestPage /> }] : []),
-      { path: '/mypage', element: <MyPage /> },
       { path: '/auth/kakao/callback', element: <KakaoCallbackPage /> },
       { path: '/signup', element: <SignupPage /> },
       { path: '*', element: <NotFoundPage /> },
