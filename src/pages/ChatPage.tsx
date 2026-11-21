@@ -18,7 +18,10 @@ const status = 'px-4 text-body-14-regular text-text-tertiary'
 
 export default function ChatPage() {
   const navigate = useNavigate()
-  const conversation = useChatStore((s) => s.conversations[s.conversations.length - 1])
+  const conversation = useChatStore((s) =>
+    s.conversations.find((item) => item.conversationId === s.activeConversationId) ??
+    s.conversations[s.conversations.length - 1],
+  )
   const typingKey = useChatStore((s) => s.typingKey)
   const creating = useChatStore((s) => s.creating)
   const sending = useChatStore((s) => s.sending)

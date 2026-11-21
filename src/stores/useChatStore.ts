@@ -8,6 +8,7 @@ import type { Conversation, Turn } from '@/types/chat'
 
 type ChatState = {
   conversations: Conversation[]
+  activeConversationId: string | null
   typingKey: string | null
   creating: boolean
   sending: boolean
@@ -15,6 +16,7 @@ type ChatState = {
   createConversation: (personaKeys: string[], firstMessage?: string) => Promise<string | null>
   sendMessage: (conversationId: string, message: string) => Promise<boolean>
   endConversation: (conversationId: string) => void
+  setActiveConversation: (conversationId: string) => void
 }
 
 export const useChatStore = create<ChatState>()((set, get) => {
@@ -89,10 +91,12 @@ export const useChatStore = create<ChatState>()((set, get) => {
 
   return {
     conversations: [],
+    activeConversationId: null,
     typingKey: null,
     creating: false,
     sending: false,
     error: null,
+    setActiveConversation: (conversationId) => set({ activeConversationId: conversationId }),
 
     createConversation: async (personaKeys, firstMessage) => {
       // 응답 전에 방(과 홈에서 먼저 말한 고민)부터 보여야 이전 방이 잠깐 보였다가 바뀌지 않는다
@@ -100,6 +104,7 @@ export const useChatStore = create<ChatState>()((set, get) => {
       const pending = firstMessage ? userTurn(firstMessage) : null
       set((s) => ({
         conversations: [...s.conversations, { conversationId: pendingId, personaKeys, turns: pending ? [pending] : [] }],
+        activeConversationId: pendingId,
         creating: true,
         sending: true,
         error: null,
@@ -113,7 +118,7 @@ export const useChatStore = create<ChatState>()((set, get) => {
           conversationId,
           turns: pending ? c.turns : [{ ...turn, replies: [] }],
         }))
-        set({ creating: false })
+        set({ activeConversationId: conversationId, creating: false })
         if (pending && firstMessage) await deliver(conversationId, personaKeys, true, pending.turnId, firstMessage)
         else await revealReplies(conversationId, turn)
         return conversationId
