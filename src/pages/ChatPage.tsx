@@ -1,7 +1,5 @@
-import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 
-import GiftRecommendationSheet from '@/components/dialog/chat/GiftRecommendationSheet'
 import ChatActions from '@/components/widgets/chat/ChatActions'
 import ChatHeader from '@/components/widgets/chat/ChatHeader'
 import ChatInput from '@/components/widgets/chat/ChatInput'
@@ -20,9 +18,6 @@ export default function ChatPage() {
   const sending = useChatStore((s) => s.sending)
   const error = useChatStore((s) => s.error)
   const sendMessage = useChatStore((s) => s.sendMessage)
-  const endConversation = useChatStore((s) => s.endConversation)
-  const [showingGiftSheet, setShowingGiftSheet] = useState(false)
-  const [giftedKeys, setGiftedKeys] = useState<string[]>([])
   const philosophers = usePhilosopherStore((s) => s.philosophers)
   const nameOf = (key: string) => philosophers.find((p) => p.key === key)?.name ?? key
 
@@ -81,39 +76,14 @@ export default function ChatPage() {
 
           {error && <p className="px-4 pt-2 text-body-14-regular text-state-negative">{error}</p>}
 
-          {conversation.ended ? (
-            <p className="border-t border-border-normal p-4 text-center text-body-14-regular text-text-tertiary">
-              이 상담은 종료되었어요
-            </p>
-          ) : (
-            <>
-              <ChatActions disabled={sending} onSolution={send} onGift={() => setShowingGiftSheet(true)} />
-              <ChatInput
-                disabled={sending}
-                placeholder="철학자들에게 고민을 이야기해 보세요"
-                className="p-4"
-                onSend={send}
-              />
-            </>
-          )}
+          <ChatActions disabled={sending} onSolution={send} />
+          <ChatInput
+            disabled={sending}
+            placeholder="철학자들에게 고민을 이야기해 보세요"
+            className="p-4"
+            onSend={send}
+          />
         </>
-      )}
-
-      {showingGiftSheet && conversation && (
-        <GiftRecommendationSheet
-          personaKeys={conversation.personaKeys}
-          giftedKeys={giftedKeys}
-          onClose={() => setShowingGiftSheet(false)}
-          onGift={(personaKey) =>
-            setGiftedKeys((current) =>
-              current.includes(personaKey) ? current : [...current, personaKey],
-            )
-          }
-          onEndConversation={() => {
-            endConversation(conversation.conversationId)
-            setShowingGiftSheet(false)
-          }}
-        />
       )}
     </section>
   )

@@ -14,7 +14,6 @@ type ChatState = {
   error: string | null
   createConversation: (personaKeys: string[], firstMessage?: string) => Promise<string | null>
   sendMessage: (conversationId: string, message: string) => Promise<boolean>
-  endConversation: (conversationId: string) => void
 }
 
 export const useChatStore = create<ChatState>()((set, get) => {
@@ -142,8 +141,5 @@ export const useChatStore = create<ChatState>()((set, get) => {
         set({ sending: false, typingKey: null })
       }
     },
-
-    // 임시: 대화 종료·선물 추천 API가 없어 로컬에서 종료 상태만 표시한다
-    endConversation: (conversationId) => updateConversation(conversationId, (c) => ({ ...c, ended: true })),
   }
 })

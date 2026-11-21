@@ -16,7 +16,6 @@ export type Conversation = {
   conversationId: string
   personaKeys: string[]
   turns: Turn[]
-  ended?: boolean
 }
 
 export type CreateConversationResponse = {
