@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 
+import PhilosopherAvatar from '@/components/widgets/philosopher/PhilosopherAvatar'
 import { cn } from '@/lib/utils'
 import type { PhilosopherProfile } from '@/types/philosopher'
 
@@ -23,15 +24,12 @@ export default function PhilosopherCard({
     <span
       className={cn(
         'flex flex-col gap-1.5 bg-background-base text-left',
-        selected ? 'border-2 border-text-primary p-3.25' : 'border border-border-strong p-3.5',
+        selected ? 'border-2 border-border-active p-3.25' : 'border border-border-normal p-3.5',
         className,
       )}
     >
       <span className="flex items-start justify-between">
-        <span
-          aria-hidden
-          className={cn('shrink-0 rounded-full bg-border-strong', size === 'lg' ? 'size-14' : 'size-11')}
-        />
+        <PhilosopherAvatar personaKey={philosopher.key} className={size === 'lg' ? 'size-14' : 'size-11'} />
         {topRight}
       </span>
       <span className={size === 'lg' ? 'text-body-16-semibold' : 'text-body-14-bold'}>{philosopher.name}</span>
