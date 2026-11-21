@@ -75,8 +75,7 @@ export default function ChatPage() {
         <LoadingScreen />
       ) : !conversation ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-3 p-4">
-          <p className="text-body-16-regular text-text-tertiary">아직 상담방이 없어요</p>
-          {error && <p className="text-body-14-regular text-state-negative">{error}</p>}
+          <p className="text-body-16-regular text-text-tertiary">{error ?? '아직 상담방이 없어요'}</p>
           {creating ? (
             <p className="text-body-14-regular text-text-tertiary">방을 만드는 중…</p>
           ) : (

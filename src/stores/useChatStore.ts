@@ -238,7 +238,9 @@ export const useChatStore = create<ChatState>()((set, get) => {
         }));
         return true;
       } catch (e) {
-        set({ error: handleApiError(e) });
+        // 다른 계정의 방이거나 지워진 방이면 서버는 404에 일반 문구("요청한 리소스를…")만 준다
+        const notFound = isAxiosError(e) && e.response?.status === 404;
+        set({ error: notFound ? '이 대화를 찾을 수 없어요' : handleApiError(e) });
         return false;
       } finally {
         set({ openingConversation: false });
