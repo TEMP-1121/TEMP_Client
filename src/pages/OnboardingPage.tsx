@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
+import { useAuthStore } from '@/stores/useAuthStore';
+
 const slides = [
   {
     title: '일이 지루하게 느껴질 때',
@@ -23,6 +25,7 @@ export default function OnboardingPage() {
   const navigate = useNavigate();
   const slide = slides[page];
   const isLast = page === slides.length - 1;
+  const userName = useAuthStore((s) => s.userName);
 
   function finishOnboarding() {
     navigate('/home');
@@ -47,6 +50,9 @@ export default function OnboardingPage() {
         />
 
         <div className='mt-6 px-0.5'>
+          {page === 0 && userName && (
+            <p className='mb-2 text-body-14-bold text-text-brand'>{userName}님, 안녕하세요!</p>
+          )}
           <h1 className='whitespace-pre-line text-[18px] font-semibold leading-[1.35] tracking-[-0.03em] text-text-primary'>
             {slide.title}
           </h1>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router'
 
 import { rememberReturnTo } from '@/lib/authRedirect'
+import LoadingScreen from '@/components/common/LoadingScreen'
 import { useAuthStore } from '@/stores/useAuthStore'
 
 // 로그인이 필요한 화면을 감싼다. 새로고침·앱 재실행으로 메모리의 토큰이 없으면 refresh 쿠키로 한 번 확인하고,
@@ -31,9 +32,5 @@ export default function RequireAuth() {
   }, [accessToken, checked, pathname, search, navigate])
 
   if (accessToken) return <Outlet />
-  return (
-    <section className="flex flex-1 items-center justify-center p-4">
-      <p className="text-body-14-regular text-text-tertiary">로그인 확인 중…</p>
-    </section>
-  )
+  return <LoadingScreen />
 }

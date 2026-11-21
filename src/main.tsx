@@ -12,7 +12,6 @@ import KakaoCallbackPage from '@/pages/KakaoCallbackPage';
 import LoginPage from '@/pages/LoginPage';
 import MyPage from '@/pages/MyPage';
 import NotFoundPage from '@/pages/NotFoundPage';
-import SignupPage from '@/pages/SignupPage';
 import OnboardingPage from '@/pages/OnboardingPage';
 import PhilosopherExplorePage from '@/pages/PhilosopherExplorePage';
 import PhilosopherSelectPage from '@/pages/PhilosopherSelectPage';
@@ -42,7 +41,6 @@ const router = createBrowserRouter([
       },
       ...(import.meta.env.DEV ? [{ path: '/chat/test', element: <ChatPauseTestPage /> }] : []),
       { path: '/auth/kakao/callback', element: <KakaoCallbackPage /> },
-      { path: '/signup', element: <SignupPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

@@ -184,7 +184,8 @@ export const useChatStore = create<ChatState>()((set, get) => {
     setActiveConversation: (conversationId) => set({ activeConversationId: conversationId }),
 
     conversationList: [],
-    listLoading: false,
+    // 처음 받기 전까지는 로딩으로 둬서 보관함이 '대화 없음'부터 보여 주지 않게 한다
+    listLoading: true,
     listError: null,
     openingConversation: false,
 
