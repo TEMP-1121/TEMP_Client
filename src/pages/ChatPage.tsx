@@ -13,7 +13,10 @@ import { usePhilosopherStore } from '@/stores/usePhilosopherStore'
 
 export default function ChatPage() {
   const navigate = useNavigate()
-  const conversation = useChatStore((s) => s.conversations[s.conversations.length - 1])
+  const conversation = useChatStore((s) =>
+    s.conversations.find((item) => item.conversationId === s.activeConversationId) ??
+    s.conversations[s.conversations.length - 1],
+  )
   const typingKey = useChatStore((s) => s.typingKey)
   const creating = useChatStore((s) => s.creating)
   const sending = useChatStore((s) => s.sending)
@@ -79,14 +82,20 @@ export default function ChatPage() {
           {error && <p className="px-4 pt-2 text-body-14-regular text-state-negative">{error}</p>}
 
           {conversation.paused ? (
-            <ChatInput disabled placeholder="철학자들에게 고민을 이야기해 보세요" className="p-4" onSend={async () => false} />
+            <ChatInput
+              disabled
+              placeholder="철학자들에게 고민을 이야기해 보세요"
+              className="px-4 pt-3.75 pb-9.5"
+              onSend={async () => false}
+            />
           ) : (
             <>
               <ChatActions disabled={sending} onSolution={send} />
               <ChatInput
                 disabled={sending}
                 placeholder="철학자들에게 고민을 이야기해 보세요"
-                className="p-4"
+                // 시안 102px = 위 구분선 1 + 위 15 + 입력창 48 + 아래 38(아이폰 홈 인디케이터 자리 포함). 하단 탭(84px)과 같은 기준
+                className="px-4 pt-3.75 pb-9.5"
                 onSend={send}
               />
             </>

@@ -3,8 +3,11 @@
 @theme {
   --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
     "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
-  /* 철학자 아바타 이니셜 (시안 지정) */
-  --font-avatar: "Noto Sans KR", "Pretendard Variable", Pretendard, sans-serif;
+  /* 철학자 아바타 이니셜·홈 철학자 고르기 버튼 (시안 지정). index.html에서 500·700만 불러온다 */
+  --font-noto: "Noto Sans KR", "Pretendard Variable", Pretendard, sans-serif;
+
+  /* 홈 철학자 고르기 버튼·빠르게 시작하기 모서리 (홈 시안 기준) */
+  --radius-card: 10px;
 
   /* 입력 중 점 3개가 차례로 튀어 오른다 */
   --animate-typing-dot: typing-dot 1.2s ease-in-out infinite;
@@ -111,6 +114,14 @@
   letter-spacing: -0.02em;
 }
 
+/* 홈 안내 제목 (홈 시안 기준, 타이포그래피 표에는 아직 없음) */
+@utility text-heading-20-bold {
+  font-size: 20px;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
 @utility text-heading-20-medium {
   font-size: 20px;
   line-height: 1.4;
@@ -210,6 +221,14 @@
   letter-spacing: -0.02em;
 }
 
+/* 빠르게 시작하기 선택 상태 (홈 시안 기준, 타이포그래피 표에는 아직 없음) */
+@utility text-caption-13-bold {
+  font-size: 13px;
+  line-height: 1.5;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
 @utility text-caption-13-regular {
   font-size: 13px;
   line-height: 1.5;
@@ -236,6 +255,28 @@
   font-size: 12px;
   line-height: 1.4;
   font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+/* 하단 탭 라벨 (탭 시안 기준, 타이포그래피 표에는 아직 없음). 아이콘 24 + 간격 3 + 글자 13(11×1.2) = 시안의 40px */
+@utility text-caption-11-bold {
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+@utility text-caption-11-regular {
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+@utility text-caption-11-medium {
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 500;
   letter-spacing: -0.02em;
 }
 
