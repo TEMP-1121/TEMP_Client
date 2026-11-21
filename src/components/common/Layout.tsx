@@ -10,7 +10,7 @@ export default function Layout() {
 
   return (
     <div className="min-h-dvh bg-background-subtle">
-      <div className="mx-auto flex h-dvh max-w-117 flex-col bg-background-base">
+      <div className="mx-auto flex h-dvh max-w-100.5 flex-col bg-background-base">
         {!bare && <Header />}
         <main className="flex min-h-0 flex-1 flex-col overflow-y-auto">
           <Outlet />

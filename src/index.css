@@ -3,6 +3,21 @@
 @theme {
   --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
     "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  /* 철학자 아바타 이니셜 (시안 지정) */
+  --font-avatar: "Noto Sans KR", "Pretendard Variable", Pretendard, sans-serif;
+
+  /* 입력 중 점 3개가 차례로 튀어 오른다 */
+  --animate-typing-dot: typing-dot 1.2s ease-in-out infinite;
+  @keyframes typing-dot {
+    0%,
+    60%,
+    100% {
+      transform: translateY(0);
+    }
+    30% {
+      transform: translateY(-3px);
+    }
+  }
 
   --color-palette-common-white: #ffffff;
   --color-palette-common-black: #000000;
@@ -145,6 +160,14 @@
   letter-spacing: -0.02em;
 }
 
+/* 단톡방 하단 버튼 (채팅 시안 기준, 타이포그래피 표에는 아직 없음) */
+@utility text-body-15-bold {
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
 @utility text-body-15-regular {
   font-size: 15px;
   line-height: 1.6;
@@ -201,8 +224,32 @@
   letter-spacing: -0.02em;
 }
 
+/* 단톡방 철학자 이름 (채팅 시안 기준, 타이포그래피 표에는 아직 없음) */
+@utility text-caption-12-bold {
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
 @utility text-caption-12-regular {
   font-size: 12px;
+  line-height: 1.4;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+/* 입력 중 표시의 아바타 이니셜 (채팅 시안 기준, 타이포그래피 표에는 아직 없음) */
+@utility text-caption-10-bold {
+  font-size: 10px;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* 단톡방 헤더의 철학자 이름 (채팅 시안 기준, 타이포그래피 표에는 아직 없음) */
+@utility text-caption-10-regular {
+  font-size: 10px;
   line-height: 1.4;
   font-weight: 400;
   letter-spacing: -0.02em;

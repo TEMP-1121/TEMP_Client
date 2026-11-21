@@ -15,18 +15,21 @@ const COLORS: Record<string, string> = {
 
 type PhilosopherAvatarProps = {
   personaKey: string
+  name?: string
   className?: string
 }
 
-export default function PhilosopherAvatar({ personaKey, className }: PhilosopherAvatarProps) {
+export default function PhilosopherAvatar({ personaKey, name, className }: PhilosopherAvatarProps) {
   return (
     <span
       aria-hidden
       className={cn(
-        'size-10 shrink-0 rounded-full border-2 border-border-inverse',
+        'flex size-10 shrink-0 items-center justify-center rounded-full font-avatar text-body-14-bold text-text-primary',
         COLORS[personaKey] ?? 'bg-background-subtle',
         className,
       )}
-    />
+    >
+      {name?.[0]}
+    </span>
   )
 }
