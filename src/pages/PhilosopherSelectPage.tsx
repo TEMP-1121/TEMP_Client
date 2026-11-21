@@ -1,4 +1,5 @@
 import { X } from 'lucide-react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 import { cn } from '@/lib/utils';
@@ -10,6 +11,7 @@ import {
 
 export default function PhilosopherSelectPage() {
   const philosophers = usePhilosopherStore((s) => s.philosophers);
+  const fetchPersonas = usePhilosopherStore((s) => s.fetchPersonas);
   const selected = usePhilosopherStore((s) => s.selectedIds);
   const togglePhilosopher = usePhilosopherStore((s) => s.toggleSelect);
   const createConversation = useChatStore((s) => s.createConversation);
@@ -18,6 +20,10 @@ export default function PhilosopherSelectPage() {
   const draft = useChatStore((s) => s.draft);
   const setDraft = useChatStore((s) => s.setDraft);
   const isFull = selected.length === MAX_PHILOSOPHERS;
+
+  useEffect(() => {
+    void fetchPersonas();
+  }, [fetchPersonas]);
 
   function openRoom() {
     createConversation(selected, draft.trim() || undefined).then((id) => {
@@ -28,27 +34,21 @@ export default function PhilosopherSelectPage() {
 
   return (
     <section className='flex min-h-0 flex-1 flex-col bg-background-surface'>
-      <div
-        className='flex h-12 shrink-0 items-center justify-between px-5 text-sm font-semibold text-text-primary'
-        aria-hidden
-      >
-        {/* <span>9:41</span> */}
-        <div className='flex items-center gap-1.5'></div>
-      </div>
-
-      <header className='relative flex shrink-0 flex-col items-center px-12 pb-5 pt-1'>
-        <h1 className='text-body-16-semibold'>철학자 고르기</h1>
-        <p className='mt-1 text-caption-12-regular text-text-tertiary'>
+      <header className='shrink-0 pb-5'>
+        <div className='grid h-14 grid-cols-[2.5rem_1fr_2.5rem] items-center px-2'>
+          <h1 className='col-start-2 text-center text-body-16-semibold'>철학자 고르기</h1>
+          <button
+            type='button'
+            onClick={() => navigate('/home')}
+            aria-label='닫기'
+            className='flex size-10 items-center justify-center text-icon-primary'
+          >
+            <X className='size-6' aria-hidden />
+          </button>
+        </div>
+        <p className='text-center text-caption-12-regular text-text-tertiary'>
           함께 이야기할 철학자 {MAX_PHILOSOPHERS}명을 골라 주세요
         </p>
-        <button
-          type='button'
-          onClick={() => navigate('/home')}
-          aria-label='닫기'
-          className='absolute right-4 top-0 flex size-9 items-center justify-center text-icon-primary'
-        >
-          <X className='size-6' aria-hidden />
-        </button>
       </header>
 
       <div className='grid flex-1 grid-cols-2 content-start gap-3 overflow-y-auto px-4 pb-4'>
