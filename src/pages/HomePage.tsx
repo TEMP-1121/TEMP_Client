@@ -5,7 +5,7 @@ export default function HomePage() {
   const startKakaoLogin = useAuthStore((s) => s.startKakaoLogin)
 
   return (
-    <section className="flex flex-col items-center justify-center p-4">
+    <section className="flex flex-1 flex-col items-center justify-center p-4">
       <KakaoLoginButton onClick={startKakaoLogin} />
     </section>
   )

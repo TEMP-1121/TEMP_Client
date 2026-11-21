@@ -2,13 +2,13 @@ import type { InputHTMLAttributes } from 'react'
 
 import { cn } from '@/lib/utils'
 
-type SignupTextFieldProps = InputHTMLAttributes<HTMLInputElement> & {
+type TextFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   id: string
   label: string
   error?: string
 }
 
-export default function SignupTextField({ id, label, error, className, ...rest }: SignupTextFieldProps) {
+export default function TextField({ id, label, error, className, ...rest }: TextFieldProps) {
   const errorId = `${id}-error`
   return (
     <div className="flex flex-col gap-1.5">

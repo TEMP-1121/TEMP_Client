@@ -40,7 +40,8 @@ public/assets/           # 이미지(PNG). `/assets/파일명.png`로 참조
 - 판단 기준: 여러 페이지 공통 → `common/`, 특정 기능 전용 → `widgets/<기능>/`, 모달 → `dialog/<기능>/`
 - `ui/` 폴더 없음 (shadcn 미사용). 기본 부품도 `common/`에 직접 만든다
 - 기능 폴더 안에 `hooks/`로 관련 훅 분리 가능
-- 여러 곳에서 쓰는 타입이 생기면 `src/types/`. 한 곳에서만 쓰면 그 파일 안에 둔다
+- 여러 곳에서 쓰는 타입이 생기면 `src/types/<도메인>.ts`. 한 곳에서만 쓰면 그 파일 안에 둔다
+- 입력창(`TextField`) 같은 범용 폼 부품은 기능 이름을 붙이지 말고 `common/`에 (`SignupTextField` ✗ → `common/TextField` ○)
 - 레이아웃: `components/common/Layout.tsx`가 468px(`max-w-117`) 중앙 프레임 + `Header` + `<main>`(`<Outlet />`) + `BottomNavigation`
   - 페이지는 `<main>` 안에 들어가므로 최상위를 `<section className="flex-1 ...">`로 (`main`, `min-h-dvh` 쓰지 않기)
   - 하단 탭 추가: `BottomNavigation.tsx`의 `tabs` 배열에 한 줄 + `main.tsx`에 라우트
@@ -101,8 +102,9 @@ export const useFeedStore = create<FeedState>()((set) => ({
 - 호출 위치는 도메인 스토어 (상태 관리 섹션 참고)
 - 주소는 `.env`의 `VITE_API_URL`. 하드코딩 금지
 - `VITE_`로 시작하는 값은 빌드 결과 JS에 그대로 들어가 누구나 볼 수 있음. API 키·비밀번호 같은 비밀값은 넣지 않기 (서버에서 처리)
-- 에러 메시지는 `handleApiError(e)`로 한국어 문장으로 변환해서 표시
-- 로그인/토큰 주입은 아직 없음. 필요해지면 `api.interceptors`에서 `useAuthStore.getState()`로 주입
+- 서버 응답 형식은 `ApiResponse<T>` (`{ code, message, data }`, `src/types/api.ts`). 필드 검증 에러는 `FieldError[]`
+- 에러 메시지는 `handleApiError(e)`로 한국어 문장으로 변환해서 표시. 에러 코드 분기는 `getApiErrorCode(e)` (스토어마다 따로 만들지 않기)
+- 인증은 카카오 OAuth + 세션 쿠키(JSESSIONID). 인증 관련 요청은 `withCredentials: true`, 가입 POST는 `X-CSRF-TOKEN` 헤더 (`useAuthStore` 참고)
 
 ## 스타일
 
@@ -126,6 +128,8 @@ export const useFeedStore = create<FeedState>()((set) => ({
 - safe-area는 셸의 `SafeAreaView`가 처리. 웹에서 `env(safe-area-inset-*)` 넣지 않기
 - 우리 도메인이 아닌 링크는 셸이 휴대폰 기본 브라우저로 엶. 앱 안에서 열어야 하면 셸의 `IN_APP_HOSTS` 수정
 - Android 뒤로 가기는 셸이 WebView 히스토리로 처리 → 페이지 이동은 `<Link>`/`navigate()`로 (히스토리가 쌓이게)
+  - 예외: OAuth 시작처럼 다른 origin(백엔드)으로 가야 하는 이동만 `window.location.assign`
+- 카카오 로그인 흐름은 앱 안에서 이어져야 함 → 셸 `IN_APP_HOSTS`에 백엔드 도메인, `kauth.kakao.com`, `accounts.kakao.com` 필요 (없으면 외부 브라우저로 빠져 앱은 로그인 안 됨)
 - 빌드 타깃 `es2020` 유지 (구형 Android WebView)
 - 4xx는 웹이 직접 화면으로 보여 줘야 함 (`NotFoundPage`). 셸은 5xx만 에러 화면 처리
 - 로그인 없이 첫 화면에서 바로 핵심 기능을 쓸 수 있게 (해커톤 심사용)

@@ -1,6 +1,6 @@
 import { useState, type SubmitEvent } from 'react'
 
-import SignupTextField from '@/components/widgets/auth/SignupTextField'
+import TextField from '@/components/common/TextField'
 import { cn } from '@/lib/utils'
 import { normalizeSignup, validateSignup } from '@/lib/validateSignup'
 import { useAuthStore } from '@/stores/useAuthStore'
@@ -48,7 +48,7 @@ export default function SignupForm({ defaultName, defaultEmail }: SignupFormProp
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-1 flex-col gap-5">
-      <SignupTextField
+      <TextField
         id="signup-name"
         label="이름"
         autoComplete="name"
@@ -59,7 +59,7 @@ export default function SignupForm({ defaultName, defaultEmail }: SignupFormProp
         onChange={(e) => handleChange('name', e.target.value)}
         onBlur={() => handleBlur('name')}
       />
-      <SignupTextField
+      <TextField
         id="signup-email"
         label="이메일"
         type="email"
@@ -71,7 +71,7 @@ export default function SignupForm({ defaultName, defaultEmail }: SignupFormProp
         onChange={(e) => handleChange('email', e.target.value)}
         onBlur={() => handleBlur('email')}
       />
-      <SignupTextField
+      <TextField
         id="signup-phone"
         label="휴대폰 번호"
         type="tel"

@@ -14,3 +14,9 @@ export function handleApiError(error: unknown, fallback = '잠시 후 다시 시
   }
   return fallback
 }
+
+export function getApiErrorCode(error: unknown) {
+  if (!isAxiosError(error)) return undefined
+  const code: unknown = error.response?.data?.code
+  return typeof code === 'string' ? code : undefined
+}
