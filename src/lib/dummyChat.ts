@@ -5,57 +5,6 @@ import { uuid } from '@/lib/utils'
 import type { ApiResponse } from '@/types/api'
 import type { CreateConversationResponse, PersonaReply, SendMessageResponse, Turn } from '@/types/chat'
 
-export const DUMMY_GIFT_RECOMMENDATIONS: Record<
-  string,
-  { quote: string; productName: string; price: string }
-> = {
-  epictetus: {
-    quote: '질문을 적어 둘 노트가 필요하네.',
-    productName: '몰스킨 클래식 노트',
-    price: '22,900원',
-  },
-  nietzsche: {
-    quote: '자네 방식대로 쓸 펜일세.',
-    productName: '라미 사파리 만년필',
-    price: '39,000원',
-  },
-  marx: {
-    quote: '일의 구조를 기록해 보게.',
-    productName: '그리드 업무 노트',
-    price: '12,000원',
-  },
-  camus: {
-    quote: '반복되는 하루에 작은 쉼표를 주게.',
-    productName: '드립백 커피 세트',
-    price: '15,000원',
-  },
-  zhuangzi: {
-    quote: '가끔은 목적 없이 걸어도 좋네.',
-    productName: '산책용 패브릭 파우치',
-    price: '18,000원',
-  },
-  epicurus: {
-    quote: '보고서 끝나면 커피 한 잔, 잊지 말게.',
-    productName: '아메리카노 기프티콘',
-    price: '4,700원',
-  },
-  aristotle: {
-    quote: '좋은 습관은 작은 기록에서 시작하네.',
-    productName: '데일리 플래너',
-    price: '16,500원',
-  },
-  arendt: {
-    quote: '함께 생각을 나눌 자리를 만들어 봐요.',
-    productName: '티타임 기프티콘',
-    price: '9,500원',
-  },
-  weil: {
-    quote: '잠깐 멈춰 온전히 쉬는 시간도 필요해요.',
-    productName: '허브티 샘플러',
-    price: '13,000원',
-  },
-}
-
 const GREETINGS: Record<string, string> = {
   epictetus: '어서 오게. 오늘 자네 손에 달린 일과 아닌 일을 함께 나눠 보세.',
   nietzsche: '왔군! 오늘은 무엇이 자네를 지치게 했나?',

@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router';
 
 import Layout from '@/components/common/Layout';
 import ChatPage from '@/pages/ChatPage';
+import ChatPauseTestPage from '@/pages/ChatPauseTestPage';
 import HomePage from '@/pages/HomePage';
 import KakaoCallbackPage from '@/pages/KakaoCallbackPage';
 import LoginPage from '@/pages/LoginPage';
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
       { path: '/home', element: <HomePage /> },
       { path: '/explore', element: <PhilosopherExplorePage /> },
       { path: '/chat', element: <ChatPage /> },
+      ...(import.meta.env.DEV ? [{ path: '/chat/test', element: <ChatPauseTestPage /> }] : []),
       { path: '/mypage', element: <MyPage /> },
       { path: '/auth/kakao/callback', element: <KakaoCallbackPage /> },
       { path: '/signup', element: <SignupPage /> },
