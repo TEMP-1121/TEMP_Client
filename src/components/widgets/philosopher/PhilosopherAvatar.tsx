@@ -24,7 +24,7 @@ export default function PhilosopherAvatar({ personaKey, name, className }: Philo
     <span
       aria-hidden
       className={cn(
-        'flex size-10 shrink-0 items-center justify-center rounded-full font-avatar text-body-14-bold text-text-primary',
+        'flex size-10 shrink-0 items-center justify-center rounded-full font-noto text-body-14-bold text-text-primary',
         COLORS[personaKey] ?? 'bg-background-subtle',
         className,
       )}

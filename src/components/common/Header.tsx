@@ -16,9 +16,9 @@ export default function Header() {
           onClick={() => setSidebarOpen(true)}
           className="flex size-10 items-center justify-center"
         >
-          <Menu className="size-6 text-icon-primary" aria-hidden />
+          <Menu className="size-6 text-icon-secondary" aria-hidden />
         </button>
-        <h1 className="text-center text-heading-18-bold">일세</h1>
+        <h1 className="text-center text-heading-18-bold text-text-primary">일세</h1>
       </header>
       {sidebarOpen && <ConversationSidebar onClose={() => setSidebarOpen(false)} />}
     </>

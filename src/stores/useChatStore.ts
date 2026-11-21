@@ -13,6 +13,10 @@ type ChatState = {
   creating: boolean;
   sending: boolean;
   error: string | null;
+  // 홈에서 쓰던 고민. 철학자 선택 화면을 오가도 남아 있어야 해서 페이지 상태가 아니라 여기 둔다
+  draft: string;
+  draftQuickStart: string;
+  setDraft: (text: string, quickStart?: string) => void;
   createConversation: (
     personaKeys: string[],
     firstMessage?: string,
@@ -115,6 +119,12 @@ export const useChatStore = create<ChatState>()((set, get) => {
     sending: false,
     error: null,
     setActiveConversation: (conversationId) => set({ activeConversationId: conversationId }),
+
+    draft: '',
+    draftQuickStart: '',
+
+    setDraft: (text, quickStart) =>
+      set(quickStart === undefined ? { draft: text } : { draft: text, draftQuickStart: quickStart }),
 
     createConversation: async (personaKeys, firstMessage) => {
       // 응답 전에 방(과 홈에서 먼저 말한 고민)부터 보여야 이전 방이 잠깐 보였다가 바뀌지 않는다
