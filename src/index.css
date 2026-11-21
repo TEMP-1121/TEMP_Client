@@ -1,0 +1,12 @@
+@import "tailwindcss" source("../src");
+
+/* WebView 안에서 앱처럼 보이게: 탭 하이라이트·당겨서 바운스 제거 */
+html,
+body {
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+body {
+  @apply bg-white text-neutral-900 antialiased;
+}
