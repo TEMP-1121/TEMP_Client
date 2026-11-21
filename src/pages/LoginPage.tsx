@@ -1,5 +1,6 @@
 import { MessageCircle } from 'lucide-react';
 
+import Logo from '@/components/common/Logo';
 import { useAuthStore } from '@/stores/useAuthStore';
 
 export default function LoginPage() {
@@ -10,7 +11,7 @@ export default function LoginPage() {
       <div className='h-12 shrink-0' aria-hidden />
 
       <div className='flex flex-1 flex-col items-center justify-center'>
-        <div className='size-18 bg-palette-neutral-300' aria-hidden />
+        <Logo />
         <h1 className='mt-8 text-4xl font-bold leading-tight tracking-[-0.02em] text-text-primary'>
           일세
         </h1>
