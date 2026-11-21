@@ -101,12 +101,15 @@ export const useFeedStore = create<FeedState>()((set) => ({
 ## API
 
 - 모든 호출은 `src/lib/api.ts`의 `api` (axios 인스턴스). axios를 직접 `create` 하지 않기
+  - 예외: SSE 응답은 axios가 브라우저에서 스트림을 못 읽어 `lib/sse.ts`의 `postForEvent`(fetch)로 받는다. 토큰은 `authHeader()`로 똑같이 붙인다
 - 호출 위치는 도메인 스토어 (상태 관리 섹션 참고)
 - 주소는 `.env`의 `VITE_API_URL`. 하드코딩 금지
 - `VITE_`로 시작하는 값은 빌드 결과 JS에 그대로 들어가 누구나 볼 수 있음. API 키·비밀번호 같은 비밀값은 넣지 않기 (서버에서 처리)
 - 서버 응답 형식은 `ApiResponse<T>` (`{ code, message, data }`, `src/types/api.ts`). 필드 검증 에러는 `FieldError[]`
 - 에러 메시지는 `handleApiError(e)`로 한국어 문장으로 변환해서 표시. 에러 코드 분기는 `getApiErrorCode(e)` (스토어마다 따로 만들지 않기)
-- 채팅 답변은 SSE로 철학자별로 하나씩 받는다 (`useChatStore`의 `onTyping`·`onReply`). 명세 확정 전이라 지금은 `lib/dummyChat.ts`가 흉내 냄. 마감 전 반드시 삭제
+- 채팅 API는 Bearer JWT 필요. 토큰은 `useAuthStore.accessToken`에 있고 axios 인터셉터·`authHeader()`(SSE)가 붙인다. 401이면 refresh 쿠키로 한 번 갱신 후 재시도 (axios·SSE 동일). 메시지 전송은 SSE이고 서버가 끝날 때 `turn.completed`/`turn.failed` 이벤트 하나에 전원 답을 보낸다. 웹은 `revealInTurn`으로 한 명씩 "입력 중"과 함께 띄운다
+  - 메시지 `type`: 일반 대화 `conversation`, "이제 진지한 솔루션을 내놔라" `advice`
+  - 종료 이벤트 없이 연결이 끊기면 이력 조회(`GET …/{id}?clientMessageId=`)로 결과 확인
 - 인증은 카카오 OAuth + 세션 쿠키(JSESSIONID). 인증 관련 요청은 `withCredentials: true`, 가입 POST는 `X-CSRF-TOKEN` 헤더 (`useAuthStore` 참고)
 
 ## 스타일

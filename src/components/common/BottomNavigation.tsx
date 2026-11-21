@@ -21,13 +21,21 @@ export default function BottomNavigation() {
             className={({ isActive }) =>
               cn(
                 "flex flex-col items-center gap-0.75",
-                isActive ? "text-caption-11-bold text-text-primary" : "text-caption-11-medium text-text-tertiary",
+                isActive
+                  ? "text-caption-11-bold text-text-primary"
+                  : "text-caption-11-medium text-text-tertiary",
               )
             }
           >
             {({ isActive }) => (
               <>
-                <Icon className={cn("size-6", isActive ? "text-accent-primary" : "text-icon-tertiary")} aria-hidden />
+                <Icon
+                  className={cn(
+                    "size-6",
+                    isActive ? "text-accent-primary" : "text-icon-tertiary",
+                  )}
+                  aria-hidden
+                />
                 {label}
               </>
             )}

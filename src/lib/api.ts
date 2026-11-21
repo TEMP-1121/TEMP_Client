@@ -9,6 +9,12 @@ export const api = axios.create({
 
 const REFRESH_URL = '/api/v1/auth/refresh'
 
+// SSE는 axios를 거치지 않아(lib/sse.ts) 같은 토큰을 헤더로 직접 붙인다
+export function authHeader(): Record<string, string> {
+  const token = useAuthStore.getState().accessToken
+  return token ? { Authorization: `Bearer ${token}` } : {}
+}
+
 api.interceptors.request.use((config) => {
   const token = useAuthStore.getState().accessToken
   if (token && config.url !== REFRESH_URL) config.headers.Authorization = `Bearer ${token}`

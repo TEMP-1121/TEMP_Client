@@ -10,6 +10,7 @@ import UserMessage from '@/components/widgets/chat/UserMessage'
 import { useAutoScroll } from '@/components/widgets/chat/hooks/useAutoScroll'
 import { useChatStore } from '@/stores/useChatStore'
 import { usePhilosopherStore } from '@/stores/usePhilosopherStore'
+import type { MessageType } from '@/types/chat'
 
 export default function ChatPage() {
   const navigate = useNavigate()
@@ -30,10 +31,10 @@ export default function ChatPage() {
     `${conversation?.conversationId}-${replyCount}-${typingKey}-${sending}`,
   )
 
-  const send = (text: string) => {
+  const send = (text: string, type?: MessageType) => {
     if (!conversation) return Promise.resolve(false)
     stickToBottom()
-    return sendMessage(conversation.conversationId, text)
+    return sendMessage(conversation.conversationId, text, type)
   }
 
   return (
@@ -90,7 +91,7 @@ export default function ChatPage() {
             />
           ) : (
             <>
-              <ChatActions disabled={sending} onSolution={send} />
+              <ChatActions disabled={sending} onSolution={(text) => send(text, 'advice')} />
               <ChatInput
                 disabled={sending}
                 placeholder="철학자들에게 고민을 이야기해 보세요"
