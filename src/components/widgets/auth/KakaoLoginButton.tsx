@@ -14,7 +14,7 @@ export default function KakaoLoginButton({ className, type = 'button', ...rest }
       )}
       {...rest}
     >
-      <img src="/assets/kakao-login.png" alt="카카오 로그인" width={224} height={46} className="block w-56" />
+      <img src="/assets/kakao-login.png" alt="카카오 로그인" width={224} height={46} className="block h-auto w-full" />
     </button>
   )
 }
