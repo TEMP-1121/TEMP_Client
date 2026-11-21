@@ -1,6 +1,8 @@
 import { create } from 'zustand'
 
+import { api, handleApiError } from '@/lib/api'
 import { PHILOSOPHERS } from '@/lib/philosophers'
+import type { ApiResponse } from '@/types/api'
 import type { PhilosopherProfile } from '@/types/philosopher'
 
 export const MAX_PHILOSOPHERS = 3
@@ -11,8 +13,44 @@ const preloadInitials = (philosophers: PhilosopherProfile[]) =>
 
 preloadInitials(PHILOSOPHERS)
 
+type Persona = {
+  personaKey: string
+  name: string
+  subtitle: string
+  description: string
+  tags: string[]
+}
+
+type PersonasResponse = {
+  personaKeys: string[]
+  personas: Persona[]
+}
+
+// 카드의 한 줄 설명은 서버에 없어 로컬 값을 쓰고, 소개·시대·태그는 서버 값으로 덮는다.
+// 서버가 내려준 철학자만 남기되, 로컬 목록 순서(디자인 시안 순서)를 따른다
+function mergePersonas(personas: Persona[]): PhilosopherProfile[] {
+  const byKey = new Map(personas.map((persona) => [persona.personaKey, persona]))
+  return PHILOSOPHERS.flatMap((local) => {
+    const persona = byKey.get(local.key)
+    if (!persona) return []
+    return [
+      {
+        ...local,
+        name: persona.name,
+        era: persona.subtitle,
+        introduction: persona.description,
+        tags: persona.tags,
+      },
+    ]
+  })
+}
+
 type PhilosopherState = {
   philosophers: PhilosopherProfile[]
+  personasLoaded: boolean
+  personasLoading: boolean
+  personasError: string | null
+  fetchPersonas: () => Promise<void>
   selectedIds: string[]
   cardPhilosopher: PhilosopherProfile | null
   toggleSelect: (id: string) => boolean
@@ -24,8 +62,27 @@ type PhilosopherState = {
 
 export const usePhilosopherStore = create<PhilosopherState>()((set, get) => ({
   philosophers: PHILOSOPHERS,
+  personasLoaded: false,
+  personasLoading: false,
+  personasError: null,
   selectedIds: [],
   cardPhilosopher: null,
+
+  // 실패하면 로컬 목록을 그대로 둬서, 로그인 전에도 탐색 화면을 쓸 수 있게 한다
+  fetchPersonas: async () => {
+    if (get().personasLoaded || get().personasLoading) return
+    set({ personasLoading: true, personasError: null })
+    try {
+      const { data } = await api.get<ApiResponse<PersonasResponse>>('/api/v1/chat/personas')
+      const philosophers = mergePersonas(data.data.personas)
+      if (philosophers.length > 0) set({ philosophers })
+      set({ personasLoaded: true })
+    } catch (e) {
+      set({ personasError: handleApiError(e) })
+    } finally {
+      set({ personasLoading: false })
+    }
+  },
 
   openCard: (philosopher) => set({ cardPhilosopher: philosopher }),
   closeCard: () => set({ cardPhilosopher: null }),

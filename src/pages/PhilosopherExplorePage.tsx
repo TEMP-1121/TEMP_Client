@@ -1,15 +1,21 @@
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 
 import PhilosopherCardDialog from '@/components/dialog/philosopher/PhilosopherCardDialog'
 import PhilosopherCard from '@/components/widgets/philosopher/PhilosopherCard'
-import { PHILOSOPHERS } from '@/lib/philosophers'
 import { usePhilosopherStore } from '@/stores/usePhilosopherStore'
 import type { PhilosopherProfile } from '@/types/philosopher'
 
 export default function PhilosopherExplorePage() {
   const navigate = useNavigate()
+  const philosophers = usePhilosopherStore((s) => s.philosophers)
+  const fetchPersonas = usePhilosopherStore((s) => s.fetchPersonas)
   const openCard = usePhilosopherStore((s) => s.openCard)
   const openedKey = usePhilosopherStore((s) => s.cardPhilosopher?.key)
+
+  useEffect(() => {
+    void fetchPersonas()
+  }, [fetchPersonas])
 
   const startChat = (philosopher: PhilosopherProfile) => {
     const { selectOnly, closeCard } = usePhilosopherStore.getState()
@@ -26,7 +32,7 @@ export default function PhilosopherExplorePage() {
       </p>
 
       <div className="mt-6 grid grid-cols-2 gap-3">
-        {PHILOSOPHERS.map((philosopher) => (
+        {philosophers.map((philosopher) => (
           <button
             key={philosopher.key}
             type="button"
