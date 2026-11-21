@@ -1,8 +1,10 @@
+import Logo from '@/components/common/Logo';
+
 export default function SplashPage() {
   return (
     <section className='flex flex-1 flex-col bg-background-base px-4'>
       <div className='flex flex-1 flex-col items-center justify-center pb-24'>
-        <div className='size-24 bg-palette-neutral-300' aria-hidden />
+        <Logo className='size-24' />
         <h1 className='mt-6 text-4xl font-bold leading-tight tracking-[-0.02em] text-text-primary'>
           일세
         </h1>

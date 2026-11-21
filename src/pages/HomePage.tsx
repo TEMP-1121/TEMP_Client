@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router'
 
+import Logo from '@/components/common/Logo'
 import ChatInput from '@/components/widgets/chat/ChatInput'
 import QuickStartList from '@/components/widgets/home/QuickStartList'
 import PhilosopherPickerButton from '@/components/widgets/philosopher/PhilosopherPickerButton'
@@ -20,8 +21,7 @@ export default function HomePage() {
   return (
     <section className="flex flex-1 flex-col px-4 pb-4">
       <div className="flex flex-col items-center pt-8 text-center">
-        {/* 임시 로고. 진짜 로고가 나오면 public/assets/logo.svg 파일만 바꾼다 */}
-        <img src="/assets/logo.svg" alt="일세" className="size-17.5" />
+        <Logo className="size-17.5" />
         <h2 className="mt-8 text-heading-20-bold text-text-primary">오늘은 어떤 일이 지루했나요?</h2>
         <p className="mt-4 text-caption-13-regular text-text-tertiary">
           철학자 3명을 골라 단톡방을 열어 보세요.
