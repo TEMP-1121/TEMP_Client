@@ -39,6 +39,24 @@
   /* 홈 철학자 고르기 버튼·빠르게 시작하기 모서리 (홈 시안 기준) */
   --radius-card: 10px;
 
+  /* 온보딩 철학자 카드: 줄 전체가 왼쪽으로 흘러가고(marquee), 카드마다 박자를 어긋나게 오르내려(float) 물결처럼 보인다 */
+  --animate-float: float 4s ease-in-out infinite;
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-48px);
+    }
+  }
+  --animate-marquee: marquee 45s linear infinite;
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
   /* 입력 중 점 3개가 차례로 튀어 오른다 */
   --animate-typing-dot: typing-dot 1.2s ease-in-out infinite;
   @keyframes typing-dot {
@@ -154,6 +172,14 @@
   font-size: 24px;
   line-height: 1.2;
   font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* 온보딩 제목 (온보딩 시안 기준, 타이포그래피 표에는 아직 없음) */
+@utility text-title-24-bold {
+  font-size: 24px;
+  line-height: 1.2;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 
