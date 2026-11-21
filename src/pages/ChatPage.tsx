@@ -1,3 +1,5 @@
+import { Link } from 'react-router'
+
 import ChatInput from '@/components/widgets/chat/ChatInput'
 import { useAutoScroll } from '@/components/widgets/chat/hooks/useAutoScroll'
 import { DUMMY_PERSONAS } from '@/lib/dummyChat'
@@ -28,7 +30,6 @@ export default function ChatPage() {
   const creating = useChatStore((s) => s.creating)
   const sending = useChatStore((s) => s.sending)
   const error = useChatStore((s) => s.error)
-  const createConversation = useChatStore((s) => s.createConversation)
   const sendMessage = useChatStore((s) => s.sendMessage)
 
   const replyCount = conversation?.turns.reduce((n, t) => n + 1 + t.replies.length, 0)
@@ -36,7 +37,6 @@ export default function ChatPage() {
     `${conversation?.conversationId}-${replyCount}-${typingKey}-${sending}`,
   )
 
-  const start = () => createConversation(Object.keys(DUMMY_PERSONAS))
   const title = conversation?.turns.find((t) => t.message)?.message ?? '새 고민'
 
   if (!conversation) {
@@ -44,13 +44,13 @@ export default function ChatPage() {
       <section className="flex flex-1 flex-col items-center justify-center gap-3 p-4">
         <p className="text-neutral-500">아직 상담방이 없어요</p>
         {error && <p className="text-sm text-red-500">{error}</p>}
-        <button
-          onClick={start}
-          disabled={creating}
-          className="rounded-full bg-neutral-900 px-5 py-2 text-white disabled:bg-neutral-300"
-        >
-          {creating ? '방을 만드는 중…' : '테스트 방 만들기'}
-        </button>
+        {creating ? (
+          <p className="text-sm text-neutral-400">방을 만드는 중…</p>
+        ) : (
+          <Link to="/home" className="rounded-full bg-neutral-900 px-5 py-2 text-white">
+            고민 시작하기
+          </Link>
+        )}
       </section>
     )
   }
@@ -59,9 +59,9 @@ export default function ChatPage() {
     <section className="flex min-h-0 flex-1 flex-col">
       <div className="flex items-center justify-between gap-2 border-b border-neutral-200 px-4 py-2">
         <p className="truncate font-semibold">{title}</p>
-        <button onClick={start} disabled={sending || creating} className="shrink-0 text-sm text-neutral-500">
-          + 새 방
-        </button>
+        <Link to="/home" className="shrink-0 text-sm text-neutral-500">
+          + 새 고민
+        </Link>
       </div>
 
       <div ref={ref} onScroll={onScroll} className="flex flex-1 flex-col gap-3 overflow-y-auto p-4">

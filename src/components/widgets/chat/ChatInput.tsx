@@ -1,13 +1,24 @@
 import { useState, type KeyboardEvent } from 'react'
 import { SendHorizontal } from 'lucide-react'
 
+import { cn } from '@/lib/utils'
+
 type ChatInputProps = {
   disabled?: boolean
+  defaultValue?: string
+  placeholder?: string
+  className?: string
   onSend: (text: string) => Promise<boolean>
 }
 
-export default function ChatInput({ disabled = false, onSend }: ChatInputProps) {
-  const [text, setText] = useState('')
+export default function ChatInput({
+  disabled = false,
+  defaultValue = '',
+  placeholder = '고민을 이야기해 보세요',
+  className,
+  onSend,
+}: ChatInputProps) {
+  const [text, setText] = useState(defaultValue)
   const canSend = !disabled && text.trim() !== ''
 
   const send = async () => {
@@ -30,7 +41,7 @@ export default function ChatInput({ disabled = false, onSend }: ChatInputProps) 
         e.preventDefault()
         send()
       }}
-      className="flex items-end gap-2 border-t border-neutral-200 bg-white p-3"
+      className={cn('flex items-end gap-2 border-t border-neutral-200 bg-white p-3', className)}
     >
       {/* text-base(16px) 미만이면 iOS가 포커스할 때 화면을 확대한다 */}
       <textarea
@@ -39,7 +50,7 @@ export default function ChatInput({ disabled = false, onSend }: ChatInputProps) 
         onKeyDown={handleKeyDown}
         rows={1}
         maxLength={2000}
-        placeholder="고민을 이야기해 보세요"
+        placeholder={placeholder}
         aria-label="메시지"
         className="max-h-32 flex-1 resize-none rounded-2xl bg-neutral-100 px-4 py-2 text-base outline-none"
       />
