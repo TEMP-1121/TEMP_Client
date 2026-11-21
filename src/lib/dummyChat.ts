@@ -9,6 +9,9 @@ export const DUMMY_PERSONAS: Record<string, string> = {
   socrates: '소크라테스',
   seneca: '세네카',
   camus: '카뮈',
+  epicurus: '에피쿠로스',
+  nietzsche: '니체',
+  zhuangzi: '장자',
 }
 
 const GREETINGS: Record<string, string> = {
