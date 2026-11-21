@@ -70,6 +70,7 @@ export default function ChatPage() {
                     personaKey={reply.personaKey}
                     name={nameOf(reply.personaKey)}
                     text={reply.text}
+                    advice={turn.type === 'advice'}
                   />
                 ))}
               </div>

@@ -103,7 +103,9 @@ export const useFeedStore = create<FeedState>()((set) => ({
 - 모든 호출은 `src/lib/api.ts`의 `api` (axios 인스턴스). axios를 직접 `create` 하지 않기
   - 예외: SSE 응답은 axios가 브라우저에서 스트림을 못 읽어 `lib/sse.ts`의 `postForEvent`(fetch)로 받는다. 토큰은 `authHeader()`로 똑같이 붙인다
 - 호출 위치는 도메인 스토어 (상태 관리 섹션 참고)
-- 주소는 `.env`의 `VITE_API_URL`. 하드코딩 금지
+- 백엔드는 웹과 같은 주소 아래로 프록시해서 부른다 (`/api`, `/oauth2`, `/login/oauth2`). 다른 사이트로 직접 부르면 로그인 쿠키가 막힘 (특히 iOS·Safari)
+  - 배포: `vercel.json` rewrites (백엔드 주소는 여기 한 곳), 로컬: `vite.config.ts`의 `server.proxy` + `.env`의 `API_PROXY_TARGET`
+  - 코드에서는 `/api/v1/...`처럼 경로만 쓴다. 백엔드 주소 하드코딩 금지
 - `VITE_`로 시작하는 값은 빌드 결과 JS에 그대로 들어가 누구나 볼 수 있음. API 키·비밀번호 같은 비밀값은 넣지 않기 (서버에서 처리)
 - 서버 응답 형식은 `ApiResponse<T>` (`{ code, message, data }`, `src/types/api.ts`). 필드 검증 에러는 `FieldError[]`
 - 에러 메시지는 `handleApiError(e)`로 한국어 문장으로 변환해서 표시. 에러 코드 분기는 `getApiErrorCode(e)` (스토어마다 따로 만들지 않기)
@@ -139,7 +141,7 @@ export const useFeedStore = create<FeedState>()((set) => ({
 - 우리 도메인이 아닌 링크는 셸이 휴대폰 기본 브라우저로 엶. 앱 안에서 열어야 하면 셸의 `IN_APP_HOSTS` 수정
 - Android 뒤로 가기는 셸이 WebView 히스토리로 처리 → 페이지 이동은 `<Link>`/`navigate()`로 (히스토리가 쌓이게)
   - 예외: OAuth 시작처럼 다른 origin(백엔드)으로 가야 하는 이동만 `window.location.assign`
-- 카카오 로그인 흐름은 앱 안에서 이어져야 함 → 셸 `IN_APP_HOSTS`에 백엔드 도메인, `kauth.kakao.com`, `accounts.kakao.com` 필요 (없으면 외부 브라우저로 빠져 앱은 로그인 안 됨)
+- 카카오 로그인 흐름은 앱 안에서 이어져야 함 → 셸 `IN_APP_HOSTS`에 `kauth.kakao.com`, `accounts.kakao.com` 필요 (없으면 외부 브라우저로 빠져 앱은 로그인 안 됨). 백엔드는 웹 주소 아래로 프록시하므로 백엔드 도메인은 필요 없음
 - 빌드 타깃 `es2020` 유지 (구형 Android WebView)
 - 4xx는 웹이 직접 화면으로 보여 줘야 함 (`NotFoundPage`). 셸은 5xx만 에러 화면 처리
 - 로그인 없이 첫 화면에서 바로 핵심 기능을 쓸 수 있게 (해커톤 심사용)
@@ -163,7 +165,7 @@ export const useFeedStore = create<FeedState>()((set) => ({
 - remote: `origin` → https://github.com/TEMP-1121/TEMP_Client.git
 - `docs/`는 gitignore (로컬 참고 문서용, 예: 셸 빌드 가이드)
 - `.env`, `.env.*`는 절대 커밋하지 않음 (gitignore). 새 환경변수를 추가하면 이름과 용도를 이 문서에 적고 팀에는 따로 공유. 배포 값은 Vercel 환경변수에서 관리
-  - 현재 변수: `VITE_API_URL` (백엔드 주소)
+  - 현재 변수: `API_PROXY_TARGET` (로컬 개발 서버가 프록시할 백엔드 주소. `VITE_`가 아니라 빌드 결과에 안 들어감)
 
 ### 브랜치
 
