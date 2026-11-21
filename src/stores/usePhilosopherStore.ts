@@ -16,6 +16,7 @@ type PhilosopherState = {
   selectedIds: string[]
   cardPhilosopher: PhilosopherProfile | null
   toggleSelect: (id: string) => boolean
+  selectOnly: (id: string) => void
   pickRandom: (ids: string[], count?: number) => void
   openCard: (philosopher: PhilosopherProfile) => void
   closeCard: () => void
@@ -39,6 +40,8 @@ export const usePhilosopherStore = create<PhilosopherState>()((set, get) => ({
     set({ selectedIds: [...selectedIds, id] })
     return true
   },
+
+  selectOnly: (id) => set({ selectedIds: [id] }),
 
   pickRandom: (ids, count = MAX_PHILOSOPHERS) => {
     const shuffled = [...ids]

@@ -12,8 +12,8 @@ export default function PhilosopherExplorePage() {
   const openCard = usePhilosopherStore((s) => s.openCard)
 
   const startChat = (philosopher: PhilosopherProfile) => {
-    const { selectedIds, toggleSelect, closeCard } = usePhilosopherStore.getState()
-    if (!selectedIds.includes(philosopher.key)) toggleSelect(philosopher.key)
+    const { selectOnly, closeCard } = usePhilosopherStore.getState()
+    selectOnly(philosopher.key)
     closeCard()
     navigate('/philosophers')
   }
