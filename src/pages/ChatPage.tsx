@@ -23,6 +23,7 @@ export default function ChatPage() {
   const sending = useChatStore((s) => s.sending)
   const error = useChatStore((s) => s.error)
   const sendMessage = useChatStore((s) => s.sendMessage)
+  const retryTurn = useChatStore((s) => s.retryTurn)
   const philosophers = usePhilosopherStore((s) => s.philosophers)
   const nameOf = (key: string) => philosophers.find((p) => p.key === key)?.name ?? key
 
@@ -63,7 +64,17 @@ export default function ChatPage() {
           <div ref={ref} onScroll={onScroll} className="flex flex-1 flex-col gap-4 overflow-y-auto bg-background-surface p-4">
             {conversation.turns.map((turn) => (
               <div key={turn.turnId} className="flex flex-col gap-4">
-                {turn.message && <UserMessage text={turn.message} />}
+                {turn.message && (
+                  <UserMessage
+                    text={turn.message}
+                    failed={turn.failed}
+                    retryDisabled={sending}
+                    onRetry={() => {
+                      stickToBottom()
+                      retryTurn(conversation.conversationId, turn.turnId)
+                    }}
+                  />
+                )}
                 {turn.replies.map((reply) => (
                   <PhilosopherMessage
                     key={reply.personaKey}
@@ -71,6 +82,7 @@ export default function ChatPage() {
                     name={nameOf(reply.personaKey)}
                     text={reply.text}
                     advice={turn.type === 'advice'}
+                    quote={reply.quote}
                   />
                 ))}
               </div>
@@ -81,8 +93,6 @@ export default function ChatPage() {
             )}
           </div>
 
-          {error && <p className="px-4 pt-2 text-body-14-regular text-state-negative">{error}</p>}
-
           {conversation.paused ? (
             <ChatInput
               disabled
@@ -92,13 +102,17 @@ export default function ChatPage() {
             />
           ) : (
             <>
-              <ChatActions disabled={sending} onSolution={(text) => send(text, 'advice')} />
+              <ChatActions disabled={sending} onSolution={(text) => void send(text, 'advice')} />
               <ChatInput
                 disabled={sending}
                 placeholder="철학자들에게 고민을 이야기해 보세요"
                 // 시안 102px = 위 구분선 1 + 위 15 + 입력창 48 + 아래 38(아이폰 홈 인디케이터 자리 포함). 하단 탭(84px)과 같은 기준
                 className="px-4 pt-3.75 pb-9.5"
-                onSend={send}
+                // 실패해도 메시지는 대화에 남아 그 자리에서 다시 보내므로, 입력창에는 되돌리지 않는다
+                onSend={async (text) => {
+                  await send(text)
+                  return true
+                }}
               />
             </>
           )}
