@@ -1,15 +1,24 @@
 import { create } from 'zustand'
 
+import type { PhilosopherProfile } from '@/types/philosopher'
+
 export const MAX_PHILOSOPHERS = 3
 
 type PhilosopherState = {
   selectedIds: string[]
+  cardPhilosopher: PhilosopherProfile | null
   toggleSelect: (id: string) => boolean
   pickRandom: (ids: string[], count?: number) => void
+  openCard: (philosopher: PhilosopherProfile) => void
+  closeCard: () => void
 }
 
 export const usePhilosopherStore = create<PhilosopherState>()((set, get) => ({
   selectedIds: [],
+  cardPhilosopher: null,
+
+  openCard: (philosopher) => set({ cardPhilosopher: philosopher }),
+  closeCard: () => set({ cardPhilosopher: null }),
 
   toggleSelect: (id) => {
     const { selectedIds } = get()
