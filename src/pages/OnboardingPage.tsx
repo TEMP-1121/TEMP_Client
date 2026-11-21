@@ -34,7 +34,7 @@ export default function OnboardingPage() {
         <button
           type='button'
           onClick={finishOnboarding}
-          className='absolute right-4 top-16 z-10 px-2 py-2 text-[10px] text-text-tertiary transition-colors hover:text-text-primary'
+          className='absolute right-4 top-16 z-10 px-2 py-2 text-[12px] text-text-tertiary transition-colors hover:text-text-primary'
         >
           건너뛰기
         </button>
@@ -47,10 +47,10 @@ export default function OnboardingPage() {
         />
 
         <div className='mt-6 px-0.5'>
-          <h1 className='whitespace-pre-line text-[18px] font-semibold leading-[1.35] tracking-[-0.03em] text-text-primary'>
+          <h1 className='whitespace-pre-line text-[24px] font-semibold leading-[1.35] tracking-[-0.03em] text-text-primary'>
             {slide.title}
           </h1>
-          <p className='mt-8 text-[11px] leading-[1.4] text-text-tertiary'>
+          <p className='mt-8 text-[15px] leading-[1.4] text-text-tertiary'>
             {slide.description}
           </p>
         </div>
@@ -75,7 +75,7 @@ export default function OnboardingPage() {
           onClick={() =>
             isLast ? finishOnboarding() : setPage((current) => current + 1)
           }
-          className='flex h-12 w-full shrink-0 items-center justify-center rounded-lg bg-accent-primary text-[12px] font-semibold text-text-inverse transition-colors hover:bg-accent-pressed active:bg-accent-pressed'
+          className='flex h-12 w-full shrink-0 items-center justify-center rounded-lg bg-accent-primary text-[15px] font-semibold text-text-inverse transition-colors hover:bg-accent-pressed active:bg-accent-pressed'
         >
           {isLast ? '일세 시작하기!' : '다음'}
         </button>

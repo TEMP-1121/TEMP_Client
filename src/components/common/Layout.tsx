@@ -7,7 +7,7 @@ export default function Layout() {
   const { pathname } = useLocation();
   // 로그인·온보딩·철학자 선택·단톡방은 자체 헤더를 쓰고 하단 탭을 숨긴다
   const bare =
-    ['/', '/onboarding', '/philosophers'].includes(pathname) ||
+    ['/', '/splash', '/onboarding', '/philosophers'].includes(pathname) ||
     pathname === '/chat' ||
     pathname.startsWith('/chat/');
 

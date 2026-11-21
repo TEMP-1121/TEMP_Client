@@ -12,6 +12,7 @@ import MyPage from '@/pages/MyPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import SignupPage from '@/pages/SignupPage';
 import OnboardingPage from '@/pages/OnboardingPage';
+import SplashPage from '@/pages/SplashPage';
 import PhilosopherExplorePage from '@/pages/PhilosopherExplorePage';
 import PhilosopherSelectPage from '@/pages/PhilosopherSelectPage';
 
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { path: '/', element: <LoginPage /> },
+      { path: '/splash', element: <SplashPage /> },
       { path: '/onboarding', element: <OnboardingPage /> },
       { path: '/philosophers', element: <PhilosopherSelectPage /> },
       { path: '/home', element: <HomePage /> },
