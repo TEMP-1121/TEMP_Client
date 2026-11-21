@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 const tabs: { to: string; label: string; icon: LucideIcon }[] = [
   { to: "/home", label: "채팅", icon: MessageCircle },
-  { to: "/philosophers", label: "철학자 탐색", icon: Users },
+  { to: "/explore", label: "철학자 탐색", icon: Users },
 ];
 
 export default function BottomNavigation() {
