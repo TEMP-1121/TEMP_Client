@@ -105,6 +105,7 @@ export const useFeedStore = create<FeedState>()((set) => ({
 - 호출 위치는 도메인 스토어 (상태 관리 섹션 참고)
 - 백엔드는 웹과 같은 주소 아래로 프록시해서 부른다 (`/api`, `/oauth2`, `/login/oauth2`). 다른 사이트로 직접 부르면 로그인 쿠키가 막힘 (특히 iOS·Safari)
   - 배포: `vercel.json` rewrites (백엔드 주소는 여기 한 곳), 로컬: `vite.config.ts`의 `server.proxy` + `.env`의 `API_PROXY_TARGET`
+  - Vercel은 `main`만 배포한다 (`vercel.json`의 `git.deploymentEnabled`). 무료 플랜 하루 배포 한도를 브랜치 Preview가 다 써서 프로덕션 배포가 막힌 적이 있음. 새 브랜치 규칙이 생기면 거기에도 `false` 추가
   - 코드에서는 `/api/v1/...`처럼 경로만 쓴다. 백엔드 주소 하드코딩 금지
 - `VITE_`로 시작하는 값은 빌드 결과 JS에 그대로 들어가 누구나 볼 수 있음. API 키·비밀번호 같은 비밀값은 넣지 않기 (서버에서 처리)
 - 서버 응답 형식은 `ApiResponse<T>` (`{ code, message, data }`, `src/types/api.ts`). 필드 검증 에러는 `FieldError[]`
