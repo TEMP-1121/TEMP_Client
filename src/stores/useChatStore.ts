@@ -9,6 +9,8 @@ import type { ApiResponse } from '@/types/api';
 import type {
   Conversation,
   ConversationHistory,
+  ConversationList,
+  ConversationSummary,
   CreateConversationResponse,
   MessageType,
   PersonaReply,
@@ -41,6 +43,14 @@ type ChatState = {
   endConversation: (conversationId: string) => void;
   setActiveConversation: (conversationId: string) => void;
   retryTurn: (conversationId: string, turnId: string) => Promise<boolean>;
+  // 대화 보관함: 서버의 내 방 목록
+  conversationList: ConversationSummary[];
+  listLoading: boolean;
+  listError: string | null;
+  fetchConversations: () => Promise<void>;
+  // 보관함에서 고른 방. 메모리에 없으면 서버 이력으로 불러온다
+  openingConversation: boolean;
+  openConversation: (conversationId: string) => Promise<boolean>;
 };
 
 export const useChatStore = create<ChatState>()((set, get) => {
@@ -158,6 +168,65 @@ export const useChatStore = create<ChatState>()((set, get) => {
     sending: false,
     error: null,
     setActiveConversation: (conversationId) => set({ activeConversationId: conversationId }),
+
+    conversationList: [],
+    listLoading: false,
+    listError: null,
+    openingConversation: false,
+
+    // ponytail: 최근 50개만 받는다. 보관함이 길어지면 page로 더 불러오기 추가
+    fetchConversations: async () => {
+      set({ listLoading: true, listError: null });
+      try {
+        const { data } = await api.get<ApiResponse<ConversationList>>(
+          '/api/v1/chat/conversations',
+          { params: { size: 50 } },
+        );
+        set({ conversationList: data.data.content });
+      } catch (e) {
+        set({ listError: handleApiError(e) });
+      } finally {
+        set({ listLoading: false });
+      }
+    },
+
+    // ponytail: 오래된 순 100턴까지만 불러온다. 대화가 더 길어지면 page로 이어 받기 추가
+    openConversation: async (conversationId) => {
+      const local = get().conversations.find((c) => c.conversationId === conversationId);
+      if (local?.turns.length) {
+        set({ activeConversationId: conversationId, error: null });
+        return true;
+      }
+      set({ openingConversation: true, activeConversationId: conversationId, error: null });
+      try {
+        const { data } = await api.get<ApiResponse<ConversationHistory>>(
+          `/api/v1/chat/conversations/${conversationId}`,
+          { params: { size: 100 } },
+        );
+        const loaded: Conversation = {
+          conversationId,
+          personaKeys: data.data.personaKeys,
+          turns: data.data.content
+            // 서버는 방을 만들 때 인사를 항상 저장하지만, 고민을 먼저 말하고 연 방은 화면에서 인사를 띄우지 않았다.
+            // 새로고침 후에도 같은 화면이 되도록 내 메시지가 있는 방은 인사를 숨긴다
+            .filter((turn, _, all) => turn.type !== 'greeting' || !all.some((t) => t.message))
+            .map((turn) => ({
+              ...turn,
+              replies: (turn.replies as ServerReply[]).map(toReply),
+            })),
+        };
+        set((s) => ({
+          conversations: [...s.conversations.filter((c) => c.conversationId !== conversationId), loaded],
+          activeConversationId: conversationId,
+        }));
+        return true;
+      } catch (e) {
+        set({ error: handleApiError(e) });
+        return false;
+      } finally {
+        set({ openingConversation: false });
+      }
+    },
 
     // 명세상 실패가 확정된 전송은 같은 clientMessageId를 다시 쓰지 않는다. 실패한 턴을 빼고 같은 내용·종류로 새로 보낸다
     retryTurn: async (conversationId, turnId) => {

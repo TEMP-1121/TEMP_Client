@@ -1,6 +1,7 @@
 import type { PhilosopherProfile } from '@/types/philosopher'
 
-// 철학자는 디자인 시스템의 9명(--color-philosopher-*)으로 고정이라 서버에서 받지 않는다
+// 철학자는 디자인 시스템의 9명(--color-philosopher-*)으로 고정. 카드 한 줄 설명과 서버 응답 전·실패 시 보여 줄 기본값이다.
+// 소개·시대·태그는 usePhilosopherStore.fetchPersonas가 서버 값(/api/v1/chat/personas)으로 덮는다
 export const PHILOSOPHERS: PhilosopherProfile[] = [
   {
     key: 'epictetus',
