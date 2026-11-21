@@ -95,7 +95,7 @@ export default function OnboardingPage() {
           {page === 0 && userName && (
             <p className='mb-2 text-body-14-bold text-text-brand'>{userName}님, 안녕하세요!</p>
           )}
-          <h1 className='whitespace-pre-line text-title-24-bold text-text-primary'>
+          <h1 className='whitespace-pre-line font-a2z text-title-24-bold text-text-primary'>
             {slide.title}
           </h1>
           <p className='mt-8 whitespace-pre-line text-body-15-regular text-text-secondary'>
