@@ -6,6 +6,7 @@ import Layout from '@/components/common/Layout'
 import HomePage from '@/pages/HomePage'
 import MyPage from '@/pages/MyPage'
 import NotFoundPage from '@/pages/NotFoundPage'
+import OnboardingPage from '@/pages/OnboardingPage'
 
 import './index.css'
 
@@ -13,7 +14,8 @@ const router = createBrowserRouter([
   {
     element: <Layout />,
     children: [
-      { path: '/', element: <HomePage /> },
+      { path: '/', element: <OnboardingPage /> },
+      { path: '/home', element: <HomePage /> },
       { path: '/mypage', element: <MyPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
