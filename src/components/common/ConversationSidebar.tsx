@@ -29,7 +29,6 @@ export default function ConversationSidebar({ onClose }: { onClose: () => void }
   const listLoading = useChatStore((s) => s.listLoading)
   const listError = useChatStore((s) => s.listError)
   const fetchConversations = useChatStore((s) => s.fetchConversations)
-  const openConversation = useChatStore((s) => s.openConversation)
   const philosophers = usePhilosopherStore((s) => s.philosophers)
   const nameOf = (key: string) => philosophers.find((philosopher) => philosopher.key === key)?.name ?? key
 
@@ -94,8 +93,8 @@ export default function ConversationSidebar({ onClose }: { onClose: () => void }
                 type='button'
                 onClick={() => {
                   onClose()
-                  navigate('/chat')
-                  openConversation(conversation.conversationId)
+                  // 대화는 ChatPage가 주소의 방 ID로 불러온다
+                  navigate(`/chat/${conversation.conversationId}`)
                 }}
                 className='flex w-full items-center gap-2 border-b border-border-normal py-4 text-left last:border-b-0'
               >

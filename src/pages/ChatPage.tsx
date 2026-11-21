@@ -1,4 +1,5 @@
-import { Link, useNavigate } from 'react-router'
+import { useEffect } from 'react'
+import { Link, useNavigate, useParams } from 'react-router'
 
 import ChatActions from '@/components/widgets/chat/ChatActions'
 import ChatHeader from '@/components/widgets/chat/ChatHeader'
@@ -19,6 +20,9 @@ export default function ChatPage() {
     s.conversations.find((item) => item.conversationId === s.activeConversationId),
   )
   const opening = useChatStore((s) => s.openingConversation)
+  const activeConversationId = useChatStore((s) => s.activeConversationId)
+  const openConversation = useChatStore((s) => s.openConversation)
+  const { conversationId: routeId } = useParams()
   const typingKey = useChatStore((s) => s.typingKey)
   const creating = useChatStore((s) => s.creating)
   const sending = useChatStore((s) => s.sending)
@@ -27,6 +31,18 @@ export default function ChatPage() {
   const retryTurn = useChatStore((s) => s.retryTurn)
   const philosophers = usePhilosopherStore((s) => s.philosophers)
   const nameOf = (key: string) => philosophers.find((p) => p.key === key)?.name ?? key
+
+  // 주소의 방과 보고 있는 방이 다르면(새로고침·보관함·뒤로 가기) 그 방을 불러온다
+  useEffect(() => {
+    if (routeId && routeId !== activeConversationId) openConversation(routeId)
+  }, [routeId, activeConversationId, openConversation])
+
+  // 새 방은 서버가 ID를 준 뒤에야 주소에 넣을 수 있다. 히스토리를 늘리지 않게 바꿔치기한다
+  useEffect(() => {
+    if (!routeId && !creating && activeConversationId && conversation) {
+      navigate(`/chat/${activeConversationId}`, { replace: true })
+    }
+  }, [routeId, creating, activeConversationId, conversation, navigate])
 
   const replyCount = conversation?.turns.reduce((n, t) => n + 1 + t.replies.length, 0)
   const { ref, onScroll, stickToBottom } = useAutoScroll<HTMLDivElement>(
