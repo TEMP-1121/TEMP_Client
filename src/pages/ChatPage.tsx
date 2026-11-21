@@ -45,6 +45,10 @@ export default function ChatPage() {
     }
   }, [routeId, creating, activeConversationId, conversation, navigate])
 
+  const lastTurn = conversation?.turns[conversation.turns.length - 1]
+  const questionTurnId =
+    !sending && lastTurn?.type === 'question' && lastTurn.replies.length > 0 && !lastTurn.failed ? lastTurn.turnId : undefined
+
   const replyCount = conversation?.turns.reduce((n, t) => n + 1 + t.replies.length, 0)
   const { ref, onScroll, stickToBottom } = useAutoScroll<HTMLDivElement>(
     `${conversation?.conversationId}-${replyCount}-${typingKey}-${sending}`,
@@ -123,7 +127,7 @@ export default function ChatPage() {
             />
           ) : (
             <>
-              <ChatActions disabled={sending} onSolution={(text) => void send(text, 'advice')} />
+              <ChatActions disabled={sending} questionTurnId={questionTurnId} onSolution={(text) => void send(text, 'advice')} />
               <ChatInput
                 disabled={sending}
                 placeholder="철학자들에게 고민을 이야기해 보세요"
