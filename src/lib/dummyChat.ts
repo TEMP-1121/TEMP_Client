@@ -4,19 +4,20 @@ import { revealInTurn } from '@/lib/revealInTurn'
 import { uuid } from '@/lib/utils'
 import type { ApiResponse } from '@/types/api'
 import type { CreateConversationResponse, PersonaReply, SendMessageResponse, Turn } from '@/types/chat'
+import type { Philosopher } from '@/types/philosopher'
 
 // 디자인 시스템의 철학자 9명(--color-philosopher-*) 기준
-export const DUMMY_PERSONAS: Record<string, string> = {
-  epictetus: '에픽테토스',
-  nietzsche: '니체',
-  marx: '마르크스',
-  camus: '카뮈',
-  zhuangzi: '장자',
-  epicurus: '에피쿠로스',
-  aristotle: '아리스토텔레스',
-  arendt: '한나 아렌트',
-  weil: '시몬 베유',
-}
+export const DUMMY_PHILOSOPHERS: Philosopher[] = [
+  { key: 'epictetus', name: '에픽테토스', description: '내게 달린 선택에 집중해요.', tags: ['통제', '선택'] },
+  { key: 'nietzsche', name: '니체', description: '남의 성공 기준을 의심하고 내 기준을 세워요.', tags: ['내기준', '자기극복'] },
+  { key: 'marx', name: '마르크스', description: '누가 일을 결정하는지 보고, 바꿀 조건을 찾아요.', tags: ['노동', '구조'] },
+  { key: 'camus', name: '카뮈', description: '답이 없는 반복 속에서 내가 취할 태도를 찾아요.', tags: ['반복', '태도'] },
+  { key: 'zhuangzi', name: '장자', description: '당연한 기준을 뒤집어 다른 길을 보여줘요.', tags: ['관점전환', '자유'] },
+  { key: 'epicurus', name: '에피쿠로스', description: '꼭 필요한 욕구와 불안을 키우는 욕구를 나눠요.', tags: ['욕구', '작은행복'] },
+  { key: 'aristotle', name: '아리스토텔레스', description: '되고 싶은 사람에 가까워지는 습관을 제안해요.', tags: ['습관', '성장'] },
+  { key: 'arendt', name: '한나 아렌트', description: '동료와 함께 새롭게 시작할 일을 찾아요.', tags: ['협업', '새시작'] },
+  { key: 'weil', name: '시몬 베유', description: '일하는 사람을 지치게 하는 업무 조건을 짚어요.', tags: ['업무조건', '번아웃'] },
+]
 
 const GREETINGS: Record<string, string> = {
   epictetus: '어서 오게. 오늘 자네 손에 달린 일과 아닌 일을 함께 나눠 보세.',
