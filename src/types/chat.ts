@@ -7,7 +7,7 @@ export type Quote = {
 export type PersonaReply = {
   personaKey: string
   text: string
-  quote?: Quote
+  quote?: Quote | null
 }
 
 // 서버가 실제로 보내는 답변 (Swagger에는 personaKey·text만 있지만 advice 턴은 advice·quote로 온다)
@@ -15,15 +15,18 @@ export type ServerReply = {
   personaKey: string
   text?: string
   advice?: string
-  quote?: Quote
+  quote?: Quote | null
 }
 
 // conversation은 일반 대화, advice는 "이제 진지한 솔루션을 내놔라" 조언 요청
 export type MessageType = 'conversation' | 'advice'
 
+export const DANGER_SIGN = 'USER_DANGER_SIGN'
+
 export type Turn = {
   turnId: string
-  type: 'greeting' | MessageType
+  // question은 조언 요청에 철학자가 되묻는 보충 질문, USER_DANGER_SIGN은 서버가 위험 신호를 감지한 턴(답 없음)
+  type: 'greeting' | MessageType | 'question' | typeof DANGER_SIGN
   clientMessageId: string | null
   message: string | null
   replies: PersonaReply[]
