@@ -66,6 +66,17 @@
   --color-philosopher-arendt: #d9ef68;
   --color-philosopher-weil: #bf8efe;
 
+  /* 철학자 카드 태그 글자·테두리 (철학자 고르기 시안). 기본색은 흰 바탕에서 안 읽혀 더 진한 색을 따로 둔다 */
+  --color-philosopher-epictetus-tag: #11b8eb;
+  --color-philosopher-nietzsche-tag: #4a85ff;
+  --color-philosopher-marx-tag: #ff702f;
+  --color-philosopher-camus-tag: #10a647;
+  --color-philosopher-zhuangzi-tag: #f6446d;
+  --color-philosopher-epicurus-tag: #c7b700;
+  --color-philosopher-aristotle-tag: #5566f1;
+  --color-philosopher-arendt-tag: #81c100;
+  --color-philosopher-weil-tag: #a158ff;
+
   --color-background-base: var(--color-palette-common-white);
   --color-background-surface: var(--color-palette-neutral-50);
   --color-background-subtle: var(--color-palette-neutral-100);
@@ -76,6 +87,8 @@
   --color-border-active: var(--color-palette-red-500);
   --color-border-disabled: var(--color-palette-neutral-100);
   --color-border-inverse: var(--color-palette-common-white);
+  /* 철학자 고르기 카드 선택 테두리 (시안 #ffa7bb에 가장 가까운 팔레트 색) */
+  --color-border-selected: var(--color-palette-red-200);
 
   --color-text-primary: var(--color-palette-neutral-900);
   --color-text-secondary: var(--color-palette-neutral-700);
