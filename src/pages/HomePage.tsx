@@ -18,25 +18,19 @@ export default function HomePage() {
   const pickPhilosophers = () => navigate('/philosophers')
 
   return (
-    // 한 화면에 다 보이도록 아래(철학자 고르기·빠르게 시작하기·입력창)는 고정하고, 위 안내 영역이 남는 높이를 나눠 쓴다
-    <section className="flex min-h-0 flex-1 flex-col">
-      {/* 화면이 아주 작으면 안내 영역만 스크롤된다. my-auto라 넘칠 때도 위가 잘리지 않는다 */}
-      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4">
-        <div className="my-auto flex flex-col items-center py-6 text-center">
-          {/* 임시 로고. 진짜 로고가 나오면 public/assets/logo.svg 파일만 바꾼다. 아이폰 SE처럼 낮은 화면에선 제목·설명이 보이도록 숨긴다 */}
-          <img src="/assets/logo.svg" alt="일세" className="size-17.5 [@media(max-height:700px)]:hidden" />
-          <h2 className="mt-8 text-heading-20-bold text-text-primary [@media(max-height:700px)]:mt-0">
-            오늘은 어떤 일이 지루했나요?
-          </h2>
-          <p className="mt-4 text-caption-13-regular text-text-tertiary">
-            철학자 3명을 골라 단톡방을 열어 보세요.
-            <br />
-            서로 다른 시선으로 함께 이야기해 줄 거예요.
-          </p>
-        </div>
+    <section className="flex flex-1 flex-col px-4 pb-4">
+      <div className="flex flex-col items-center pt-8 text-center">
+        {/* 임시 로고. 진짜 로고가 나오면 public/assets/logo.svg 파일만 바꾼다 */}
+        <img src="/assets/logo.svg" alt="일세" className="size-17.5" />
+        <h2 className="mt-8 text-heading-20-bold text-text-primary">오늘은 어떤 일이 지루했나요?</h2>
+        <p className="mt-4 text-caption-13-regular text-text-tertiary">
+          철학자 3명을 골라 단톡방을 열어 보세요.
+          <br />
+          서로 다른 시선으로 함께 이야기해 줄 거예요.
+        </p>
       </div>
 
-      <div className="flex shrink-0 flex-col px-4 pb-4">
+      <div className="mt-auto flex flex-col pt-10">
         <PhilosopherPickerButton selectedIds={selectedIds} onClick={pickPhilosophers} />
 
         <QuickStartList
@@ -44,7 +38,7 @@ export default function HomePage() {
           selected={quickStart}
           // 선택이 풀리면('') 입력창도 비운다
           onSelect={(text) => setDraft(text, text)}
-          className="mt-14 [@media(max-height:700px)]:mt-6"
+          className="mt-14"
         />
 
         <div className="mt-6">

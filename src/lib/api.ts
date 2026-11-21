@@ -2,8 +2,8 @@ import axios, { isAxiosError, type InternalAxiosRequestConfig } from 'axios'
 
 import { useAuthStore } from '@/stores/useAuthStore'
 
+// 백엔드는 웹과 같은 주소 아래(/api …)로 프록시된다 (배포: vercel.json, 로컬: vite.config.ts). 다른 사이트로 부르면 로그인 쿠키가 막힌다
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
   timeout: 15000,
 })
 
