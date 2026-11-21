@@ -1,21 +1,27 @@
 import { create } from 'zustand'
 
-import { DUMMY_PHILOSOPHERS } from '@/lib/dummyChat'
-import type { Philosopher } from '@/types/philosopher'
+import { PHILOSOPHERS } from '@/lib/philosophers'
+import type { PhilosopherProfile } from '@/types/philosopher'
 
 export const MAX_PHILOSOPHERS = 3
 
 type PhilosopherState = {
-  philosophers: Philosopher[]
+  philosophers: PhilosopherProfile[]
   selectedIds: string[]
+  cardPhilosopher: PhilosopherProfile | null
   toggleSelect: (id: string) => boolean
   pickRandom: (ids: string[], count?: number) => void
+  openCard: (philosopher: PhilosopherProfile) => void
+  closeCard: () => void
 }
 
 export const usePhilosopherStore = create<PhilosopherState>()((set, get) => ({
-  // 임시: 철학자 목록 API가 나오면 fetchPhilosophers로 받아 온다
-  philosophers: DUMMY_PHILOSOPHERS,
+  philosophers: PHILOSOPHERS,
   selectedIds: [],
+  cardPhilosopher: null,
+
+  openCard: (philosopher) => set({ cardPhilosopher: philosopher }),
+  closeCard: () => set({ cardPhilosopher: null }),
 
   toggleSelect: (id) => {
     const { selectedIds } = get()

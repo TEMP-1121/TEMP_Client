@@ -2,6 +2,8 @@ import { X } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router';
 
 import PhilosopherAvatar from '@/components/widgets/philosopher/PhilosopherAvatar';
+import PhilosopherCard from '@/components/widgets/philosopher/PhilosopherCard';
+import PhilosopherGrid from '@/components/widgets/philosopher/PhilosopherGrid';
 import { cn } from '@/lib/utils';
 import { useChatStore } from '@/stores/useChatStore';
 import { MAX_PHILOSOPHERS, usePhilosopherStore } from '@/stores/usePhilosopherStore';
@@ -41,41 +43,36 @@ export default function PhilosopherSelectPage() {
         </p>
       </div>
 
-      <div className='grid flex-1 grid-cols-2 content-start gap-2.5 overflow-y-auto px-5 pb-4'>
-        {philosophers.map((philosopher) => {
-          const isSelected = selected.includes(philosopher.key);
-          const isDisabled = !isSelected && isFull;
+      <div className='flex-1 overflow-y-auto px-5 pb-4'>
+        <PhilosopherGrid
+          philosophers={philosophers}
+          renderItem={(philosopher) => {
+            const isSelected = selected.includes(philosopher.key);
+            const isDisabled = !isSelected && isFull;
 
-          return (
-            <label
-              key={philosopher.key}
-              className={cn(
-                'flex min-h-36 cursor-pointer flex-col border border-border-normal p-3 transition-colors',
-                isSelected && 'border-2 border-border-active p-2.75',
-                isDisabled && 'cursor-not-allowed opacity-45',
-              )}
-            >
-              <div className='mb-2 flex items-start justify-between'>
-                <PhilosopherAvatar personaKey={philosopher.key} className='size-12' />
-                <input
-                  type='checkbox'
-                  checked={isSelected}
-                  disabled={isDisabled}
-                  onChange={() => togglePhilosopher(philosopher.key)}
-                  aria-label={`${philosopher.name} 선택`}
-                  className='size-5 cursor-pointer accent-accent-primary disabled:cursor-not-allowed'
+            return (
+              <label
+                key={philosopher.key}
+                className={cn('cursor-pointer', isDisabled && 'cursor-not-allowed opacity-45')}
+              >
+                <PhilosopherCard
+                  philosopher={philosopher}
+                  selected={isSelected}
+                  topRight={
+                    <input
+                      type='checkbox'
+                      checked={isSelected}
+                      disabled={isDisabled}
+                      onChange={() => togglePhilosopher(philosopher.key)}
+                      aria-label={`${philosopher.name} 선택`}
+                      className='size-5 cursor-pointer accent-accent-primary disabled:cursor-not-allowed'
+                    />
+                  }
                 />
-              </div>
-              <span className='text-body-14-semibold'>{philosopher.name}</span>
-              <span className='mt-1.5 text-caption-12-regular text-text-secondary'>
-                {philosopher.description}
-              </span>
-              <span className='mt-auto pt-2 text-caption-12-regular text-text-tertiary'>
-                {philosopher.tags.map((tag) => `#${tag}`).join(' ')}
-              </span>
-            </label>
-          );
-        })}
+              </label>
+            );
+          }}
+        />
       </div>
 
       <footer className='shrink-0 border-t border-border-normal bg-background-base px-5 pt-3 pb-5'>
