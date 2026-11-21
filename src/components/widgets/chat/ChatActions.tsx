@@ -11,7 +11,7 @@ type ChatActionsProps = {
 // 스크롤되지 않고 입력창 바로 위에 고정
 export default function ChatActions({ disabled, onSolution, questionTurnId }: ChatActionsProps) {
   return (
-    <div className="relative flex flex-col items-center gap-3 bg-background-surface px-4 pb-4">
+    <div className="flex flex-col items-center gap-3 bg-background-surface px-4 pb-4">
       {/* 솔루션 대신 질문이 온 이유를 답할 때까지 띄워 둔다. 메시지 위에 겹치면 질문 말풍선을 가려 버튼 위에 자리를 차지하게 두고,
           저절로 사라지면 버튼이 내려앉으며 화면이 흔들려 보여 시간제한을 두지 않는다 */}
       {questionTurnId && (
@@ -19,11 +19,6 @@ export default function ChatActions({ disabled, onSolution, questionTurnId }: Ch
           어떤 일이 있었는지 조금 더 이야기해주겠나?
         </p>
       )}
-      {/* 스크롤되는 메시지가 버튼 위에서 뚝 잘려 보이지 않게 흐리게 사라지도록. 목록 아래 여백(16px)과 같은 높이라 맨 아래 메시지는 가리지 않는다 */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-full h-4 bg-linear-to-b from-transparent to-background-surface"
-      />
       <button
         onClick={() => onSolution(SOLUTION_REQUEST)}
         disabled={disabled}
