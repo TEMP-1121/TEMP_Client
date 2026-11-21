@@ -1,5 +1,14 @@
 import { clsx, type ClassValue } from 'clsx'
-import { twMerge } from 'tailwind-merge'
+import { extendTailwindMerge } from 'tailwind-merge'
+
+// index.css의 @utility 글자 스타일(text-body-16-regular 등)을 모르면 글자 색으로 보고 text-text-primary와 합칠 때 지워 버린다
+const twMerge = extendTailwindMerge({
+  extend: {
+    classGroups: {
+      'font-size': [{ text: [(value: string) => /^(title|heading|body|caption)-\d+-/.test(value)] }],
+    },
+  },
+})
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))

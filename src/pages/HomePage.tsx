@@ -29,24 +29,24 @@ export default function HomePage() {
       <div className="flex flex-col items-center pt-8 text-center">
         <div className="flex -space-x-3">
           {[0, 1, 2].map((i) => (
-            <span key={i} className="size-20 rounded-full border-2 border-white bg-neutral-300" />
+            <span key={i} className="size-20 rounded-full border-2 border-border-inverse bg-background-subtle" />
           ))}
         </div>
-        <h2 className="mt-8 text-2xl font-bold">오늘은 어떤 일이 지루했나요?</h2>
-        <p className="mt-3 text-sm text-neutral-500">
+        <h2 className="mt-8 text-title-24-semibold">오늘은 어떤 일이 지루했나요?</h2>
+        <p className="mt-3 text-body-14-regular text-text-tertiary">
           철학자 3명을 골라 단톡방을 열어 보세요. 서로 다른 시선으로 함께 이야기해 줄 거예요.
         </p>
       </div>
 
       <div className="mt-10 flex flex-col gap-2">
-        <p className="text-sm text-neutral-500">빠르게 시작하기</p>
+        <p className="text-body-14-regular text-text-tertiary">빠르게 시작하기</p>
         {QUICK_STARTS.map((text) => (
           <button
             key={text}
             onClick={() => setDraft(text)}
             className={cn(
-              'border px-4 py-3 text-left',
-              draft === text ? 'border-2 border-neutral-900 font-semibold' : 'border-neutral-300',
+              'border px-4 py-3 text-left text-body-15-regular',
+              draft === text ? 'border-border-active bg-accent-light text-text-brand' : 'border-border-normal',
             )}
           >
             {text}
@@ -55,7 +55,7 @@ export default function HomePage() {
       </div>
 
       <div className="mt-auto flex flex-col gap-3 pt-10">
-        <Link to="/philosophers" className="flex items-center gap-4 border border-neutral-900 px-4 py-3">
+        <Link to="/philosophers" className="flex items-center gap-4 border border-border-strong px-4 py-3">
           <div className="flex -space-x-2">
             {[0, 1, 2].map((i) => {
               const id = selectedIds[i]
@@ -63,8 +63,8 @@ export default function HomePage() {
                 <span
                   key={i}
                   className={cn(
-                    'flex size-9 items-center justify-center rounded-full text-xs',
-                    id ? 'border-2 border-white bg-neutral-300' : 'border border-dashed border-neutral-400 bg-white',
+                    'flex size-9 items-center justify-center rounded-full text-caption-12-semibold',
+                    id ? 'border-2 border-border-inverse bg-background-subtle' : 'border border-dashed border-border-strong bg-background-base',
                   )}
                 >
                   {id && DUMMY_PERSONAS[id]?.[0]}
@@ -72,8 +72,8 @@ export default function HomePage() {
               )
             })}
           </div>
-          <span className="flex-1 font-bold">철학자 3명 고르기</span>
-          <span className="flex items-center text-neutral-500">
+          <span className="flex-1 text-body-16-semibold">철학자 3명 고르기</span>
+          <span className="flex items-center text-body-14-regular text-text-tertiary">
             {selectedIds.length}/{MAX_PHILOSOPHERS}
             <ChevronRight className="size-4" />
           </span>
@@ -87,7 +87,7 @@ export default function HomePage() {
           className="border-t-0 p-0"
           onSend={start}
         />
-        {!ready && <p className="text-xs text-neutral-500">철학자 3명을 고르면 대화를 시작할 수 있어요</p>}
+        {!ready && <p className="text-caption-12-regular text-text-tertiary">철학자 3명을 고르면 대화를 시작할 수 있어요</p>}
       </div>
     </section>
   )

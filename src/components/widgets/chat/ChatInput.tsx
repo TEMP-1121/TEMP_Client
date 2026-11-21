@@ -41,7 +41,7 @@ export default function ChatInput({
         e.preventDefault()
         send()
       }}
-      className={cn('flex items-end gap-2 border-t border-neutral-200 bg-white p-3', className)}
+      className={cn('flex items-end gap-2 border-t border-border-normal bg-background-base p-3', className)}
     >
       {/* text-base(16px) 미만이면 iOS가 포커스할 때 화면을 확대한다 */}
       <textarea
@@ -52,13 +52,13 @@ export default function ChatInput({
         maxLength={2000}
         placeholder={placeholder}
         aria-label="메시지"
-        className="max-h-32 flex-1 resize-none rounded-2xl bg-neutral-100 px-4 py-2 text-base outline-none"
+        className="max-h-32 flex-1 resize-none rounded-2xl bg-background-subtle px-4 py-2 text-body-16-regular outline-none placeholder:text-text-placeholder"
       />
       <button
         type="submit"
         disabled={!canSend}
         aria-label="보내기"
-        className="flex size-10 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white disabled:bg-neutral-300"
+        className="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent-primary text-text-inverse active:bg-accent-pressed disabled:bg-accent-disabled"
       >
         <SendHorizontal className="size-5" />
       </button>

@@ -11,11 +11,11 @@ const nameOf = (key: string) => DUMMY_PERSONAS[key] ?? key
 function Bubble({ mine, name, text }: { mine?: boolean; name?: string; text: string }) {
   return (
     <div className={cn('flex max-w-4/5 flex-col gap-1', mine && 'self-end')}>
-      {name && <span className="text-xs text-neutral-500">{name}</span>}
+      {name && <span className="text-caption-12-regular text-text-tertiary">{name}</span>}
       <p
         className={cn(
-          'rounded-2xl px-4 py-2 whitespace-pre-wrap',
-          mine ? 'bg-neutral-900 text-white' : 'bg-neutral-100',
+          'rounded-2xl px-4 py-2 text-body-15-regular whitespace-pre-wrap',
+          mine ? 'bg-accent-primary text-text-inverse' : 'bg-background-subtle',
         )}
       >
         {text}
@@ -42,12 +42,12 @@ export default function ChatPage() {
   if (!conversation) {
     return (
       <section className="flex flex-1 flex-col items-center justify-center gap-3 p-4">
-        <p className="text-neutral-500">아직 상담방이 없어요</p>
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        <p className="text-body-16-regular text-text-tertiary">아직 상담방이 없어요</p>
+        {error && <p className="text-body-14-regular text-state-negative">{error}</p>}
         {creating ? (
-          <p className="text-sm text-neutral-400">방을 만드는 중…</p>
+          <p className="text-body-14-regular text-text-tertiary">방을 만드는 중…</p>
         ) : (
-          <Link to="/home" className="rounded-full bg-neutral-900 px-5 py-2 text-white">
+          <Link to="/home" className="rounded-full bg-accent-primary px-5 py-2 text-body-16-semibold text-text-inverse">
             고민 시작하기
           </Link>
         )}
@@ -57,9 +57,9 @@ export default function ChatPage() {
 
   return (
     <section className="flex min-h-0 flex-1 flex-col">
-      <div className="flex items-center justify-between gap-2 border-b border-neutral-200 px-4 py-2">
-        <p className="truncate font-semibold">{title}</p>
-        <Link to="/home" className="shrink-0 text-sm text-neutral-500">
+      <div className="flex items-center justify-between gap-2 border-b border-border-normal px-4 py-2">
+        <p className="truncate text-body-16-semibold">{title}</p>
+        <Link to="/home" className="shrink-0 text-body-14-medium text-text-secondary">
           + 새 고민
         </Link>
       </div>
@@ -74,13 +74,13 @@ export default function ChatPage() {
           </div>
         ))}
         {typingKey ? (
-          <p className="text-sm text-neutral-400">{nameOf(typingKey)}님이 입력 중…</p>
+          <p className="text-body-14-regular text-text-tertiary">{nameOf(typingKey)}님이 입력 중…</p>
         ) : (
-          sending && <p className="text-sm text-neutral-400">…</p>
+          sending && <p className="text-body-14-regular text-text-tertiary">…</p>
         )}
       </div>
 
-      {error && <p className="px-4 pt-2 text-sm text-red-500">{error}</p>}
+      {error && <p className="px-4 pt-2 text-body-14-regular text-state-negative">{error}</p>}
       <ChatInput
         disabled={sending}
         onSend={(text) => {

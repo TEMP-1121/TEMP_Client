@@ -10,7 +10,7 @@ const tabs: { to: string; label: string; icon: LucideIcon }[] = [
 
 export default function BottomNavigation() {
   return (
-    <nav className="sticky bottom-0 z-10 flex h-16 border-t border-neutral-200 bg-white">
+    <nav className="sticky bottom-0 z-10 flex h-16 border-t border-border-normal bg-background-base">
       {tabs.map(({ to, label, icon: Icon }) => (
         <NavLink
           key={to}
@@ -18,8 +18,8 @@ export default function BottomNavigation() {
           end
           className={({ isActive }) =>
             cn(
-              "flex flex-1 flex-col items-center justify-center gap-1 text-xs",
-              isActive ? "font-semibold text-neutral-900" : "text-neutral-400",
+              "flex flex-1 flex-col items-center justify-center gap-1",
+              isActive ? "text-caption-12-semibold text-text-primary" : "text-caption-12-regular text-icon-tertiary",
             )
           }
         >
