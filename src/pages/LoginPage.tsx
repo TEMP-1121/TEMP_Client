@@ -25,7 +25,7 @@ export default function LoginPage() {
         <button
           type='button'
           onClick={startKakaoLogin}
-          className='grid h-14 w-full grid-cols-[2.5rem_1fr_2.5rem] items-center rounded-full border border-accent-primary bg-background-base px-3 text-sm font-medium text-text-primary transition-colors hover:bg-accent-light active:bg-accent-light'
+          className='grid h-14 w-full grid-cols-[2.5rem_1fr_2.5rem] items-center rounded-full border border-static-black bg-background-base px-3 text-sm font-medium text-text-primary transition-colors hover:bg-accent-light active:bg-accent-light'
         >
           <MessageCircle className='ml-1 size-5 fill-current text-static-black' aria-hidden />
           <span className='text-center'>카카오로 시작하기</span>

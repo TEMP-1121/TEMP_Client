@@ -1,6 +1,6 @@
 export default function SplashPage() {
   return (
-    <section className='flex flex-1 flex-col bg-background-base px-4'>
+    <section className='flex flex-1 flex-col bg-background-base bg-linear-to-br from-transparent from-36% to-accent-primary/20 px-4'>
       <div className='flex flex-1 flex-col items-center justify-center pb-24'>
         <div className='size-24 bg-palette-neutral-300' aria-hidden />
         <h1 className='mt-6 text-4xl font-bold leading-tight tracking-[-0.02em] text-text-primary'>
