@@ -1,5 +1,213 @@
 @import "tailwindcss" source("../src");
 
+@theme {
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+
+  --color-palette-common-white: #ffffff;
+  --color-palette-common-black: #000000;
+
+  --color-palette-neutral-50: #f8f8f8;
+  --color-palette-neutral-100: #f1f1f2;
+  --color-palette-neutral-200: #e5e7e9;
+  --color-palette-neutral-300: #d4d4d5;
+  --color-palette-neutral-400: #c3c3c4;
+  --color-palette-neutral-500: #b2b2b2;
+  --color-palette-neutral-600: #8f8f8f;
+  --color-palette-neutral-700: #6e6e6e;
+  --color-palette-neutral-800: #4d4d4d;
+  --color-palette-neutral-900: #2e2e2e;
+  --color-palette-neutral-950: #171717;
+
+  --color-palette-red-50: #fff0f3;
+  --color-palette-red-100: #ffdde4;
+  --color-palette-red-200: #ffb8c8;
+  --color-palette-red-300: #ff85a1;
+  --color-palette-red-400: #f94471;
+  --color-palette-red-500: #ea0034;
+  --color-palette-red-600: #c7002c;
+  --color-palette-red-700: #a30024;
+  --color-palette-red-800: #80001c;
+  --color-palette-red-900: #700008;
+  --color-palette-red-950: #600000;
+
+  --color-palette-green-50: #ecfbf1;
+  --color-palette-green-100: #d1f5dd;
+  --color-palette-green-200: #a6eabd;
+  --color-palette-green-500: #1fa855;
+  --color-palette-green-600: #16a34a;
+  --color-palette-green-700: #15803d;
+
+  --color-philosopher-epictetus: #a5e9fe;
+  --color-philosopher-nietzsche: #72a0fe;
+  --color-philosopher-marx: #f7824d;
+  --color-philosopher-camus: #49c576;
+  --color-philosopher-zhuangzi: #f47f9a;
+  --color-philosopher-epicurus: #fff473;
+  --color-philosopher-aristotle: #8e9afe;
+  --color-philosopher-arendt: #d9ef68;
+  --color-philosopher-weil: #bf8efe;
+
+  --color-background-base: var(--color-palette-common-white);
+  --color-background-surface: var(--color-palette-neutral-50);
+  --color-background-subtle: var(--color-palette-neutral-100);
+  --color-background-scrim: #00000066;
+
+  --color-border-normal: var(--color-palette-neutral-200);
+  --color-border-strong: var(--color-palette-neutral-300);
+  --color-border-active: var(--color-palette-red-500);
+  --color-border-disabled: var(--color-palette-neutral-100);
+  --color-border-inverse: var(--color-palette-common-white);
+
+  --color-text-primary: var(--color-palette-neutral-900);
+  --color-text-secondary: var(--color-palette-neutral-700);
+  --color-text-tertiary: var(--color-palette-neutral-600);
+  --color-text-placeholder: var(--color-palette-neutral-500);
+  --color-text-disabled: var(--color-palette-neutral-400);
+  --color-text-inverse: var(--color-palette-common-white);
+  --color-text-brand: var(--color-palette-red-500);
+
+  --color-icon-primary: var(--color-palette-neutral-900);
+  --color-icon-secondary: var(--color-palette-neutral-700);
+  --color-icon-tertiary: var(--color-palette-neutral-500);
+  --color-icon-disabled: var(--color-palette-neutral-400);
+  --color-icon-inverse: var(--color-palette-common-white);
+
+  --color-static-white: var(--color-palette-common-white);
+  --color-static-black: var(--color-palette-common-black);
+
+  --color-accent-primary: var(--color-palette-red-500);
+  --color-accent-pressed: var(--color-palette-red-700);
+  --color-accent-deep: var(--color-palette-red-950);
+  --color-accent-light: var(--color-palette-red-50);
+  --color-accent-secondary-light: var(--color-palette-red-100);
+  --color-accent-disabled: var(--color-palette-neutral-200);
+
+  --color-state-positive: var(--color-palette-green-600);
+  --color-state-positive-light: var(--color-palette-green-50);
+  --color-state-negative: var(--color-palette-red-600);
+  --color-state-negative-light: var(--color-palette-red-50);
+}
+
+@utility text-title-24-semibold {
+  font-size: 24px;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+@utility text-heading-20-medium {
+  font-size: 20px;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+@utility text-heading-18-bold {
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+@utility text-heading-18-semibold {
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+@utility text-body-16-semibold {
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+@utility text-body-16-medium {
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+@utility text-body-16-regular {
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+@utility text-body-15-medium {
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+@utility text-body-15-regular {
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+@utility text-body-14-bold {
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+@utility text-body-14-semibold {
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+@utility text-body-14-medium {
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+@utility text-body-14-regular {
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+@utility text-caption-13-medium {
+  font-size: 13px;
+  line-height: 1.5;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+@utility text-caption-13-regular {
+  font-size: 13px;
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+@utility text-caption-12-semibold {
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+@utility text-caption-12-regular {
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
 /* WebView 안에서 앱처럼 보이게: 탭 하이라이트·당겨서 바운스 제거 */
 html,
 body {
@@ -8,5 +216,5 @@ body {
 }
 
 body {
-  @apply bg-white text-neutral-900 antialiased;
+  @apply bg-background-base text-text-primary text-body-16-regular antialiased;
 }
