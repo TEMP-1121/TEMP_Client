@@ -17,6 +17,9 @@ import PhilosopherSelectPage from '@/pages/PhilosopherSelectPage';
 
 import './index.css';
 
+// 개발 모드에서만 콘솔에 ilseToken(토큰)을 열어 둔다. 배포 빌드에는 들어가지 않는다
+if (import.meta.env.DEV) import('@/lib/devAuth');
+
 const router = createBrowserRouter([
   {
     element: <Layout />,
