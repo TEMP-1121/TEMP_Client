@@ -1,4 +1,4 @@
-import { MessageSquare, MoreHorizontal } from 'lucide-react'
+import { MessageSquareMore, MoreHorizontal } from 'lucide-react'
 import { useNavigate } from 'react-router'
 
 import { useChatStore } from '@/stores/useChatStore'
@@ -52,7 +52,7 @@ export default function ConversationSidebar({ onClose }: { onClose: () => void }
             }}
             className='mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-accent-primary text-body-16-semibold text-text-inverse active:bg-accent-pressed'
           >
-            <MessageSquare className='size-4' aria-hidden />
+            <MessageSquareMore className='size-4' aria-hidden />
             새로 상담하기
           </button>
           <div className='mt-6 border-t border-border-normal pb-3 pt-5'>
