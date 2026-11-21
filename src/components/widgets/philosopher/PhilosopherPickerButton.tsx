@@ -21,7 +21,7 @@ export default function PhilosopherPickerButton({ selectedIds, onClick }: Philos
           selectedIds[i] ? (
             <PhilosopherAvatar key={i} personaKey={selectedIds[i]} className="size-8" />
           ) : (
-            <span key={i} className="size-8 rounded-full border border-dashed border-text-tertiary bg-background-base" />
+            <span key={i} className="size-8 rounded-full bg-background-base" />
           ),
         )}
       </div>
