@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
+import OnboardingChatPreview from '@/components/widgets/onboarding/OnboardingChatPreview';
 import OnboardingPhilosopherCard from '@/components/widgets/onboarding/OnboardingPhilosopherCard';
 import { PHILOSOPHERS } from '@/lib/philosophers';
 import { useAuthStore } from '@/stores/useAuthStore';
@@ -83,7 +84,7 @@ export default function OnboardingPage() {
         ) : page === 1 ? (
           // 첫 장의 카드 영역과 같은 높이라 장을 넘겨도 제목 위치가 그대로다. 시안처럼 아래 대화가 흐려지며 사라진다
           <div aria-hidden className='mt-14 flex h-93 shrink-0 justify-center pt-10'>
-            <img src='/assets/onboarding2.png' alt='' className='h-fit w-full max-w-84.25 mask-b-from-60%' />
+            <OnboardingChatPreview />
           </div>
         ) : (
           <div aria-hidden className='mt-14 flex h-93 shrink-0 items-center justify-center pt-14'>
