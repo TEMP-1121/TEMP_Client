@@ -22,19 +22,19 @@ const slides = [
 export default function OnboardingPage() {
   const [page, setPage] = useState(0);
   const navigate = useNavigate();
-  const isWelcome = page === 0;
-  const slide = slides[page - 1];
+  const slide = slides[page];
+  const isLast = page === slides.length - 1;
 
   function finishOnboarding() {
     navigate('/philosophers');
   }
 
   return (
-    <section className='flex flex-1 flex-col bg-[#f8f9fb] px-5 pb-5'>
+    <section className='flex flex-1 flex-col bg-background-surface px-5 pb-5'>
       <div className='h-12' aria-hidden />
 
       <div className='flex h-10 items-center justify-end'>
-        {!isWelcome && page < slides.length && (
+        {!isLast && (
           <button
             type='button'
             onClick={finishOnboarding}
@@ -49,54 +49,33 @@ export default function OnboardingPage() {
         <div className='mb-7 h-[min(46vh,390px)] min-h-64' aria-hidden />
 
         <div className='min-h-28 px-1'>
-          {isWelcome ? (
-            <>
-              <h1 className='text-[21px] font-semibold leading-snug tracking-[-0.04em] text-neutral-800'>
-                일상에 오신 직장인 여러분,
-                <br />
-                환영합니다.
-              </h1>
-              <p className='mt-3 max-w-72 text-xs leading-relaxed text-neutral-500'>
-                매일 똑같은 일에 지쳤다면, 몇백 년 먼저 태어난 철학자 사수에게
-                말을 걸어보세요.
-              </p>
-            </>
-          ) : (
-            <>
-              <h1 className='text-[20px] font-semibold leading-snug tracking-[-0.04em] text-neutral-900'>
-                {slide.title}
-              </h1>
-              <p className='mt-3 text-xs leading-relaxed text-neutral-500'>
-                {slide.description}
-              </p>
-            </>
-          )}
+          <h1 className='text-[20px] font-semibold leading-snug tracking-[-0.04em] text-neutral-900'>
+            {slide.title}
+          </h1>
+          <p className='mt-3 text-xs leading-relaxed text-neutral-500'>
+            {slide.description}
+          </p>
         </div>
       </div>
 
       <div
         className='flex h-8 items-center justify-center gap-1.5'
-        aria-label={isWelcome ? undefined : `온보딩 ${page} / ${slides.length}`}
+        aria-label={`온보딩 ${page + 1} / ${slides.length}`}
       >
-        {!isWelcome &&
-          slides.map((item, index) => (
-            <span
-              key={item.title}
-              className={`h-1.5 rounded-full transition-all ${index === page - 1 ? 'w-5 bg-neutral-900' : 'w-1.5 bg-neutral-300'}`}
-            />
-          ))}
+        {slides.map((item, index) => (
+          <span
+            key={item.title}
+            className={`h-1.5 rounded-full transition-all ${index === page ? 'w-5 bg-neutral-900' : 'w-1.5 bg-neutral-300'}`}
+          />
+        ))}
       </div>
 
       <button
         type='button'
-        onClick={() =>
-          page === slides.length
-            ? finishOnboarding()
-            : setPage((current) => current + 1)
-        }
+        onClick={() => (isLast ? finishOnboarding() : setPage((current) => current + 1))}
         className='flex h-14 w-full items-center justify-center rounded-none bg-neutral-900 text-sm font-semibold text-white transition-colors hover:bg-neutral-800 active:bg-neutral-700'
       >
-        {isWelcome ? '시작하기' : page === slides.length ? '시작하기' : '다음'}
+        {isLast ? '시작하기' : '다음'}
       </button>
     </section>
   );

@@ -5,8 +5,8 @@ import Header from '@/components/common/Header'
 
 export default function Layout() {
   const { pathname } = useLocation()
-  // 온보딩·철학자 선택·단톡방은 자체 헤더를 쓰고 하단 탭을 숨긴다
-  const bare = pathname === '/' || pathname === '/philosophers' || pathname === '/chat'
+  // 로그인·온보딩·철학자 선택·단톡방은 자체 헤더를 쓰고 하단 탭을 숨긴다
+  const bare = ['/', '/onboarding', '/philosophers', '/chat'].includes(pathname)
 
   return (
     <div className="min-h-dvh bg-background-subtle">

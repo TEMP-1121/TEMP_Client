@@ -1,12 +1,13 @@
-import { CircleCheck, LoaderCircle } from 'lucide-react'
+import { LoaderCircle } from 'lucide-react'
 import { useEffect } from 'react'
-import { Link } from 'react-router'
+import { useNavigate } from 'react-router'
 
 import KakaoRetry from '@/components/widgets/auth/KakaoRetry'
 import SignupForm from '@/components/widgets/auth/SignupForm'
 import { useAuthStore } from '@/stores/useAuthStore'
 
 export default function SignupPage() {
+  const navigate = useNavigate()
   const defaults = useAuthStore((s) => s.signupDefaults)
   const defaultsLoading = useAuthStore((s) => s.defaultsLoading)
   const signupExpired = useAuthStore((s) => s.signupExpired)
@@ -18,17 +19,11 @@ export default function SignupPage() {
     void fetchSignupDefaults()
   }, [fetchSignupDefaults])
 
-  if (accountId) {
-    return (
-      <section className="flex flex-1 flex-col items-center justify-center gap-4 p-6 text-center">
-        <CircleCheck className="size-10 text-neutral-900" aria-hidden />
-        <h2 className="text-lg font-bold">가입을 완료했어요</h2>
-        <Link to="/" replace className="rounded-2xl bg-neutral-900 px-6 py-3 font-semibold text-white">
-          홈으로
-        </Link>
-      </section>
-    )
-  }
+  useEffect(() => {
+    if (accountId) navigate('/onboarding', { replace: true })
+  }, [accountId, navigate])
+
+  if (accountId) return null
 
   if (signupExpired) {
     return (
