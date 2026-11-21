@@ -1,41 +1,41 @@
-import type { ReactNode } from 'react'
-
 import PhilosopherAvatar from '@/components/widgets/philosopher/PhilosopherAvatar'
 import { cn } from '@/lib/utils'
 import type { PhilosopherProfile } from '@/types/philosopher'
 
 type PhilosopherCardProps = {
   philosopher: PhilosopherProfile
-  size?: 'md' | 'lg'
   selected?: boolean
-  topRight?: ReactNode
   className?: string
 }
 
-// label·button 안에 들어가므로 블록 요소 대신 span만 쓴다
-export default function PhilosopherCard({
-  philosopher,
-  size = 'md',
-  selected = false,
-  topRight,
-  className,
-}: PhilosopherCardProps) {
+// button 안에 들어가므로 블록 요소 대신 span만 쓴다
+export default function PhilosopherCard({ philosopher, selected = false, className }: PhilosopherCardProps) {
   return (
     <span
       className={cn(
-        'flex flex-col gap-1.5 bg-background-base text-left',
-        selected ? 'border-2 border-border-active p-3.25' : 'border border-border-normal p-3.5',
+        'flex min-h-55 flex-col gap-6.75 rounded-card border bg-background-base px-3.5 pt-6 pb-3.5 text-left transition-colors',
+        selected ? 'border-border-active' : 'border-transparent',
         className,
       )}
     >
-      <span className="flex items-start justify-between">
-        <PhilosopherAvatar personaKey={philosopher.key} className={size === 'lg' ? 'size-14' : 'size-11'} />
-        {topRight}
+      <span className="flex justify-center">
+        <PhilosopherAvatar personaKey={philosopher.key} className="size-22.75" />
       </span>
-      <span className={size === 'lg' ? 'text-body-16-semibold' : 'text-body-14-bold'}>{philosopher.name}</span>
-      <span className="text-caption-12-regular text-text-secondary">{philosopher.description}</span>
-      <span className="text-caption-12-regular text-text-tertiary">
-        {philosopher.tags.map((tag) => `#${tag}`).join(' ')}
+      <span className="flex flex-col gap-1.75">
+        <span className="flex flex-col gap-1.5">
+          <span className="text-body-14-bold text-text-primary">{philosopher.name}</span>
+          <span className="text-caption-12-regular text-text-secondary">{philosopher.description}</span>
+        </span>
+        <span className="flex flex-wrap gap-1.75">
+          {philosopher.tags.map((tag) => (
+            <span
+              key={tag}
+              className="flex h-5.5 items-center rounded-full border border-border-active bg-background-base px-2.5 text-caption-11-regular text-text-brand"
+            >
+              #{tag}
+            </span>
+          ))}
+        </span>
       </span>
     </span>
   )
