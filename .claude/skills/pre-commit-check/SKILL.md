@@ -1,17 +1,17 @@
 ---
 name: pre-commit-check
-description: 커밋 전에 현재 변경사항이 CLAUDE.md 규칙과 해커톤 심사 기준에 어긋나는지 점검해 보고한다. 사용자가 /pre-commit-check 라고 하거나 "커밋 전에 확인해줘"라고 하면 실행. 파일을 고치거나 커밋하지 않고 보고만 한다.
+description: 커밋 전에 현재 변경사항이 AGENTS.md 규칙과 해커톤 심사 기준에 어긋나는지 점검해 보고한다. 사용자가 /pre-commit-check 라고 하거나 "커밋 전에 확인해줘"라고 하면 실행. 파일을 고치거나 커밋하지 않고 보고만 한다.
 ---
 
 # pre-commit-check
 
-현재 변경사항을 CLAUDE.md 규칙과 해커톤 심사 기준으로 점검한다.
+현재 변경사항을 AGENTS.md 규칙과 해커톤 심사 기준으로 점검한다.
 
 ## 전제
 
 - 파일 수정, `git add`, `git commit`, `git push`를 하지 않는다. 보고만 하고, 사용자가 요청하면 그때 고친다.
 - 실제 diff와 코드에 있는 것만 근거로. 추측으로 지적하지 않는다.
-- CLAUDE.md가 규칙의 기준이다. 이 문서와 CLAUDE.md가 다르면 CLAUDE.md를 따른다.
+- AGENTS.md가 규칙의 기준이다 (CLAUDE.md는 `@AGENTS.md`로 불러오기만 한다). 이 문서와 AGENTS.md가 다르면 AGENTS.md를 따른다.
 
 ## 절차
 
@@ -20,7 +20,7 @@ description: 커밋 전에 현재 변경사항이 CLAUDE.md 규칙과 해커톤 
 3. 변경된 파일을 읽고 아래 A·B·C 항목을 확인. B는 변경된 화면·스토어 기준으로 본다.
 4. 결과를 출력 형식대로 보고.
 
-## A. 규칙 위반 (CLAUDE.md)
+## A. 규칙 위반 (AGENTS.md)
 
 차단 (커밋 전에 반드시 수정):
 - `yarn build` 또는 `yarn lint` 실패
@@ -31,6 +31,7 @@ description: 커밋 전에 현재 변경사항이 CLAUDE.md 규칙과 해커톤 
 - `http://` 로 시작하는 API·리소스 주소 (APK에서 막힘), 하드코딩된 API 주소
 
 경고:
+- `CLAUDE.md`에 `@AGENTS.md` 외 내용이 추가됨 → 그 내용을 `AGENTS.md`로 옮기고 `CLAUDE.md`는 `@AGENTS.md` 한 줄로 되돌리기 (Codex 사용자가 못 봄)
 - `console.log` 잔존
 - `src/lib/api.ts` 밖에서 `axios.create` 또는 axios 직접 사용
 - 컴포넌트·페이지에서 `api`를 직접 호출 (도메인 스토어 안에서 호출. 한 화면에서만 잠깐 쓰는 호출은 예외), `lib/api.ts`에 엔드포인트 함수 추가
