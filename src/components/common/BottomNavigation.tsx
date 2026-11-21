@@ -1,10 +1,11 @@
-import { House, User, type LucideIcon } from 'lucide-react'
+import { House, MessageCircle, User, type LucideIcon } from 'lucide-react'
 import { NavLink } from 'react-router'
 
 import { cn } from '@/lib/utils'
 
 const tabs: { to: string; label: string; icon: LucideIcon }[] = [
   { to: '/', label: '홈', icon: House },
+  { to: '/chat', label: '채팅', icon: MessageCircle },
   { to: '/mypage', label: '마이', icon: User },
 ]
 
