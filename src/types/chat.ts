@@ -61,6 +61,18 @@ export type Delivery = {
   turn: Turn | null
 }
 
+export type ConversationSummary = {
+  conversationId: string
+  personaKeys: string[]
+  createdAt: string
+  // 처음 저장된 사용자 메시지. 메시지가 아직 없는 방은 null
+  title: string | null
+}
+
+export type ConversationList = {
+  content: ConversationSummary[]
+}
+
 export type ConversationHistory = {
   conversationId: string
   personaKeys: string[]
